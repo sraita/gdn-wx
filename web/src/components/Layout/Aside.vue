@@ -2,9 +2,9 @@
   <div>
     <el-menu
       default-active="1-4-1"
-      background-color="#e6e6e6"
-      text-color="#8c8c8c"
-      active-text-color="#1a1a1a"
+      background-color="#fff"
+      text-color="#6c757d"
+      active-text-color="#727cf5"
       :collapse="this.$store.state.app.isSidebarOpen" 
     >
       <el-menu-item index="1" @click="linkTo('dashboard')">

@@ -82,8 +82,7 @@ export default {
   }
 
   .sidebar-toggle {
-    width: 48px; height: 60px; 
-    i {font-size: 24px;}
+    width: 60px; height: 60px; color: #727cf5; font-size: 18px;
   }
   .nav-item {
     list-style: none;

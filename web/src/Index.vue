@@ -30,11 +30,22 @@ export default {
   .el-header {
     background: #fff;
     padding: 0 !important;
+    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    z-index: 1;
   }
   .el-aside {
-    background-color: #e6e6e6;
+    background-color: #fff;
+    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
+    z-index: 1;
     .el-menu {
-      text-align: justify;
+      text-align: justify;border-right: none;
     }
   }
+  .el-main {
+    background-color: #fafbfe; padding: 10px;
+  }
+  .inline-title {
+    font-size: 15px; font-weight: 600; line-height: initial; padding: 10px 0; margin-top: 10px;
+  }
+  .page {height: 100%;}
 </style>
