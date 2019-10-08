@@ -45,7 +45,10 @@ export default {
     background-color: #fafbfe; padding: 10px;
   }
   .inline-title {
-    font-size: 15px; font-weight: 600; line-height: initial; padding: 10px 0; margin-top: 10px;
+    font-size: 15px; font-weight: 600; line-height: initial; padding: 10px 0;
   }
   .page {height: 100%;}
+  .el-divider--horizontal {
+    margin: 10px 0;
+  }
 </style>
