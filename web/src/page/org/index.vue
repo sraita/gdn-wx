@@ -70,7 +70,7 @@
             <el-button size="mini" icon="el-icon-plus">批量导入</el-button>
           </div>
         </div>
-        <el-table border stripe size="mini">
+        <el-table stripe size="mini">
           <el-table-column label="姓名"></el-table-column>
           <el-table-column label="职位"></el-table-column>
           <el-table-column label="工号"></el-table-column>
@@ -91,6 +91,15 @@
         <el-form-item label="部门名称" prop="name">
           <el-input v-model="addForm.name" placeholder="请输入部门名称"></el-input>
         </el-form-item>
+        <el-form-item label="部门类型" prop="type">
+          <el-radio-group v-model="addForm.type">
+            <el-radio label="company">公司</el-radio>
+            <el-radio label="department">部门</el-radio>
+            <el-radio label="team">团队</el-radio>
+          </el-radio-group>
+          
+        </el-form-item>
+        
       </el-form>
 
       <span slot="footer">
@@ -141,56 +150,21 @@ export default {
       addMemberDialogVisible: false, // 添加人员 Dialog
       orgList: [
         {
-          label: "一级 1",
+          label: "博雅网艺工作室",
           children: [
             {
-              label: "二级 1-1",
+              label: "总经办",
+            },{
+              label: "设计部"
+            },{
+              label: "财务部"
+            },{
+              label: "市场部"
+            },{
+              label: "研发部",
               children: [
-                {
-                  label: "三级 1-1-1"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: "一级 2",
-          children: [
-            {
-              label: "二级 2-1",
-              children: [
-                {
-                  label: "三级 2-1-1"
-                }
-              ]
-            },
-            {
-              label: "二级 2-2",
-              children: [
-                {
-                  label: "三级 2-2-1"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: "一级 3",
-          children: [
-            {
-              label: "二级 3-1",
-              children: [
-                {
-                  label: "三级 3-1-1"
-                }
-              ]
-            },
-            {
-              label: "二级 3-2",
-              children: [
-                {
-                  label: "三级 3-2-1"
-                }
+                {label: "高德纳小程序项目组"},
+                {label: "测试组"}
               ]
             }
           ]

@@ -47,7 +47,7 @@
         </div>
         <el-divider></el-divider>
          
-        <el-table border stripe size="mini" :data="tableData">
+        <el-table stripe size="mini" :data="tableData">
           <el-table-column label="名称" prop="name"></el-table-column>
           <el-table-column label="编码" prop="code"></el-table-column>
           <el-table-column label="类型" prop="type"></el-table-column>
@@ -182,25 +182,25 @@ export default {
       roleGroupList:[],
       orgList: [
         {
-          label: "一级 1",
+          label: "默认",
           children: [
             {
-              label: "二级 1-1",
+              label: "超级管理员",
             
             },
             {
-              label: "二级 1-2"
+              label: "管理员"
             }
           ]
         },
         {
-          label: "一级 2",
+          label: "财务部",
           children: [
             {
-              label: "二级 2-1"
+              label: "财务部长"
             },
             {
-              label: "二级 2-2"
+              label: "出纳"
             }
           ]
         }

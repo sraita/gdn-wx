@@ -40,11 +40,8 @@
               </div>
           </a>
           <el-dropdown-menu slot="dropdown" class="nav-user-box">
-            <el-dropdown-item icon="el-icon-plus">黄金糕</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-circle-plus">狮子头</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-circle-plus-outline">螺蛳粉</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-check">双皮奶</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-circle-check">蚵仔煎</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-lock">修改密码</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-switch-button">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
