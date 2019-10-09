@@ -1,4 +1,5 @@
 const { Org } = require('../models/org');
+const { construct, destruct } = require('@aximario/json-tree');
 
 const getList = async function (req, res, next) {
   let query = JSON.stringify(req.query);
@@ -24,24 +25,29 @@ const getList = async function (req, res, next) {
   })
 }
 
-const getTree = function (req, res, next) {
-  Org.find({ _id: req.body.parent }).populate('children')
+const getTree = async function (req, res, next) {
 
-    .exec(function (err, orgs) {
-
-      if (err) {
-
-        console.log(err)
-
-      }
-
-      // res.send('test')
-
-      res.json({
-        status: 'ok',
-        data: orgs
-      })
+  const list = await Org.find({});
+  // console.log(list)
+  res.json({
+    status: 'ok',
+    data: construct([
+      { id: 6, parent_id: 2, data: '这是其他数据' },
+      { id: 7, parent_id: 3, data: '这是其他数据' },
+      { id: 2, parent_id: 1, data: '这是其他数据' },
+      { id: 4, parent_id: 2, data: '这是其他数据' },
+      { id: 1, parent_id: 0, data: '这是其他数据' },
+      { id: 9, parent_id: 5, data: '这是其他数据' },
+      { id: 8, parent_id: 3, data: '这是其他数据' },
+      { id: 3, parent_id: 1, data: '这是其他数据' },
+      { id: 5, parent_id: 2, data: '这是其他数据' },
+      { id: 10, parent_id: 6, data: '这是其他数据' }
+    ], {
+      id: 'id',
+        pid: 'parent_id',
+      children: 'kids'
     })
+  })
 }
 
 const create = async function (req, res, next) {
