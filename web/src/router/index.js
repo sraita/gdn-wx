@@ -4,7 +4,7 @@ import Index from '@/Index'
 import Org from '@/page/org'
 import Dashborad from '@/page/dashboard'
 import Role from '@/page/role'
-
+import custom from '@/page/custom'
 Vue.use(Router)
 
 export default new Router({
@@ -28,7 +28,8 @@ export default new Router({
           path: '/role',
           name: 'role',
           component: Role, 
-        }
+        },
+        { path: '/custom', name: 'custom', component: custom}
       ]
     }
   ]

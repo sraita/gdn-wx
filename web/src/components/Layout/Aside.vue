@@ -28,7 +28,8 @@
         <i class="el-icon-document"></i>
         <span slot="title">订单管理</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <!-- 第三方公司客户 -->
+      <el-menu-item index="3" @click="linkTo('custom')">
         <i class="el-icon-document"></i>
         <span slot="title">客户管理</span>
       </el-menu-item>
