@@ -21,7 +21,12 @@ const createUser = async function (req, res) {
 
 
 const getUserById = async function (req, res) {
-  res.send('get user by id')
+  console.log(req.params)
+  const data = await User.findById(req.params._id);
+  res.json({
+    message: 'ok',
+    data:data
+  });
 }
 
 const updateUserById = async function (req, res) {
