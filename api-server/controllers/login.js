@@ -29,7 +29,7 @@ const doLogin = async function (req, res) {
     jwt.sign() 接受两个参数，一个是传入的对象，一个是自定义的密钥
   */
   const token = jwt.sign({ 
-    exp: Math.floor(Date.now() / 1000) + (1*60), // 过期时间为1分钟
+    exp: Math.floor(Date.now() / 1000) + (60*60), // 过期时间为60分钟
     id: String(user._id)
   }, SECRET);
   res.send({

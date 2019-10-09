@@ -39,13 +39,13 @@ const baseAuth = function (req, res, next) {
           message: '用户不存在'
         });
       }
-      if (user.status !== 1) {
-        return res.send({
-          status: 'error',
-          name: 'UserWasDisable',
-          message: '用户被禁用'
-        });
-      }
+      // if (user.status !== 1) {
+      //   return res.send({
+      //     status: 'error',
+      //     name: 'UserWasDisable',
+      //     message: '用户被禁用'
+      //   });
+      // }
       // 验证接口访问权限
 
       next();
