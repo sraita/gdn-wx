@@ -14,7 +14,7 @@ const baseAuth = function (req, res, next) {
   } else {
     // 判断用户是否登录
     if (!req.headers.authorization) {
-      return res.json({
+      return res.status(401).json({
         status:'error',
         message: "请先登录"
       });
@@ -51,7 +51,7 @@ const baseAuth = function (req, res, next) {
       next();
     } catch (err) {
       console.log(err);
-      return res.json({
+      return res.status(403).json({
         status: 'error',
         name: err.name,
         message: err.message

@@ -35,7 +35,7 @@
                 <img src="@/assets/avatar.jpg" alt="User Avatar"/>
               </div>
               <div class="user-info">
-                <p class="user-name">Dominic Keller</p>
+                <p class="user-name">{{userInfo.username}}</p>
                 <p class="user-job">SD</p>
               </div>
           </a>
@@ -56,6 +56,11 @@
 <script>
 export default {
   name: 'Header',
+  data() {
+    return {
+      userInfo: this.$store.state.user.userInfo
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSidebar');

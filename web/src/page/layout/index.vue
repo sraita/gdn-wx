@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import Header from '@/components/Layout/Header';
-import Aside from '@/components/Layout/Aside';
+import Header from './components/Header';
+import Aside from './components/Aside';
 export default {
-  name: 'index',
+  name: 'defaultLayout',
   components: {
     Header,
     Aside
