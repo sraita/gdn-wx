@@ -64,9 +64,6 @@
 </template>
 
 <script>
-import { Component, Vue } from "vue-property-decorator";
-import router from "@/router";
-import {get,post} from '../../utils/http';
 export default {
   name: 'loginPage',
   data() {
@@ -102,11 +99,13 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          post('/auth/login',this.form).then(res=>{
+          this.$api.auth.doLogin(this.form).then(res=>{
             console.log(res);
-            this.$store.dispatch('user/updateToken',res.data.token)
-            this.$store.dispatch('user/updateUserInfo',res.data.user)
-            router.replace({
+            const {token, refresh_token, token_expire, refresh_token_expire,user} = res.data; 
+            this.$store.dispatch('auth/updateLoginToken',token, token_expire);
+            this.$store.dispatch('auth/updateRefreshToken',refresh_token, refresh_token_expire);
+            this.$store.dispatch('user/updateUserInfo',res.data.user);
+            this.$router.replace({
               path: '/'
             });
           }).catch(err => {

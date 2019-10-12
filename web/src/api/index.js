@@ -1,1 +1,6 @@
-import {get, post} from '../utils/http';
+
+import auth from './auth';
+
+export default {
+  auth,
+}

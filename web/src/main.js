@@ -13,6 +13,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/iconfont/iconfont.css';
 
 import { post, get } from './utils/http'
+import api from './api'
 
 Vue.config.productionTip = false
 
@@ -23,6 +24,8 @@ Vue.use(VueCookies)
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post
 Vue.prototype.$get = get
+
+Vue.prototype.$api = api
 
 /* eslint-disable no-new */
 new Vue({

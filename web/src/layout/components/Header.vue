@@ -41,7 +41,7 @@
           </a>
           <el-dropdown-menu slot="dropdown" class="nav-user-box">
             <el-dropdown-item icon="iconfont icon-lock-outline">修改密码</el-dropdown-item>
-            <el-dropdown-item icon="iconfont icon-logout">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="iconfont icon-logout" @click="this.$api.auth.logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>

@@ -64,6 +64,7 @@ router.beforeEach((to, from, next) => {
   console.log(router);
   console.log(to, from)
   const store = router.app.$options.store;
+  const loginToken = sessionStorage.getItem('loginToken');
   // 判断路由是否存在
   if (to.name === undefined) {
     return next({
@@ -72,7 +73,7 @@ router.beforeEach((to, from, next) => {
     });
   }
   // 判断用户是否登录
-  if (store.state.user.token === '') {
+  if (!loginToken || loginToken === '') {
     if (['login', 'Forbidden','Notfound'].includes(to.name)) {//如果是登录页面路径，就直接next()
       next();
     } else {//不然就跳转到登录；

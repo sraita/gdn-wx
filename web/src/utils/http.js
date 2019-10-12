@@ -5,6 +5,7 @@ import axios from 'axios'; import QS from 'qs';
 import { Message } from 'element-ui';
 import store from '../store/index'
 import router from '../router';
+import utils from './utils';
 
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
@@ -38,6 +39,8 @@ axios.interceptors.request.use(
     config.cancelToken = new CancelToken((cancel) => {
       sources[request] = cancel
     })
+
+    // console.log('Token Expired:',utils.isTokenExpired());
     //1.判断请求是否已存在请求列表，避免重复请求，将当前请求添加进请求列表数组；
     if (requestList.includes(request)) {
       sources[request]('取消重复请求')
@@ -49,8 +52,8 @@ axios.interceptors.request.use(
     //3.从store中获取token并添加到请求头供后端作权限校验
     // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
-    const token = store.state.token;
-    token && (config.headers.Authorization = token);
+    const token = sessionStorage.getItem('loginToken')
+    token && (config.headers.Authorization = 'Bearer ' + token);
     return config;
   },
   error => {
