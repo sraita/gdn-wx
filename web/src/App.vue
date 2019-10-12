@@ -5,6 +5,7 @@
 </template>
 
 <style lang="scss">
+@import './assets/css/global.scss';
 html, body {
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   font-size: 14px;
@@ -22,12 +23,5 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-.clearfix{overflow:hidden;_zoom:1;}
-.float-left {
-  float: left !important;
-}
-.float-right {
-  float: right!important;
 }
 </style>

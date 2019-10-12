@@ -45,7 +45,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item style="text-align: center;">
-                  <el-button type="primary" size="small" @click="submitForm('loginForm')" style="width:100%;">登 录</el-button>
+                  <el-button type="primary" @click="submitForm('loginForm')" style="width:100%;">登 录</el-button>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -131,6 +131,7 @@ export default {
     height: 100%;
     background: url("../../assets/login_bg.jpg") center;
     background-size: cover;
+    .el-main,.el-header{background: initial;}
   }
   .login-mask {
     width: 100%;

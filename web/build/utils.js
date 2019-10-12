@@ -13,7 +13,9 @@ exports.assetsPath = function (_path) {
 }
 
 exports.cssLoaders = function (options) {
-  options = options || {}
+  options = options || {
+    resources: path.resolve(__dirname, '../src/assets/css/global.scss')
+  }
 
   const cssLoader = {
     loader: 'css-loader',

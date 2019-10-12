@@ -11,7 +11,7 @@
           <el-dropdown trigger="click">
             <span>
               <el-badge is-dot class="item">
-                <i class="el-icon-message"></i>
+                <i class="iconfont icon-bell-outline"></i>
               </el-badge>
             </span>
             <el-dropdown-menu slot="dropdown" class="nav-notifi-box">
@@ -32,7 +32,7 @@
         <el-dropdown trigger="click">
           <a href="javascript:;" class="nav-link nav-user">
               <div class="user-avatar float-left">
-                <img src="@/assets/avatar.jpg" alt="User Avatar"/>
+                <img src="@/assets/default-avatar.png" alt="User Avatar"/>
               </div>
               <div class="user-info">
                 <p class="user-name">{{userInfo.username}}</p>
@@ -40,8 +40,8 @@
               </div>
           </a>
           <el-dropdown-menu slot="dropdown" class="nav-user-box">
-            <el-dropdown-item icon="el-icon-lock">修改密码</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-switch-button">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="iconfont icon-lock-outline">修改密码</el-dropdown-item>
+            <el-dropdown-item icon="iconfont icon-logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
