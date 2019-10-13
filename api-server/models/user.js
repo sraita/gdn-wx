@@ -36,9 +36,14 @@ UserSchema.methods.validPassword = function (password) {
   );
 }
 
+// 添加 mongoose 实例方法
+UserSchema.methods.findByUsername = function (username) {
+  return this.model('user').find({ username: username });
+}
+
 UserSchema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
 UserSchema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
 
-const User = Mongo.model('User', UserSchema);
+const User = Mongo.model('user', UserSchema);
 
 module.exports = { User };
