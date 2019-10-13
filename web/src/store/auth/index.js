@@ -2,46 +2,25 @@ const auth = {
   namespaced: true,
   state: {
     loginToken: '',
-    loginTokenExpires: 0,
     refreshToken: '',
-    refreshTokenExpires: 0
   },
 
   mutations: {
-    UPDATE_LOGIN_TOKEN(state, token, tokenExpires) {
-      const expires = tokenExpires ? tokenExpires : Date.now();
+    UPDATE_LOGIN_TOKEN(state, token) {
       state.loginToken = token;
-      state.loginTokenExpires = expires
-
       sessionStorage.setItem('loginToken',token);
-      sessionStorage.setItem('loginTokenExpires', expires);
     },
-    UPDATE_REFRESH_TOKEN(state, token, tokenExpires) {
-      const expires = tokenExpires ? tokenExpires : Date.now();
+    UPDATE_REFRESH_TOKEN(state, token) {
       state.refreshToken = token;
-      state.refreshTokenExpires = expires;
       sessionStorage.setItem('refreshToken', token);
-      sessionStorage.setItem('refreshTokenExpires', expires);
-    },
-    CLEAR_TOKEN(state) {
-      state = {
-        loginToken: '',
-        loginTokenExpires: 0,
-        refreshToken: '',
-        refreshTokenExpires: 0
-      };
     }
   },
   actions: {
-    updateLoginToken({ commit },token, tokenExpires) {
-      commit('UPDATE_LOGIN_TOKEN', token, tokenExpires)
+    updateTokens({ commit }, token, refresh_token) {
+      commit('UPDATE_LOGIN_TOKEN', token);
+      commit('UPDATE_REFRESH_TOKEN', refresh_token)
     },
-    updateRefreshToken({ commit }, token, tokenExpires) {
-      commit('UPDATE_REFRESH_TOKEN', token, tokenExpires)
-    },
-    clearToken( {commit}) {
-      commit('CLEAR_TOKEN')
-    }
+    
   },
   getters: {
 

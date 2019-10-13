@@ -29,19 +29,19 @@
         </a>
       </li>
       <li class="nav-item">
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command="userDropdownCommand">
           <a href="javascript:;" class="nav-link nav-user">
               <div class="user-avatar float-left">
-                <img src="@/assets/default-avatar.png" alt="User Avatar"/>
+                <img :src="this.$store.state.user.avatar" alt="User Avatar"/>
               </div>
               <div class="user-info">
-                <p class="user-name">{{userInfo.username}}</p>
+                <p class="user-name">{{this.$store.state.user.username}}</p>
                 <p class="user-job">SD</p>
               </div>
           </a>
           <el-dropdown-menu slot="dropdown" class="nav-user-box">
             <el-dropdown-item icon="iconfont icon-lock-outline">修改密码</el-dropdown-item>
-            <el-dropdown-item icon="iconfont icon-logout" @click="this.$api.auth.logout">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="iconfont icon-logout" command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
@@ -58,12 +58,33 @@ export default {
   name: 'Header',
   data() {
     return {
-      userInfo: this.$store.state.user.userInfo
+      userInfo: this.$store.state.user
     }
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSidebar');
+    },
+    userDropdownCommand(command) {
+      switch(command) {
+        case 'logout':
+          this.logout();
+          break;
+        default:
+          break;
+      }
+    },
+    logout() {
+      this.$confirm('你将退出登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('auth/updateTokens','','');
+        this.$router.replace({
+          path: "/login"
+        });
+      });
     }
   }
 }

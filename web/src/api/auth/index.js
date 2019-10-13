@@ -8,7 +8,7 @@ const logout = (()=>{
   });
 }); 
 
-const getUserInfo = (id => get('/api/user/',{id}));
+const getUserInfo = (id => get(`/api/user/${id}`));
 export default {
   doLogin,
   logout,

@@ -22,6 +22,16 @@ export default {
   components: {
     Header,
     Aside
+  },
+  methods: {
+    getUserInfo() {
+      this.$api.auth.getUserInfo(localStorage.getItem('userId')).then(res=> {
+        this.$store.dispatch('user/updateUserInfo', res.data)
+      });
+    }
+  },
+  mounted() {
+    this.getUserInfo();
   }
 }
 </script>

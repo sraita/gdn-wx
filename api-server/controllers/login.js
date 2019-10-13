@@ -54,15 +54,24 @@ const doLogin = async function (req, res) {
     生成 token
     jwt.sign() 接受两个参数，一个是传入的对象，一个是自定义的密钥
   */
+  const token_expire = Math.floor(Date.now() / 1000) + (60 * 60);// token 过期时间为60分钟
+  const refresh_token_expire = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60); // refresh_token 过期时间为7 天
   const token = jwt.sign({ 
-    exp: Math.floor(Date.now() / 1000) + (60*60), // 过期时间为60分钟
+    // exp: token_expire, 
+    exp: 0,
+    id: String(user._id)
+  }, SECRET);
+  const refresh_token = jwt.sign({
+    exp: refresh_token_expire,
     id: String(user._id)
   }, SECRET);
   res.json({
     status: 'ok',
     data:{
-      user,
-      token
+      userId: user._id,
+      token,
+      expire_in: 3600, //token接口调用凭证超时时间，单位（秒）
+      refresh_token,
     }
   })
 }

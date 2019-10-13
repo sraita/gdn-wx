@@ -92,6 +92,11 @@ export default {
     };
   },
   methods: {
+    getUserInfo() {
+      this.$api.auth.getUserInfo(localStorage.getItem('userId')).then(res=> {
+        console.log(res);
+      });
+    },
     getVerifyCode() {
       this.form.verifyCode = '';
       this.verifyCodeImg = '/auth/getCaptcha?' + Date.now();
@@ -101,10 +106,9 @@ export default {
         if (valid) {
           this.$api.auth.doLogin(this.form).then(res=>{
             console.log(res);
-            const {token, refresh_token, token_expire, refresh_token_expire,user} = res.data; 
-            this.$store.dispatch('auth/updateLoginToken',token, token_expire);
-            this.$store.dispatch('auth/updateRefreshToken',refresh_token, refresh_token_expire);
-            this.$store.dispatch('user/updateUserInfo',res.data.user);
+            const {token, expire_in, refresh_token,userId} = res.data; 
+            this.$store.dispatch('auth/updateTokens', token, refresh_token);
+            this.$store.dispatch('user/updateUserId',userId);
             this.$router.replace({
               path: '/'
             });

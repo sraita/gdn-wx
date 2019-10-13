@@ -51,8 +51,9 @@ const baseAuth = function (req, res, next) {
       next();
     } catch (err) {
       console.log(err);
-      return res.status(403).json({
+      return res.status(401).json({
         status: 'error',
+        code: err.name === 'TokenExpiredError' ? 40101 : 40102,
         name: err.name,
         message: err.message
       });
@@ -60,4 +61,39 @@ const baseAuth = function (req, res, next) {
   }
 }
 
-module.exports = baseAuth;
+const refreshToken = function (req, res, next) {
+    const raw = req.query.token;
+    // 解密 token 获取对应的 id
+    try {
+      const { id } = jwt.verify(raw, SECRET);
+      const token_expire = Math.floor(Date.now() / 1000) + (60 * 60);// token 过期时间为60分钟
+      const refresh_token_expire = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60); // refresh_token 过期时间为7 天
+      const token = jwt.sign({
+        exp: token_expire, 
+        id: id
+      }, SECRET);
+      const refresh_token = jwt.sign({
+        exp: refresh_token_expire,
+        id:id
+      }, SECRET);
+      return res.json({
+        status: 'success',
+        data: {
+          token: token,
+          expire_in: 3600,
+          refresh_token
+        }
+      })
+    } catch (err) {
+      console.log(err);
+      return res.status(401).json({
+        status: 'error',
+        name: err.name,
+        message: err.message
+      });
+    }
+}
+module.exports = {
+  baseAuth,
+  refreshToken
+};

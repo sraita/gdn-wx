@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import { Message } from 'element-ui';
+import utils from '../utils/utils';
 import Layout from '@/layout'
 import Org from '@/page/org'
 import Dashborad from '@/page/dashboard'
@@ -61,10 +64,9 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(router);
-  console.log(to, from)
   const store = router.app.$options.store;
-  const loginToken = sessionStorage.getItem('loginToken');
+  const loginToken = utils.getLoginToken();
+
   // 判断路由是否存在
   if (to.name === undefined) {
     return next({
@@ -73,7 +75,7 @@ router.beforeEach((to, from, next) => {
     });
   }
   // 判断用户是否登录
-  if (!loginToken || loginToken === '') {
+  if (!loginToken || loginToken === '' ) {
     if (['login', 'Forbidden','Notfound'].includes(to.name)) {//如果是登录页面路径，就直接next()
       next();
     } else {//不然就跳转到登录；

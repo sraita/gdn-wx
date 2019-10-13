@@ -66,24 +66,22 @@ export default {
       addRules: {},
       addDialogVisible: false,
       tableData: [
-        {
-          name: "环信云",
-          account: "admin@hxy.com",
-          mobile: "138888888888",
-          state: "启用"
-        }
+        {}
       ]
     };
   },
   methods: {
-    doSearch() {
-      get('/org').then(res=>{
-        console.log(res);
+    fetchData() {
+      get('/api/org').then(res=>{
+        this.tableData = res.data.list;
       })
     },
     addSubmit(formName) {
       
     }
+  },
+  mounted() {
+    this.fetchData();
   }
 };
 </script>
