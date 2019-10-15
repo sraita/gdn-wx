@@ -4,16 +4,17 @@ import Router from 'vue-router'
 import { Message } from 'element-ui';
 import utils from '../utils/utils';
 import Layout from '@/layout'
-import Org from '@/page/org'
-import Dashborad from '@/page/dashboard'
-import Role from '@/page/role'
-import custom from '@/page/custom'
+import Org from '@/views/org'
+import Dashborad from '@/views/dashboard'
+import Role from '@/views/role'
+import custom from '@/views/custom'
+import menu from '@/views/menu'
 import Notfound from '../layout/components/Notfound'
 import Forbidden from '../layout/components/Forbidden'
 Vue.use(Router)
 
 const routes = [
-  { path: '/login', name: 'login', component: () => import('../page/login') },
+  { path: '/login', name: 'login', component: () => import('../views/login') },
   {
     path: '/',
     name: 'Index',
@@ -34,7 +35,8 @@ const routes = [
         name: 'role',
         component: Role,
       },
-      { path: '/custom', name: 'custom', component: custom }
+      { path: '/custom', name: 'custom', component: custom },
+      { path: '/menu', name: 'menu', component: menu},
     ]
   },
   {

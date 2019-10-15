@@ -20,7 +20,6 @@
           <el-menu-item index="1-1" @click="linkTo('org')">组织机构</el-menu-item>
           <el-menu-item index="1-2" @click="linkTo('role')">角色管理</el-menu-item>
           <el-menu-item index="1-3" @click="linkTo('menu')">菜单管理</el-menu-item>
-          <el-menu-item index="1-4" @click="linkTo('role')">资源管理</el-menu-item>
           <el-menu-item index="1-5" @click="linkTo('user')">用户管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
