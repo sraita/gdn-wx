@@ -1,4 +1,4 @@
-const Mongo = require('mongoose');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 // Mongo.connect('mongodb://localhost:27017/class-demo', {
@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 //   useCreateIndex: true
 // });
 
-const UserSchema = new Mongo.Schema({
+const schema = new mongoose.Schema({
   username: {
     type: String,
     unique: true
@@ -21,15 +21,20 @@ const UserSchema = new Mongo.Schema({
   },
   avatar: {
     type: String
-  }
+  },
+  status: Number, // 0:禁用,1:启用
+  createAt: Date,
+  orgs: [{type: mongoose.Schema.Types.ObjectId, ref: 'org'}], // 所属机构或部门
+  rootOrg: { type: mongoose.Schema.Types.ObjectId, ref: 'org'}, // 顶级机构
+  roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
 });
 
 // 设置索引
-UserSchema.index({ username: 1 });
+schema.index({ username: 1 });
 /**
  * 实例方法，验证password，用于对api的调用进行认证
  */
-UserSchema.methods.validPassword = function (password) {
+schema.methods.validPassword = function (password) {
   return bcrypt.compareSync(
     password,
     this.password
@@ -37,13 +42,13 @@ UserSchema.methods.validPassword = function (password) {
 }
 
 // 添加 mongoose 实例方法
-UserSchema.methods.findByUsername = function (username) {
+schema.methods.findByUsername = function (username) {
   return this.model('user').find({ username: username });
 }
 
-UserSchema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
-UserSchema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
+schema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
+schema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
 
-const User = Mongo.model('user', UserSchema);
+const User = mongoose.model('user', schema);
 
 module.exports = { User };

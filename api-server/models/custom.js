@@ -7,7 +7,6 @@ const schema = new mongoose.Schema({
   tel: String,
   mobile: String, // 手机号
   email: String, // 邮箱
-  account: String, // 管理账号
   province: String,
   city: String,
   county: String, 
@@ -16,6 +15,8 @@ const schema = new mongoose.Schema({
     type: Date, // 创建时间
     default: new Date()
   },
+  onwer: {type: mongoose.Schema.Types.ObjectId, ref: 'user'}, // 租户所有权人
+  managers:[{type: mongoose.Schema.Types.ObjectId, ref:'user'}], // 租户管理者
   status: {
     type: Number, // 0 - 禁用, 1 - 启用
     default: 1

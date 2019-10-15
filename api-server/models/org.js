@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const OrgSchema = new mongoose.Schema({
-  // 组织机构代码
-  code: {
-    type: String,
-    required: true
-  }, 
   // 部门名称
   name: {
     type: String,
@@ -13,22 +8,13 @@ const OrgSchema = new mongoose.Schema({
   }, 
   // 上级部门
   parent: { type: mongoose.Types.ObjectId, ref: 'org', default: null },
-  children: [{ type: mongoose.Types.ObjectId, ref: 'org' }],
   type: {
     type: String,
     enum: ['compony','department','team'],
     default: 'department'
   },
-  status:{
-    type: String,
-    enum: ['enable', 'disable'],
-    default: 'enable'
-  },
-  // 创建者 或 所有者（通常是该组织的管理员）
-  userId: {
-    type:String, 
-    required: true
-  },
+  custom: {type: mongoose.Types.ObjectId, ref: 'custom'}, // 所属租户
+  status:Number, // 0: 禁用, 1:启用
   createAt: Date
 });
 
