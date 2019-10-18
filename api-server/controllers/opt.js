@@ -1,14 +1,11 @@
-var { Element } = require('../models/Element');
+var { Opt } = require('../models/Opt');
 
 const create = function (req, res, next) {
 
-  const element = new Element({
-    name: req.body.name,
-    sort: req.body.sort
-  });
+  const opt = new Opt(req.body);
 
-  element.menu = req.body.menu;
-  element.save(function(err,doc) {
+  opt.menu = req.body.menu;
+  opt.save(function (err, doc) {
     if (err) {
       res.json({
         status: 'error',
@@ -25,17 +22,17 @@ const create = function (req, res, next) {
 }
 
 const updateById = function (req, res, next) {
-  Element.findByIdAndUpdate(req.params._id,req.body, (err, result) => {
+  Opt.findByIdAndUpdate(req.params._id, req.body, (err, result) => {
     if (err) {
-      res.json({status: 'error', name: err.name, message: err.message})
+      res.json({ status: 'error', name: err.name, message: err.message })
     } else {
-      res.json({status: 'success', data: result});
+      res.json({ status: 'success', data: result });
     }
   });
 }
 
 const removeById = function (req, res, next) {
-  Element.findByIdAndRemove(req.params._id, (err, result) => {
+  Opt.findByIdAndRemove(req.params._id, (err, result) => {
     if (err) {
       res.json({ status: 'error', name: err.name, message: err.message })
     } else {
@@ -45,7 +42,7 @@ const removeById = function (req, res, next) {
 }
 
 const getListByMenuId = async function (req, res, next) {
-  const list = await Element.find({menu: req.params.menuId}).sort({sort: 1}).populate('menu');
+  const list = await Opt.find({ menu: req.params.menuId }).sort({ sort: 1 }).populate('menu');
   res.json({
     status: 'success',
     data: {

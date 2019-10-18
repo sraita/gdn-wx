@@ -50,16 +50,27 @@
 
         <div class="inline-title clearfix">
           <div>
-            <span>操作列表[0]</span>
-            <el-button size="mini" icon="el-icon-plus" @click="addOptDialogVisible=true">新增</el-button>
+            <span>操作列表[{{getOptsCount}}]</span>
+            <el-button size="mini" icon="el-icon-plus" @click="addOptItem">新增</el-button>
           </div>
         </div>
-        <el-table stripe size="mini">
-          <el-table-column label="姓名"></el-table-column>
-          <el-table-column label="职位"></el-table-column>
-          <el-table-column label="工号"></el-table-column>
-          <el-table-column label="手机号"></el-table-column>
-          <el-table-column label="邮箱"></el-table-column>
+        <el-table :data="optsListTable" stripe size="mini">
+          <el-table-column label="排序" prop="sort"></el-table-column>
+          <el-table-column label="名称" prop="name"></el-table-column>
+          <el-table-column label="API 名称" prop="apiName"></el-table-column>
+          <el-table-column label="API Path" prop="apiPath"></el-table-column>
+          <el-table-column label="状态" prop="status">
+            <template slot-scope="scope">
+              <el-tag type="danger" size="mini" v-if="scope.row.status === 0" >禁用</el-tag>
+              <el-tag type="success" size="mini" v-else >启用</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="editOptItem(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="removeOptItem(scope.row)" type="text" class="text-danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
         <div class="inline-title clearfix">
@@ -121,10 +132,12 @@
     </el-dialog>
 
     <!-- Dialog 新增操作 -->
-    <el-dialog title="新增操作权限" :visible.sync="addOptDialogVisible" width="320px">
+    <el-dialog 
+      :title="addOptForm.isEdit? '编辑操作权限':'新增操作权限'" 
+      :visible.sync="addOptDialogVisible" width="320px">
       <el-form
         :model="addOptForm"
-        ref="addForm"
+        ref="addOptForm"
         :rules="addFromRules"
         label-width="80px"
         size="small"
@@ -136,16 +149,23 @@
         <el-form-item label="排序:" prop="sort">
           <el-input v-model="addOptForm.sort" placeholder></el-input>
         </el-form-item>
-        <el-form-item label="API 名称:" prop="routerName">
-          <el-input v-model="addOptForm.routerName" placeholder></el-input>
+        <el-form-item label="Method:" prop="method">
+          <el-radio-group v-model="addOptForm.method">
+            <el-radio label="post">POST</el-radio>
+            <el-radio label="get">GET</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="API 路径:" prop="routerPath">
-          <el-input v-model="addOptForm.routerName" placeholder></el-input>
+        <el-form-item label="API 名称:" prop="apiName">
+          <el-input v-model="addOptForm.apiName" placeholder></el-input>
+        </el-form-item>
+        <el-form-item label="API 路径:" prop="apiPath">
+          <el-input v-model="addOptForm.apiPath" placeholder></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button size="mini" @click="addOptDialogVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="submitAddOptForm('addOptForm')">提 交</el-button>
+         <el-button v-if="addOptForm.isEdit" size="mini" type="primary" @click="submitEditOptForm('addOptForm')">保 存</el-button>  
+        <el-button v-else size="mini" type="primary" @click="submitAddOptForm('addOptForm')">提 交</el-button>
       </span>
     </el-dialog>
 
@@ -213,12 +233,14 @@ export default {
         label: "label"
       },
       selectedNode: {},
-      elementListTable: []
+      elementListTable: [],
+      optsListTable: []
     };
   },
   methods: {
     checkOrgNode(node) {
       this.selectedNode = node.data;
+      this.fetchOptsByMenuId(this.selectedNode._id);
       this.fetchElementsByMenuId(this.selectedNode._id);
     },
     addMenu() {
@@ -285,6 +307,27 @@ export default {
         })
       });
     },
+    // 新增操作
+    addOptItem () {
+      this.addOptForm = {
+        menu: this.selectedNode._id
+      };
+      this.addOptDialogVisible = true;
+    },
+    editOptItem(row) {
+      this.addOptForm = row;
+      this.addOptForm.isEdit = true;
+      this.addOptDialogVisible = true;
+    },
+    removeOptItem(row) {
+      this.$confirm(`是否「${row.name}」?`).then(()=>{
+        this.$api.opt.remove(row._id).then(res => {
+          console.log(res);
+          this.fetchOptsByMenuId(this.selectedNode._id);
+          this.$message({type: 'success', message: "删除成功"})
+        })
+      });
+    },
     fetchMenuList() {
       this.$api.menu.list().then(res => {
         let list = res.data.list;
@@ -309,6 +352,12 @@ export default {
         this.elementListTable = res.data.list;
       })
     },
+    fetchOptsByMenuId(menuId) {
+      this.$api.opt.getListByMenuId(menuId).then(res => {
+        console.log(res);
+        this.optsListTable = res.data.list;
+      })
+    },
     submitAddForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -321,7 +370,40 @@ export default {
         }
       });
     },
-    submitAddOptForm(formName) {},
+    submitAddOptForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.opt.create(this.addOptForm).then(res => {
+            this.addOptDialogVisible = false;
+            this.fetchOptsByMenuId(this.selectedNode._id);
+            this.$message({
+              type: 'success',
+              message: '添加成功'
+            });
+          })
+        } else {
+          return false;
+        }
+      })
+    },
+
+    submitEditOptForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.opt.update(this.addOptForm._id, this.addOptForm).then(res => {
+            console.log(res);
+            this.addOptDialogVisible = false;
+            this.fetchOptsByMenuId(this.selectedNode._id);
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            });
+          });
+        } else {
+          return false;
+        }
+      })
+    },
     submitAddElementForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -357,6 +439,9 @@ export default {
     }
   },
   computed: {
+    getOptsCount() {
+      return this.optsListTable.length;
+    },
     getElementsCount() {
       return this.elementListTable.length;
     }
