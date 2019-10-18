@@ -12,12 +12,19 @@ const getList = async function (req, res, next) {
   })
 };
 
-const create = async function (req, res, next) {
+const create = function (req, res, next) {
   console.log(req.body);
-  const menu = await Menu.create(req.body);
-  res.json({
-    status: 'success',
-    data: menu
+  Menu.create(req.body).then(menu => {
+    res.json({
+      status: 'success',
+      data: menu
+    });
+  }).catch(reason => {
+    console.log(reason);
+    res.json({
+      status: 'error',
+      message: reason
+    })
   });
 }
 

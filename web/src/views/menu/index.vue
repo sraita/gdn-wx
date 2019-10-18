@@ -64,16 +64,25 @@
 
         <div class="inline-title clearfix">
           <div>
-            <span>页面元素[0]</span>
-            <el-button size="mini" icon="el-icon-plus" @click="addElementDialogVisible=true">新增</el-button>
+            <span>页面元素[{{getElementsCount}}]</span>
+            <el-button size="mini" icon="el-icon-plus" @click="addElement">新增</el-button>
           </div>
         </div>
-        <el-table stripe size="mini">
-          <el-table-column label="姓名"></el-table-column>
-          <el-table-column label="职位"></el-table-column>
-          <el-table-column label="工号"></el-table-column>
-          <el-table-column label="手机号"></el-table-column>
-          <el-table-column label="邮箱"></el-table-column>
+        <el-table :data="elementListTable" stripe size="mini">
+          <el-table-column label="排序" prop="sort"></el-table-column>
+          <el-table-column label="名称" prop="name"></el-table-column>
+          <el-table-column label="状态" prop="status">
+            <template slot-scope="scope">
+              <el-tag type="danger" size="mini" v-if="scope.row.status === 0" >禁用</el-tag>
+              <el-tag type="success" size="mini" v-else >启用</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="editElement(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button @click="removeElement(scope.row)" type="text" class="text-danger" size="small">删除</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </el-card>
@@ -141,10 +150,12 @@
     </el-dialog>
 
     <!-- Dialog 新增页面元素 -->
-    <el-dialog title="新增页面元素" :visible.sync="addElementDialogVisible" width="320px">
+    <el-dialog 
+      :title="addElementForm.isEdit? '编辑页面元素':'新增页面元素'" 
+      :visible.sync="addElementDialogVisible" width="320px">
       <el-form
         :model="addElementForm"
-        ref="addForm"
+        ref="addElementForm"
         :rules="addFromRules"
         label-width="64px"
         size="small"
@@ -154,12 +165,13 @@
           <el-input v-model="addElementForm.name"></el-input>
         </el-form-item>
         <el-form-item label="排序:" prop="sort">
-          <el-input v-model="addOptForm.sort" placeholder></el-input>
+          <el-input v-model="addElementForm.sort" placeholder></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button size="mini" @click="addElementDialogVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="submitAddElementForm('addOptForm')">提 交</el-button>
+        <el-button v-if="addElementForm.isEdit" size="mini" type="primary" @click="submitEditElementForm('addElementForm')">保 存</el-button>  
+        <el-button v-else size="mini" type="primary" @click="submitAddElementForm('addElementForm')">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -200,12 +212,14 @@ export default {
         children: "children",
         label: "label"
       },
-      selectedNode: {}
+      selectedNode: {},
+      elementListTable: []
     };
   },
   methods: {
     checkOrgNode(node) {
       this.selectedNode = node.data;
+      this.fetchElementsByMenuId(this.selectedNode._id);
     },
     addMenu() {
       this.addForm = {};
@@ -244,6 +258,33 @@ export default {
         })
       });
     },
+    // 添加页面元素
+    addElement() {
+      this.addElementForm = {
+        menu: this.selectedNode._id
+      };
+      this.addElementDialogVisible = true;
+    },
+    // 编辑页面元素
+    editElement(row) {
+      this.addElementForm = {
+        isEdit: true,
+        _id: row._id,
+        name: row.name,
+        sort: row.sort
+      };
+      this.addElementDialogVisible = true;
+    },
+    // 删除页面元素
+    removeElement(row) {
+      this.$confirm(`是否删除元素「${row.name}」?`).then(()=>{
+        this.$api.element.remove(row._id).then(res => {
+          console.log(res);
+          this.fetchElementsByMenuId(this.selectedNode._id);
+          this.$message({type: 'success', message: "删除成功"})
+        })
+      });
+    },
     fetchMenuList() {
       this.$api.menu.list().then(res => {
         let list = res.data.list;
@@ -262,6 +303,12 @@ export default {
         console.log(treeList);
       });
     },
+    fetchElementsByMenuId(menuId) {
+      this.$api.element.getListByMenuId(menuId).then(res => {
+        console.log(res);
+        this.elementListTable = res.data.list;
+      })
+    },
     submitAddForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -275,7 +322,44 @@ export default {
       });
     },
     submitAddOptForm(formName) {},
-    submitAddElementForm(formName) {}
+    submitAddElementForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.element.create(this.addElementForm).then(res => {
+            this.addElementDialogVisible = false;
+            this.fetchElementsByMenuId(this.selectedNode._id);
+            this.$message({
+              type: 'success',
+              message: '添加成功'
+            });
+          })
+        } else {
+          return false;
+        }
+      })
+    },
+    submitEditElementForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.element.update(this.addElementForm._id, this.addElementForm).then(res => {
+            console.log(res);
+            this.addElementDialogVisible = false;
+            this.fetchElementsByMenuId(this.selectedNode._id);
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            });
+          });
+        } else {
+          return false;
+        }
+      })
+    }
+  },
+  computed: {
+    getElementsCount() {
+      return this.elementListTable.length;
+    }
   },
   mounted() {
     this.fetchMenuList();

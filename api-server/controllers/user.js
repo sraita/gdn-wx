@@ -24,7 +24,7 @@ const getUserById = async function (req, res) {
   console.log(req.params)
   const data = await User.findById(req.params._id);
   res.json({
-    message: 'ok',
+    status: 'success',
     data:data
   });
 }
@@ -51,7 +51,7 @@ const getUserList = async function (req, res) {
   const total = await User.countDocuments();
   const list = await User.find({}).limit(limit).skip(skip);
   res.json({
-    message: 'ok',
+    status: 'success',
     data:{
       total: total,
       list: list

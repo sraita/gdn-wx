@@ -66,7 +66,7 @@ const doLogin = async function (req, res) {
     id: String(user._id)
   }, SECRET);
   res.json({
-    status: 'ok',
+    status: 'success',
     data:{
       userId: user._id,
       token,

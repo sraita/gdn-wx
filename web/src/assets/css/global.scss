@@ -28,3 +28,81 @@
     color: #98a6ad; margin: 15px 0;
   }
 }
+
+// 字体颜色定义
+
+.text-white {
+    color: #fff!important
+}
+
+.text-primary {
+    color: #727cf5!important
+}
+
+a.text-primary:focus,a.text-primary:hover {
+    color: #2b3af0!important
+}
+
+.text-secondary {
+    color: #6c757d!important
+}
+
+a.text-secondary:focus,a.text-secondary:hover {
+    color: #494f54!important
+}
+
+.text-success {
+    color: #0acf97!important
+}
+
+a.text-success:focus,a.text-success:hover {
+    color: #068662!important
+}
+
+.text-info {
+    color: #39afd1!important
+}
+
+a.text-info:focus,a.text-info:hover {
+    color: #247f9a!important
+}
+
+.text-warning {
+    color: #ffbc00!important
+}
+
+a.text-warning:focus,a.text-warning:hover {
+    color: #b38400!important
+}
+
+.text-danger {
+    color: #fa5c7c!important
+}
+
+a.text-danger:focus,a.text-danger:hover {
+    color: #f81240!important
+}
+
+.text-light {
+    color: #e3eaef!important
+}
+
+a.text-light:focus,a.text-light:hover {
+    color: #b2c5d3!important
+}
+
+.text-dark {
+    color: #313a46!important
+}
+
+a.text-dark:focus,a.text-dark:hover {
+    color: #121519!important
+}
+
+.text-body {
+    color: #6c757d!important
+}
+
+.text-muted {
+    color: #98a6ad!important
+}

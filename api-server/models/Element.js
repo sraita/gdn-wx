@@ -5,9 +5,12 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: Number,
+  status: {
+    type:Number,
+    default: 1 // 1 - 启用, 0 - 禁用
+  },
   sort: Number,
-  menu: { type: mongoose.Schema.Types.ObjectId, ref: 'menu' }
+  menu: { type: mongoose.Schema.Types.ObjectId, ref: 'menu',required:true }
 });
 
 // 设置索引
