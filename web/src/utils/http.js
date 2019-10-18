@@ -3,9 +3,11 @@
  */
 import axios from 'axios'; import QS from 'qs';
 import { Message } from 'element-ui';
+
 import store from '../store/index'
 import router from '../router';
 import utils from './utils';
+
 
 // 创建一个axios实例
 const instance = axios.create({
@@ -58,7 +60,16 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   response => {
-    return response;
+    if (response.data.status === 'success') {
+      return Promise.resolve(response);
+    } else {
+      Message({
+        type: 'error',
+        message: response.data.message,
+        duration: 1000
+      })
+      return Promise.reject(response);
+    }
   },
   // 服务器状态码不是200的情况    
   error => {
@@ -128,7 +139,7 @@ instance.interceptors.response.use(
           });
       }
     }
-    return Promise.reject(error.response);
+    return Promise.reject(error.response.data);
   }
 );
 /** 

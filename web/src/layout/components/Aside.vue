@@ -5,7 +5,7 @@
       background-color="#fff"
       text-color="#6c757d"
       active-text-color="#727cf5"
-      :collapse="this.$store.state.app.isSidebarOpen" 
+      :collapse="!this.$store.state.app.isSidebarOpen" 
     >
       <el-menu-item index="1" @click="linkTo('dashboard')">
         <i class="el-icon-menu"></i>
@@ -30,7 +30,11 @@
       <!-- 第三方公司客户 -->
       <el-menu-item index="3" @click="linkTo('custom')">
         <i class="el-icon-document"></i>
-        <span slot="title">客户管理</span>
+        <span slot="title">租户(客户)管理</span>
+      </el-menu-item>
+      <el-menu-item index="3" @click="linkTo('custom')">
+        <i class="el-icon-document"></i>
+        <span slot="title">租户类型维护</span>
       </el-menu-item>
     </el-menu>
   </div>

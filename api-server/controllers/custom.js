@@ -1,16 +1,42 @@
 const { User } = require('../models/user');
+const { Org } = require('../models/org');
 const { Custom } = require('../models/custom');
 
 const create = async function (req, res, next) {
   try {
-    // 1. 创建对应客户管理员
     const isExist = await Custom.findOne({name:req.body.name});
     if (isExist) {
       return res.status(422).send({
         message: '客户已存在，不能重复添加'
       });
     }
-    let custom = Custom.create(req.body);
+    const accountIsExist = await User.findOne({username: req.body.account});
+    if (accountIsExist) {
+      return res.status(422).json({
+        status: 'error',
+        message: '账号已被使用'
+      });
+    }
+    // 1. 创建对应客户管理员
+    let owner = User.create({
+      username: req.body.account,
+      password: req.body.password
+    });
+    let custom = new Custom({
+      name: req.body.name,
+      owner: owner
+    });
+    custom.save();
+    // 2. 建立对应的组织机构
+    let org = new Org({
+      name: custom.name,
+      parent: null,
+      type: 'company',
+      status: 1,
+      custom: custom
+    });
+    org.save();
+    console.log(org);
     return getList(req, res, next);
   } catch (e) {
     console.log(e)

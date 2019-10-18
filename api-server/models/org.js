@@ -10,7 +10,7 @@ const OrgSchema = new mongoose.Schema({
   parent: { type: mongoose.Types.ObjectId, ref: 'org', default: null },
   type: {
     type: String,
-    enum: ['compony','department','team'],
+    enum: ['company','department','team'],
     default: 'department'
   },
   custom: {type: mongoose.Types.ObjectId, ref: 'custom'}, // 所属租户

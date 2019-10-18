@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import NProgress from 'nprogress'
 import { Message } from 'element-ui';
 import utils from '../utils/utils';
 import Layout from '@/layout'
@@ -11,6 +11,7 @@ import custom from '@/views/custom'
 import menu from '@/views/menu'
 import Notfound from '../layout/components/Notfound'
 import Forbidden from '../layout/components/Forbidden'
+import 'nprogress/nprogress.css'
 Vue.use(Router)
 
 const routes = [
@@ -66,6 +67,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  NProgress.start();
   const store = router.app.$options.store;
   const loginToken = utils.getLoginToken();
 
@@ -89,6 +91,10 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+});
+
+router.afterEach(transition => {
+  NProgress.done();
 })
 
 export default router;

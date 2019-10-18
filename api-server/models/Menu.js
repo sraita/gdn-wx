@@ -4,12 +4,12 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  parent: {type: mongoose.Schema.Types.ObjectId, ref: 'menu'}, // 上级菜单
+  parent: {type: mongoose.Schema.Types.ObjectId, ref: 'menu', default: null}, // 上级菜单
   status: Number,
   sort: Number,
   icon: {
     type: String,
-    default: 'iconfont icon-list'
+    default: 'icon-file-document-box'
   },
   routerName: String,
   routerPath: String,
