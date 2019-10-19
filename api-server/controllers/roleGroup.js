@@ -16,6 +16,25 @@ const create = function (req, res, next) {
   });
 }
 
+const updateById = function (req, res, next) {
+  RoleGroup.findByIdAndUpdate(req.params._id, req.body, (err, result) => {
+    if (err) {
+      res.json({ status: 'error', name: err.name, message: err.message })
+    } else {
+      res.json({ status: 'success', data: result });
+    }
+  });
+}
+
+const removeById = async function (req, res, next) {
+  const role_group = await RoleGroup.findById(req.params._id);
+  if (role_group.roles && role_group.roles.length > 0) {
+    return res.json({status:'error', message: '只能删除空的角色组'})
+  }
+  const result = await RoleGroup.findByIdAndRemove(req.params._id);
+  return res.json({ status: 'success', data: result });
+}
+
 const getList = async function (req, res, next) {
   const list = await RoleGroup.find();
   res.json({
@@ -123,7 +142,7 @@ const updateRoleGroupAuth = function (req, res, next) {
   console.log('=====')
   console.log(req.body.menus)
   RoleGroup.update({_id:req.params._id}, {
-    $addToSet: {
+    $set: {
       'menus': req.body.menus,
       'elements': req.body.elements,
       'opts': req.body.opts
@@ -139,6 +158,8 @@ const updateRoleGroupAuth = function (req, res, next) {
 
 module.exports = {
   create,
+  updateById,
+  removeById,
   getById,
   getList,
   getRoleTree,

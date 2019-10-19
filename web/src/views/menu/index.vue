@@ -127,7 +127,9 @@
 
       <span slot="footer">
         <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="submitAddForm('addForm')">提 交</el-button>
+        <el-button v-if="addForm.isEdit" size="small" type="primary" @click="submitEditForm('addForm')">保存</el-button>
+        <el-button v-else size="small" type="primary" @click="submitAddForm('addForm')">提 交</el-button>
+        
       </span>
     </el-dialog>
 
@@ -209,7 +211,6 @@ var getJsonTree = function(data, parentId) {
           label: node.name,
           data: node            
         };
-        data.splice(i,1);
         newNode.children = getJsonTree(data, node._id);
         itemArr.push(newNode);
       }
@@ -254,21 +255,8 @@ export default {
       this.addDialogVisible = true;
     },
     editMenu() {
-      const {
-        name,
-        icon,
-        sort,
-        routerName,
-        routerPath
-      } = this.selectedNode;
-      this.addForm = {
-        isEdit: true,
-        name,
-        icon,
-        sort,
-        routerName,
-        routerPath
-      }
+      this.addForm = this.selectedNode;
+      this.addForm.isEdit = true;
       this.addDialogVisible = true;
     },  
     deleteMenu() {
@@ -364,6 +352,23 @@ export default {
           this.$api.menu.create(this.addForm).then(res => {
             console.log(res);
             this.addDialogVisible = false;
+          });
+        } else {
+          return false;
+        }
+      });
+    },
+    submitEditForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.menu.update(this.addForm._id,this.addForm).then(res => {
+            console.log(res);
+            this.addDialogVisible = false;
+            this.fetchMenuList();
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            });
           });
         } else {
           return false;

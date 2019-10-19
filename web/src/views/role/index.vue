@@ -4,7 +4,7 @@
 -->
 
 <template>
-  <div class="page page-org">
+  <div class="page page-role">
     <el-card
       :body-style="{ padding: '0px' ,display: 'flex',height:'100%'}"
       shadow="never"
@@ -88,15 +88,14 @@
                   node-key="_id"
                   :expand-on-click-node="false"
                   :data="menuTreeList"
+                  :check-strictly="true"
                   :default-checked-keys="checkedMenus"
                   @node-click="menuTreeNodeClick"
-                  @check-change="menuTreeCheckChange('menuTree')"
+                  @check="menuTreeCheckHandle"
                 >
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span>
-                      <i
-                        :class="[data.type === 'role-group' ? 'iconfont icon-folder-account' : 'iconfont icon-account-key']"
-                      ></i>
+                      <i class="el-icon-folder"></i>
                       {{ node.label }}
                     </span>
                   </span>
@@ -116,7 +115,7 @@
           </el-row>
           <div class="mt-2 text-right">
             <el-button plain type="danger" size="small">重置</el-button>
-            <el-button plain type="primary" size="small" @click="updateRoleGroupAuth">更新</el-button>
+            <el-button plain type="primary" size="small" @click="updateRoleOrGroupAuth">更新</el-button>
           </div>
         </el-card>
       </div>
@@ -190,15 +189,9 @@ var getJsonTree = function(data, parentId) {
     for (var i = 0; i < data.length; i++) {
       var node = data[i];
       if (node.parent == parentId) {
-
-        var newNode = {
-          _id:node._id,
-          label: node.name,
-          data: node            
-        };
-        data.splice(i,1);
-        newNode.children = getJsonTree(data, node._id);
-        itemArr.push(newNode);
+        node.label = node.name;
+        node.children = getJsonTree(data, node._id);
+        itemArr.push(node);
       }
     }
     return itemArr;
@@ -231,7 +224,7 @@ export default {
     },
     roleTreeNodeClick(data) {
       this.selectdRoleTreeNode = data;
-      this.$api.roleGroup.getRoleGroupMenus(data._id).then(res => {
+      let cb1 = (res) => {
         let list = res.data.list;
         let menuTreeList = list
           .filter(item => {
@@ -243,32 +236,44 @@ export default {
             return item;
           });
         this.menuTreeList = menuTreeList;
-      });
-      this.$api.roleGroup.getById(data._id).then(res => {
+      };
+
+      let cb2 = (res) => {
         let {menus = [], elements = [], opts = []} = res.data;
         this.checkedMenus = menus.map(menu => menu._id);
         this.checkedElements = elements.map(element => element._id);
         this.checkedOpts = opts.map(opt => opt._id);
-        
-      })
+      }
+      if (data.type == 'role-group') {
+        this.$api.roleGroup.getRoleGroupMenus(data._id).then(cb1);
+        this.$api.roleGroup.getById(data._id).then(cb2)
+      } else {
+        this.$api.role.getRoleMenus(data._id).then(cb1);
+        this.$api.role.getById(data._id).then(cb2);
+      }
     },
-    menuTreeNodeClick(node) {
-      console.log(node.data)
-      this.selectdMenuTreeNode = node.data;
-      this.$api.roleGroup.getRoleGroupElementsByMenuId(this.selectdRoleTreeNode._id,this.selectdMenuTreeNode._id).then(res => {
-        this.elementsList = res.data.list;
-      });
-      this.$api.roleGroup.getRoleGroupOptsByMenuId(this.selectdRoleTreeNode._id,this.selectdMenuTreeNode._id).then(res => {
-        this.optsList = res.data.list;
-      });
+    menuTreeNodeClick(data) {
+      this.selectdMenuTreeNode = data;
+      let _id = this.selectdRoleTreeNode._id;
+      let menuId = data._id;
+      if (this.selectdRoleTreeNode.type == 'role-group') {
+        this.$api.roleGroup.getRoleGroupElementsByMenuId(_id,menuId).then(res => {
+          this.elementsList = res.data.list;
+        });
+        this.$api.roleGroup.getRoleGroupOptsByMenuId(_id,menuId).then(res => {
+          this.optsList = res.data.list;
+        });
+      } else {
+        this.$api.role.getRoleElementsByMenuId(_id,menuId).then(res => {
+          this.elementsList = res.data.list;
+        });
+        this.$api.role.getRoleOptsByMenuId(_id,menuId).then(res => {
+          this.optsList = res.data.list;
+        });
+      }
     },
-    menuTreeCheckChange(treeName){
-      let res = this.$refs[treeName].getCheckedNodes()
-      let arr = []
-      res.forEach((item) => {
-        arr.push(item._id)
-      });
-      this.checkedMenus = arr;
+    menuTreeCheckHandle(node, {checkedKeys}){
+      this.checkedMenus = checkedKeys;
     },
     tabClickHandle() {},
     fetchRoleGroupsTree() {
@@ -312,13 +317,25 @@ export default {
     // 删除角色或角色组
     removeRoleOrGroup() {
       const data = this.selectdRoleTreeNode;
+      const callback = (res) => {
+        this.selectdRoleTreeNode = null;
+        this.fetchRoleGroupsTree();
+        let message = '角色已删除';
+        if (data.type == 'role-group') {
+          message = '角色组已删除'
+        }
+        this.$message({
+          type: 'success',
+          message: message
+        });
+      }
       if (data.type == 'role-group') {
         this.$confirm(`是否删除角色组「${data.label}」?`).then(()=> {
-
+          this.$api.roleGroup.remove(data._id).then(callback)
         });
       } else {
         this.$confirm(`是否删除角色「${data.label}」?`).then(()=> {
-
+          this.$api.role.remove(data._id).then(callback)
         });
       }
     },
@@ -360,17 +377,26 @@ export default {
         }
       });
     },
-    // 更新角色组权限
-    updateRoleGroupAuth() {
+    // 更新角色组或角色权限
+    updateRoleOrGroupAuth() {
       let params = {
         menus: this.checkedMenus,
         elements: this.checkedElements,
         opts: this.checkedOpts
       };
-      this.$api.roleGroup.updateRoleGroupAuth(this.selectdRoleTreeNode._id,JSON.stringify(params)).then(res => {
-        console.log(res);
-      })
-    }
+      const callback = (res) => {
+        this.$message({
+          type: 'success',
+          message: '权限已更新'
+        })
+      }
+      console.log(params);
+      if (this.selectdRoleTreeNode.type === 'role-group') {
+        this.$api.roleGroup.updateRoleGroupAuth(this.selectdRoleTreeNode._id,JSON.stringify(params)).then(callback);
+      } else {
+        this.$api.role.updateRoleAuth(this.selectdRoleTreeNode._id,JSON.stringify(params)).then(callback);
+      }
+    },
   },
   mounted() {
     this.fetchRoleGroupsTree();
@@ -380,7 +406,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-org {
+.page-role {
   height: 100%;
   .left {
     width: 300px;

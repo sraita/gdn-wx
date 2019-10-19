@@ -28,6 +28,15 @@ const create = function (req, res, next) {
   });
 }
 
+const updateById = function (req, res, next) {
+  Menu.findByIdAndUpdate(req.params._id, req.body, (err, data) => {
+    if (err) {
+      return res.json({ status: 'error', message: err.message });
+    }
+    return res.json({ status: 'success', data: data });
+  })
+}
+
 const remove = function (req, res, next) {
   Menu.findByIdAndRemove(req.params._id, (err, data) => {
     if (err) {
@@ -40,5 +49,6 @@ const remove = function (req, res, next) {
 module.exports = {
   getList,
   create,
+  updateById,
   remove
 }
