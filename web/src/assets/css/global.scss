@@ -28,6 +28,25 @@
     color: #98a6ad; margin: 15px 0;
   }
 }
+// 内边距 、外边距
+@for $i from 0 through 6 {
+    .m-#{$i}  {margin: (5px * $i) !important;}
+    .mt-#{$i} {margin-top: (5px * $i) !important;}
+    .mr-#{$i} {margin-right: (5px * $i) !important;}
+    .mb-#{$i} {margin-bottom: (5px * $i) !important;}
+    .ml-#{$i} {margin-left: (5px * $i) !important;}
+
+    .p-#{$i}  {padding: (5px * $i) !important;}
+    .pt-#{$i} {padding-top: (5px * $i) !important;}
+    .pr-#{$i} {padding-right: (5px * $i) !important;}
+    .pb-#{$i} {padding-bottom: (5px * $i) !important;}
+    .pl-#{$i} {padding-left: (5px * $i) !important;}
+}
+
+// 文本对齐方式
+.text-left {text-align: left !important;}
+.text-center {text-align: center !important;}
+.text-right {text-align: right !important;}
 
 // 字体颜色定义
 

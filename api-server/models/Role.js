@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
     required: true,
   },
   status: Number,
-  roleGroup: { type: mongoose.Schema.Types.ObjectId, ref: 'roleGroup' }, // 所属用户组
+  group: { type: mongoose.Schema.Types.ObjectId, ref: 'roleGroup' }, // 所属用户组
   org: { type: mongoose.Schema.Types.ObjectId, ref: 'org' }, // 所属机构或部门
   rootOrg: { type: mongoose.Schema.Types.ObjectId, ref: 'org' }, // 顶级机构
   menus: [{ type: mongoose.Schema.Types.ObjectId, ref: 'menu' }], // 功能权限
@@ -14,6 +14,16 @@ const schema = new mongoose.Schema({
   remark: {
     type:String,
     default: '<无>'
+  },
+  // 是否为单一角色， 如果 为 true， 不能与其它角色共存
+  isSingle: {
+    type: Boolean,
+    default: false
+  },
+  // 是否可编辑
+  canEdit: {
+    type: Boolean,
+    default: true,
   }
 });
 

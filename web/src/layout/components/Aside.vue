@@ -32,10 +32,6 @@
         <i class="el-icon-document"></i>
         <span slot="title">租户(客户)管理</span>
       </el-menu-item>
-      <el-menu-item index="3" @click="linkTo('custom')">
-        <i class="el-icon-document"></i>
-        <span slot="title">租户类型维护</span>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>

@@ -5,14 +5,18 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  status: Number,
+  status: {
+    type:Number,
+    default: 1,
+  },
   type: {
     type: String,
     enum: ['public', 'private'],
     default: 'private'
   },
-  parent: {type: mongoose.Schema.Types.ObjectId, ref:'roleGroup'},
+  remark: String, // 备注说明
   org: {type: mongoose.Schema.Types.ObjectId, ref: 'org'},
+  roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'role'}],
   menus: [{type: mongoose.Schema.Types.ObjectId, ref: 'menu'}],
   opts: [{type: mongoose.Schema.Types.ObjectId, ref:'opt'}]
 });

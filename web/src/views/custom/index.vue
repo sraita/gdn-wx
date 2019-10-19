@@ -72,7 +72,7 @@
           <el-form-item label="客户名称：" prop="name">
             <el-input v-model="addForm.name" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="客户类型:" prop="orgRoleGroup">
+          <el-form-item label="用户组:" prop="orgRoleGroup">
             <el-select v-model="addForm.orgRoleGroup" placeholder="">
               <el-option v-for="role in orgRoleGroups"
                 :key="role.value"

@@ -24,7 +24,8 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 // post请求头
-instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+// instance.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+instance.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 // 发送 Session
 instance.defaults.withCredentials = true;
@@ -167,7 +168,7 @@ export function get(url, params) {
  */
 export function post(url, params) {
   return new Promise((resolve, reject) => {
-    instance.post(url, QS.stringify(params))
+    instance.post(url, params)
       .then(res => {
         resolve(res.data);
       })

@@ -13,6 +13,8 @@ const schema = new mongoose.Schema({
   },
   routerName: String,
   routerPath: String,
+  elements: [{ type: mongoose.Schema.Types.ObjectId, ref: 'element'}],
+  opts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'opt'}],
 });
 
 // 设置索引
