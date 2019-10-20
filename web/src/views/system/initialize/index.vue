@@ -21,7 +21,7 @@
             alt="user-image"
             class="rounded-circle shadow"
           />
-          <h4 class="text-dark-50 text-center mt-3 font-weight-bold">Hi ! Michael</h4>
+          <h4 class="text-dark-50 text-center mt-3 font-weight-bold">系统初始化</h4>
           <p class="text-muted mb-4">Enter your password to access the admin.</p>
         </div>
 

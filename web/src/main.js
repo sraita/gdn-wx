@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import mixin from './mixin'
 import VueCookies from 'vue-cookies'
 
 
@@ -16,6 +17,8 @@ import { post, get } from './utils/http'
 import api from './api'
 
 Vue.config.productionTip = false
+
+Vue.mixin(mixin);
 
 Vue.use(ElementUI);
 Vue.use(VueCookies)

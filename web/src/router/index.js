@@ -48,7 +48,7 @@ const routes = [
       {
         path: '/system', name: 'system', component: () => import('../views/system'),
         children: [
-          { path: 'initialize', name: 'systemInitialize', component: () => import('../views/system/initialize')}
+          
         ]
       }
     ]
@@ -69,6 +69,7 @@ const routes = [
       title: '页面不存在'
     }
   },
+  { path: '/initialize', name: 'systemInitialize', component: () => import('../views/system/initialize') },
   {
     path: '*',
     redirect: '/404'
