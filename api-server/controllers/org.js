@@ -1,5 +1,6 @@
 const { Org } = require('../models/org');
 const { RoleGroup } = require('../models/RoleGroup');
+const { Role } = require('../models/Role');
 const { construct, destruct } = require('@aximario/json-tree');
 
 const getList = async function (req, res, next) {
@@ -84,23 +85,56 @@ const removeById = async function (req, res, next) {
 const createRoleGroup = async function (req, res, next) {
   let role_group = new RoleGroup(req.body);
   role_group.org = req.params._id;
-  role_group.type = 'private';
-
+  role_group.type = ['private'];
+  
+  role_group.save();
   res.json({
-    type: 'success',
+    status: 'success',
     data: role_group
   });
 }
 
-// 获取机构可授权的菜单列表
-const getMenuList = async function (req, res, next) {
-  let org = await Org.findById(req.params._id);
+const getRoleGroups = async function (req, res , next) {
+  let list = await RoleGroup.find({org: req.params._id}).populate('roles');
+  res.json({
+    status: 'success',
+    data: {
+      list,
+    }
+  });
+};
 
-  let menus = RoleGroup.findById(org.defaultRoleGroup).populate('menus');
+// 新增角色(机构)
+const createRole = async function (req, res, next) {
+  let role = new Role(req.body);
+  role.org = req.params._id;
+  
+  let role_group = await RoleGroup.findById(req.body.group);
+  role_group.roles.push(role);
+  role.save();
+  role_group.save();
+  res.json({
+    status: 'success',
+    data: role
+  });
+}
+// 获取机构下所有的角色列表
+const getRoles = async function (req, res, next) {
+  let list = await Role.find({org: req.params._id});
+  res.json({
+    status: 'success',
+    data: {
+      list
+    }
+  })
+}
+// 获取机构角色组可授权的菜单列表
+const getRoleGroupMenuList = async function (req, res, next) {
+  let defaultRoleGroup = await RoleGroup.findOne({ org: req.params._id, type: { $in: ['default'] } }).populate('menus');
   res.json({
     status: 'success',
     data:{
-      list: menus
+      list: defaultRoleGroup.menus
     }
   });
 };
@@ -114,6 +148,7 @@ const getOptsByMenuId = async function (req, res, next) {
   
 }
 
+
 module.exports = {
   getList,
   getTree,
@@ -124,6 +159,9 @@ module.exports = {
 
   // 角色组管理
   createRoleGroup,
+  getRoleGroups,
   // 角色管理
-  getMenuList,
+  createRole,
+  getRoles,
+  getRoleGroupMenuList, // 获取角色组可授权的菜单列表
 }

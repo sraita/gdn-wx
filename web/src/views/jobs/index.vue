@@ -173,8 +173,8 @@
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" :rows="2" v-model="addRoleForm.remark" placeholder></el-input>
         </el-form-item>
-        <el-form-item label="" prop="type">
-          <el-checkbox label="是否为独立角色" name="type" checked></el-checkbox>
+        <el-form-item label="" prop="isSingle">
+          <el-checkbox label="是否为独立角色" name="type" v-model="addRoleForm.isSingle"  checked></el-checkbox>
         </el-form-item>
       </el-form>
 
@@ -187,41 +187,125 @@
 </template>
 
 <script>
+var getJsonTree = function(data, parentId) {
+    var itemArr = [];
+    for (var i = 0; i < data.length; i++) {
+      var node = data[i];
+      if (node.parent == parentId) {
+        node.label = node.name;
+        node.children = getJsonTree(data, node._id);
+        itemArr.push(node);
+      }
+    }
+    return itemArr;
+};
 export default {
   data() {
     return {
+      orgId: this.$store.state.user.orgId,
       addRoleForm:{},
       addRoleVisible: false,
       addRoleGroupForm:{},
       addRoleGroupVisible: false,
 
       roleGroupList: [],
-      roleList: [
-        {_id: '1',name:'超级管理员'},
-        {_id: '2', name: '财务'}
-      ],
-      treeList:[
-        {label: '默认',type:'role-group',children:[{label: '主管理员'}]}
-      ],
-      selectdRoleTreeNode:[]
+      roleList: [],
+      treeList: [],
+      menuTreeList: [],
+      selectdRoleTreeNode: {},
+      selectdMenuTreeNode: {},
+
+      checkedMenus:[],
+      checkedElements:[],
+      checkedOpts:[],
+      elementsList:[],
+      optsList:[]
     };
   },
   methods: {
-    checkOrgNode(data) {
+    roleTreeNodeClick(data) {
       console.log(data);
+      let cb1 = (res) => {
+        let list = res.data.list;
+        let menuTreeList = list
+          .filter(item => {
+            return item.parent === null;
+          })
+          .map(item => {
+            item.label = item.name;
+            item.children = getJsonTree(res.data.list,item._id);
+            return item;
+          });
+        this.menuTreeList = menuTreeList;
+      };
+
+      let cb2 = (res) => {
+        let {menus = [], elements = [], opts = []} = res.data;
+        this.checkedMenus = menus.map(menu => menu._id);
+        this.checkedElements = elements.map(element => element._id);
+        this.checkedOpts = opts.map(opt => opt._id);
+      }
+      if (data.type === 'role-group') {
+        this.$api.org.getRoleGroupMenuList(this.orgId).then(cb1);
+        this.$api.roleGroup.getById(data._id).then(cb2)
+      } else {
+        this.$api.role.getRoleMenus(data._id).then(cb1);
+        this.$api.role.getById(data._id).then(cb2);
+      }
     },
-    roleTreeNodeClick() {
+    menuTreeNodeClick() {
 
     },
+    menuTreeCheckHandle() {
+
+    },
+    fetchRoleGroupsTree() {
+      this.$api.org.getRoleGroups(this.orgId).then(res => {
+        console.log(res);
+        let list = res.data.list;
+        const treeList = list.map(item => {
+          return {
+            _id: item._id,
+            label: item.name,
+            type: "role-group",
+            children: item.roles.map(role => {
+              role.label = role.name;
+              role.type = "role";
+              return role;
+            })
+          };
+        });
+        this.treeList = treeList;
+        console.log(treeList);
+      });
+    },
     fetchRoleGroupList() {
-      this.$api.roleGroup.getList().then(res => {
+      this.$api.org.getRoleGroups(this.orgId).then(res => {
         this.roleGroupList = res.data.list;
+      });
+    },
+    fetchRoles() {
+      this.$api.org.getRoles(this.orgId).then(res => {
+        this.roleList = res.data.list;
       });
     },
     // 添加角色组
     addRoleGroup() {
       this.addRoleGroupForm = {};
       this.addRoleGroupVisible = true;
+    },
+    submitAddRoleGroupForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.org.createRoleGroup(this.orgId, this.addRoleGroupForm).then(res => {
+            this.fetchRoleGroupsTree();
+            this.addRoleGroupVisible = false;
+            this.$message({ type: "success", message: "新增角色组成功!" });
+          });
+        } else {
+          return false;
+        }
+      });
     },
     // 新增角色
     addRole() {
@@ -231,9 +315,10 @@ export default {
     submitAddRoleForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$api.role.create(this.addRoleForm).then(res => {
+          this.$api.org.createRole(this.orgId ,this.addRoleForm).then(res => {
             this.fetchRoleGroupsTree();
-            this.addRoleDialogVisible = false;
+            this.fetchRoles();
+            this.addRoleVisible = false;
             this.$message({ type: "success", message: "新增角色成功!" });
           });
         } else {
@@ -246,10 +331,14 @@ export default {
     },
     removeRoleOrGroup() {
 
+    },
+    updateRoleOrGroupAuth() {
+
     }
   },
   mounted() {
     this.fetchRoleGroupList();
+    this.fetchRoleGroupsTree();
   },
 };
 </script>

@@ -43,10 +43,15 @@ const create = async function (req, res, next) {
       name: '默认',
       type:['default','private'],
       canEdit: false,
+      menus: role_group.menus,
+      elements: role_group.elements,
+      opts: role_group.opts,
+      roles: role_group.roles
     });
 
     defaultRoleGroup.org = org;
     defaultRoleGroup.parent = role_group;
+    
     
     owner.roles = role_group.roles;
 

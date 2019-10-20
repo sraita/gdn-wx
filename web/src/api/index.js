@@ -3,6 +3,7 @@ import auth from './auth';
 import roleGroup from './role-group';
 import role from './role';
 import custom from './custom';
+import org from './org';
 import menu from './menu';
 import element from './element';
 import opt from './opt';
@@ -14,5 +15,6 @@ export default {
   opt,
   roleGroup,
   role,
-  custom
+  custom,
+  org
 }

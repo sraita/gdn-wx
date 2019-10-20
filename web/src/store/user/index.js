@@ -3,7 +3,11 @@ const user = {
   state: {
     _id: '',
     username: '',
-    avatar: ''
+    avatar: '',
+    name: '',
+    orgId: '',
+    departments: [],
+    roles:[]
   },
 
   mutations: {
@@ -15,6 +19,15 @@ const user = {
       state._id = user._id;
       state.username = user.username;
       state.avatar = user.avatar ? user.avatar : 'static/images/default-avatar.png';
+      state.name = user.name;
+      state.orgId = user.org._id;
+      state.orgName = user.org.name;
+      state.roles = user.roles.map(role => {
+        return {
+          _id:role._id,
+          name: role.name
+        }
+      })
     },
   },
   actions: {
