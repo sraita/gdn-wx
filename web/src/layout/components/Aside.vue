@@ -33,6 +33,10 @@
         <i class="el-icon-document"></i>
         <span slot="title">租户(客户)管理</span>
       </el-menu-item>
+      <el-menu-item index="99" @click="linkTo('systemInitialize')">
+        <i class="el-icon-document"></i>
+        <span slot="title">系统初始化</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>

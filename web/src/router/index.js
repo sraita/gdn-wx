@@ -45,6 +45,12 @@ const routes = [
       { path: '/custom', name: 'custom', component: custom },
       { path: '/menu', name: 'menu', component: menu},
       { path: '/user', name: 'user', component: user },
+      {
+        path: '/system', name: 'system', component: () => import('../views/system'),
+        children: [
+          { path: 'initialize', name: 'systemInitialize', component: () => import('../views/system/initialize')}
+        ]
+      }
     ]
   },
   {
