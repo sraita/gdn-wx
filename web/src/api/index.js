@@ -13,5 +13,6 @@ export default {
   element,
   opt,
   roleGroup,
-  role
+  role,
+  custom
 }

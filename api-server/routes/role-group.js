@@ -7,6 +7,7 @@ router.route('/')
   .post(controller.create)
   .get(controller.getList);
 router.route('/tree').get(controller.getRoleTree);
+router.route('/public').get(controller.getPublicRoleGroups);
 router.route('/:_id').get(controller.getById);
 router.route('/:_id').post(controller.updateById);
 router.route('/:_id/remove').post(controller.removeById);

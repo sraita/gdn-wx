@@ -1,6 +1,8 @@
 const { User } = require('../models/user');
 const { Org } = require('../models/org');
 const { Custom } = require('../models/custom');
+const { RoleGroup } = require('../models/RoleGroup');
+const { Role} = require('../models/Role');
 
 const create = async function (req, res, next) {
   try {
@@ -18,26 +20,36 @@ const create = async function (req, res, next) {
       });
     }
     // 1. 创建对应客户管理员
-    let owner = User.create({
+    let owner = new User({
       username: req.body.account,
-      password: req.body.password
+      password: req.body.password,
+      name: req.body.ownerName,
+      mobile: req.body.ownerMobile
     });
-    let custom = new Custom({
-      name: req.body.name,
-      owner: owner
-    });
-    custom.save();
     // 2. 建立对应的组织机构
     let org = new Org({
-      name: custom.name,
+      name: req.body.name,
       parent: null,
       type: 'company',
       status: 1,
-      custom: custom
     });
+    // 3. 设置机构默认管理员
+    org.owner = owner._id;
+    owner.orgs = [org._id];
+    owner.rootOrg = org._id;
+    
+    // 4. 生成机构默认可分配权限表
+    let role_group = await RoleGroup.findById(req.body.roleGroupId);
+  
+    org.defaultRoleGroup = role_group;
+    owner.roles = role_group.roles;
+
+    owner.save();
     org.save();
-    console.log(org);
-    return getList(req, res, next);
+    return res.json({
+      status: 'success',
+      data: org
+    });
   } catch (e) {
     console.log(e)
     res.status(500).json({
@@ -51,7 +63,7 @@ const getById = function (req, res, next) {
 
 }
 const updateById = function (req, res, next ) {
-  Custom.findByIdAndUpdate(req.params._id, {
+  Org.findByIdAndUpdate(req.params._id, {
     $set: req.body
   },(err, result) => {
     if (err) {
@@ -66,7 +78,7 @@ const updateById = function (req, res, next ) {
 }
 
 const removeById = function (req, res, next) {
-  Custom.findByIdAndRemove(req.params._id, (err, result) => {
+  Org.findByIdAndRemove(req.params._id, (err, result) => {
     if (err) {
       res.status(500).json({
         status: 'error',
@@ -90,13 +102,12 @@ const getList = async function (req, res, next) {
   const skip = (page - 1) * limit;
   console.log(query)
 
-  const total = await Custom.countDocuments();
   // populate 进行表关联查询
-  const list = await Custom.find({}).limit(limit).skip(skip);
+  const list = await Org.find({parent: null}).limit(limit).skip(skip).populate('owner').populate('defaultRoleGroup');
   res.json({
-    message: 'ok',
+    status: 'success',
     data: {
-      total: total,
+      total: list.length,
       list: list
     }
   })

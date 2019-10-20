@@ -9,6 +9,7 @@ import Dashborad from '@/views/dashboard'
 import Role from '@/views/role'
 import custom from '@/views/custom'
 import menu from '@/views/menu'
+import user from '@/views/user'
 import Notfound from '../layout/components/Notfound'
 import Forbidden from '../layout/components/Forbidden'
 import 'nprogress/nprogress.css'
@@ -38,6 +39,7 @@ const routes = [
       },
       { path: '/custom', name: 'custom', component: custom },
       { path: '/menu', name: 'menu', component: menu},
+      { path: '/user', name: 'user', component: user },
     ]
   },
   {

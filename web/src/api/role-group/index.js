@@ -6,6 +6,7 @@ const remove = (id => post(`/api/role-group/${id}/remove`));
 const getById = (id => get(`/api/role-group/${id}`));
 const getList = (params => get('/api/role-group', params));
 const getRoleTree = (params => get('/api/role-group/tree', params));
+const getPublicRoleGroups = (params => get('/api/role-group/public', params));
 const getRoleGroupMenus = (id => get(`/api/role-group/${id}/menus`));
 const getRoleGroupElementsByMenuId = ((id, menuId) => get(`/api/role-group/${id}/menus/${menuId}/elements`));
 const getRoleGroupOptsByMenuId = ((id,menuId) => get(`/api/role-group/${id}/menus/${menuId}/opts`));
@@ -20,5 +21,6 @@ export default {
   getRoleGroupMenus,
   getRoleGroupElementsByMenuId,
   getRoleGroupOptsByMenuId,
-  updateRoleGroupAuth
+  updateRoleGroupAuth,
+  getPublicRoleGroups
 }

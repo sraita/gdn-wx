@@ -48,8 +48,12 @@
 .text-center {text-align: center !important;}
 .text-right {text-align: right !important;}
 
-// 字体颜色定义
+// 浮动
+.float-left {float:  left !important;}
+.float-right {float:  right !important;}
+.float-none {float: none !important;}
 
+// 字体颜色定义
 .text-white {
     color: #fff!important
 }

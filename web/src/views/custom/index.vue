@@ -21,9 +21,9 @@
 
     <el-table :data="tableData" stripe size="mini">
       <el-table-column prop="name" label="客户名称"></el-table-column>
-      <el-table-column prop="account" label="登录账户"></el-table-column>
-      <el-table-column prop="mobile" label="联系电话"></el-table-column>
-      <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column prop="owner.name" label="管理员"></el-table-column>
+      <el-table-column prop="owner.mobile" label="管理员联系电话"></el-table-column>
+      <el-table-column prop="defaultRoleGroup.name" label="默认角色组"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag size="small" v-if="scope.row.status === 1">启用</el-tag>
@@ -72,12 +72,12 @@
           <el-form-item label="客户名称：" prop="name">
             <el-input v-model="addForm.name" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="用户组:" prop="orgRoleGroup">
-            <el-select v-model="addForm.orgRoleGroup" placeholder="">
-              <el-option v-for="role in orgRoleGroups"
-                :key="role.value"
-                :label="role.label"
-                :value="role.value">
+          <el-form-item label="用户组:" prop="roleGroupId">
+            <el-select v-model="addForm.roleGroupId" placeholder="">
+              <el-option v-for="group in roleGroups"
+                :key="group._id"
+                :label="group.name"
+                :value="group._id">
               </el-option>
             </el-select>
             
@@ -142,13 +142,7 @@ export default {
       },
       addDialogVisible: false,
       tableData: [{}],
-      orgRoleGroups: [{
-        label: '翻译服务提供方',
-        value:'1'
-      },{
-        label: '翻译服务使用方',
-        value:'2'
-      }]
+      roleGroups: []
     };
   },
   methods: {
@@ -156,6 +150,11 @@ export default {
       this.$api.custom.list({ page: 1, limit: 10 }).then(res => {
         this.tableData = res.data.list;
       });
+    },
+    fetchPublicRoleGroups() {
+      this.$api.roleGroup.getPublicRoleGroups().then(res => {
+        this.roleGroups = res.data.list;
+      })
     },
     doSearch(formName) {
       this.$refs[formName].validate(valid => {
@@ -187,9 +186,13 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$api.custom.create(this.addForm).then(res => {
-            this.tableData = res.data.list;
+            this.fetchData();
             this.addDialogVisible = false;
             this.$refs[formName].resetFields();
+            this.$message({
+              type: 'success',
+              message: '客户已添加'
+            })
           });
         } else {
           return false;
@@ -198,6 +201,7 @@ export default {
     }
   },
   mounted() {
+    this.fetchPublicRoleGroups();
     this.fetchData();
   }
 };

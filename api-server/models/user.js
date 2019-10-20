@@ -22,6 +22,8 @@ const schema = new mongoose.Schema({
   avatar: {
     type: String
   },
+  name: String,
+  mobile: Number,
   status: Number, // 0:禁用,1:启用
   createAt: Date,
   orgs: [{type: mongoose.Schema.Types.ObjectId, ref: 'org'}], // 所属机构或部门

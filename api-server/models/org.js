@@ -13,7 +13,8 @@ const OrgSchema = new mongoose.Schema({
     enum: ['company','department','team'],
     default: 'department'
   },
-  custom: {type: mongoose.Types.ObjectId, ref: 'custom'}, // 所属租户
+  owner: {type: mongoose.Types.ObjectId, ref: 'user'}, 
+  defaultRoleGroup: { type: mongoose.Types.ObjectId, ref: 'roleGroup' }, 
   status:Number, // 0: 禁用, 1:启用
   createAt: Date
 });

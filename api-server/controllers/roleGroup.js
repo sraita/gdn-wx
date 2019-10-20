@@ -156,6 +156,16 @@ const updateRoleGroupAuth = function (req, res, next) {
   })
 }
 
+const getPublicRoleGroups = async function (req, res, next) {
+  const list = await RoleGroup.find({type: 'public'});
+  res.json({
+    status: 'success',
+    data:{
+      list: list
+    }
+  });
+}
+
 module.exports = {
   create,
   updateById,
@@ -166,5 +176,6 @@ module.exports = {
   getRoleGroupMenus,
   getRoleGroupElementsByMenuId,
   getRoleGroupOptsByMenuId,
-  updateRoleGroupAuth
+  updateRoleGroupAuth,
+  getPublicRoleGroups
 }
