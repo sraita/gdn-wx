@@ -24,7 +24,8 @@ const schema = new mongoose.Schema({
   canEdit: {
     type: Boolean,
     default: true,
-  }
+  },
+  exclusions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role' }] // 互斥角色列表
 });
 
 // 设置索引

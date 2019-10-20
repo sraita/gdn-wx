@@ -10,12 +10,18 @@ const schema = new mongoose.Schema({
     default: 1,
   },
   type: {
-    type: String,
-    enum: ['public', 'private'],
-    default: 'private'
+    type: [String],
+    enum: ['system','public', 'private','default'], // system - 系统内部角色组(用于系统管理), public - 系统公共角色组， private - 机构私有角色组, default - 机构默认角色组
+    default: ['private']
   },
-  remark: String, // 备注说明
-  org: {type: mongoose.Schema.Types.ObjectId, ref: 'org'},
+  parent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'roleGroup', default: null }], // 有上级，默认继承上级权限
+  // 备注说明
+  remark: {
+    type:String, 
+    default: '<无>'
+  },
+  canEdit:{type: Boolean, default: true},
+  org: {type: mongoose.Schema.Types.ObjectId, ref: 'org', default: null},
   roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'role'}],
   menus: [{type: mongoose.Schema.Types.ObjectId, ref: 'menu'}],
   opts: [{type: mongoose.Schema.Types.ObjectId, ref:'opt'}]

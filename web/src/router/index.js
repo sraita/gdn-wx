@@ -33,6 +33,11 @@ const routes = [
         component: Org,
       },
       {
+        path: '/jobs',
+        name: 'jobs',
+        component: () => import('../views/jobs')
+      },
+      {
         path: '/role',
         name: 'role',
         component: Role,

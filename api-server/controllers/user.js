@@ -22,7 +22,7 @@ const createUser = async function (req, res) {
 
 const getUserById = async function (req, res) {
   console.log(req.params)
-  const data = await User.findById(req.params._id);
+  const data = await User.findById(req.params._id).populate('org').populate('roles').populate('department');
   res.json({
     status: 'success',
     data:data

@@ -1,24 +1,32 @@
 <template>
-  <div class="page">
     <el-card
       :body-style="{ padding: '0px' ,display: 'flex',height:'100%'}"
       shadow="never"
-      class="page-org"
+      :style="{height: '100%'}"
     >
       <div class="left">
-        <el-form>
+        <el-form :inline="true">
           <el-form-item>
             <el-input placeholder="搜索部门与成员">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
           </el-form-item>
           <el-form-item style="text-align: center;"> 
-            <el-button-group>
-              <el-button size="mini" icon="el-icon-plus" @click="addRoleGroupDialogVisible=true">新增企业</el-button>
-              <el-button size="mini" icon="el-icon-plus" @click="addRoleDialogVisible=true">新增部门</el-button>
-            </el-button-group>
+            <el-button type="text" icon="el-icon-plus" @click="addDepartment"></el-button>
           </el-form-item>
         </el-form>
+        <div class="mt-3">
+             
+   
+          <el-radio-group v-model="subview" class="view-change">
+            <el-radio-button label="department">
+            <router-link to="/org">组织架构</router-link>
+            </el-radio-button>
+            <el-radio-button label="role">
+             <router-link to="/org/role">角色</router-link>
+             </el-radio-button>
+          </el-radio-group>
+          </div>
         <el-divider></el-divider>
 
         <el-tree
@@ -33,17 +41,6 @@
               <i class="el-icon-folder"></i>
               {{ node.label }}
             </span>
-            <span>
-              <el-dropdown size="medium" type="primary">
-                <el-button type="text" size="mini" icon="el-icon-more"></el-button>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>添加子部门</el-dropdown-item>
-                  <el-dropdown-item>编辑部门</el-dropdown-item>
-                  <el-dropdown-item>设置上级</el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span>
           </span>
         </el-tree>
       </div>
@@ -52,9 +49,13 @@
           <div class="float-right">
             <el-button type="text"  size="mini">编辑部门</el-button>
             <el-divider direction="vertical"></el-divider>
-            <el-button type="text" size="mini" @click="addOrgDialogVisible=true">添加子部门</el-button>
+            <el-button type="text" size="mini" @click="addSubDepartment">添加子部门</el-button>
             <el-divider direction="vertical"></el-divider>
-            <el-button type="text" size="mini" @click="addOrgDialogVisible=true">设置主管</el-button>
+            <el-button type="text" size="mini" @click="setManager">设置主管</el-button>
+             <el-divider direction="vertical"></el-divider>
+            <el-button type="text" size="mini" @click="setManager">添加员工</el-button>
+             <el-divider direction="vertical"></el-divider>
+            <el-button type="text" size="mini" @click="setManager">添加角色</el-button>
           </div>
           <span>研发部[12 人]</span>
         </div>
@@ -79,74 +80,16 @@
         </el-table>
       </div>
     </el-card>
-
-    <!-- Dialog 添加部门 -->
-
-    <el-dialog title="添加部门" :visible.sync="addOrgDialogVisible" width="30%">
-      <el-form :model="addForm" ref="form" label-width="80px">
-        <el-form-item label="上级部门" prop="parent">
-          <el-input v-model="addForm.parent"></el-input>
-        </el-form-item>
-
-        <el-form-item label="部门名称" prop="name">
-          <el-input v-model="addForm.name" placeholder="请输入部门名称"></el-input>
-        </el-form-item>
-        <el-form-item label="部门类型" prop="type">
-          <el-radio-group v-model="addForm.type">
-            <el-radio label="company">公司</el-radio>
-            <el-radio label="department">部门</el-radio>
-            <el-radio label="team">团队</el-radio>
-          </el-radio-group>
-          
-        </el-form-item>
-        
-      </el-form>
-
-      <span slot="footer">
-        <el-button @click="addOrgDialogVisible = false">取 消</el-button>
-        <el-button type="primary">提 交</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- Dialog 添加人员 -->
-    <el-dialog title="添加人员" :visible.sync="addMemberDialogVisible" width="30%">
-      <el-form :model="addMemberForm" ref="addMemberForm" label-width="80px">
-        <el-form-item label="姓名">
-          <el-input v-model="addMemberForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="部门">
-          <el-input v-model="addMemberForm.org" placeholder="请选择部门"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="addMemberForm.email" placeholder="请输入邮箱"></el-input>
-        </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="addMemberForm.mobile" placeholder></el-input>
-        </el-form-item>
-
-        <el-form-item label="角色">
-          <el-input v-model="addMemberForm.roles" placeholder></el-input>
-        </el-form-item>
-        <el-form-item label="工号">
-          <el-input v-model="addMemberForm.jobNum" placeholder></el-input>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer">
-        <el-button @click=" addMemberDialogVisible = false">取 消</el-button>
-        <el-button type="primary">提 交</el-button>
-      </span>
-    </el-dialog>
-  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      addForm: {},
+      subview:'department',
+      addDepartmentForm: {},
+      addDepartmentVisible: false, // 添加部门 Dialog
       addMemberForm: {},
-      addOrgDialogVisible: false, // 添加子部门 Dialog
       addMemberDialogVisible: false, // 添加人员 Dialog
       orgList: [
         {
@@ -179,17 +122,31 @@ export default {
   methods: {
     checkOrgNode(data) {
       console.log(data);
+    },
+    // 添加部门
+    addDepartment() {
+      this.addDepartmentForm = {};
+      this.addDepartmentVisible = true;
+    },
+    // 添加子部门
+    addSubDepartment() {
+      
+    },
+    // 设置部门主管
+    setManager() {
+
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .page-org {
   height: 100%;
-  
-  .el-card__body {
-    display: flex;
+  .view-change {
+    width: 100%;
+    .el-radio-button {width: 50%;}
+    .el-radio-button__inner{ width: 100% !important;}
   }
   .left {
     width: 260px;

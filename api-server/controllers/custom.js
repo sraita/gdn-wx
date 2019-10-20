@@ -6,7 +6,7 @@ const { Role} = require('../models/Role');
 
 const create = async function (req, res, next) {
   try {
-    const isExist = await Custom.findOne({name:req.body.name});
+    const isExist = await Org.findOne({name:req.body.name});
     if (isExist) {
       return res.status(422).send({
         message: '客户已存在，不能重复添加'
@@ -35,17 +35,24 @@ const create = async function (req, res, next) {
     });
     // 3. 设置机构默认管理员
     org.owner = owner._id;
-    owner.orgs = [org._id];
-    owner.rootOrg = org._id;
+    owner.org = org;
     
     // 4. 生成机构默认可分配权限表
     let role_group = await RoleGroup.findById(req.body.roleGroupId);
-  
-    org.defaultRoleGroup = role_group;
+    let defaultRoleGroup = new RoleGroup({
+      name: '默认',
+      type:['default','private'],
+      canEdit: false,
+    });
+
+    defaultRoleGroup.org = org;
+    defaultRoleGroup.parent = role_group;
+    
     owner.roles = role_group.roles;
 
     owner.save();
     org.save();
+    defaultRoleGroup.save();
     return res.json({
       status: 'success',
       data: org

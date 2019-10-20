@@ -1,4 +1,5 @@
 const { Org } = require('../models/org');
+const { RoleGroup } = require('../models/RoleGroup');
 const { construct, destruct } = require('@aximario/json-tree');
 
 const getList = async function (req, res, next) {
@@ -80,6 +81,39 @@ const removeById = async function (req, res, next) {
 
 }
 
+const createRoleGroup = async function (req, res, next) {
+  let role_group = new RoleGroup(req.body);
+  role_group.org = req.params._id;
+  role_group.type = 'private';
+
+  res.json({
+    type: 'success',
+    data: role_group
+  });
+}
+
+// 获取机构可授权的菜单列表
+const getMenuList = async function (req, res, next) {
+  let org = await Org.findById(req.params._id);
+
+  let menus = RoleGroup.findById(org.defaultRoleGroup).populate('menus');
+  res.json({
+    status: 'success',
+    data:{
+      list: menus
+    }
+  });
+};
+
+// 获取某个菜单下课授权的页面元素
+const getElementsByMenuId = async function (req, res, next) {
+
+}
+
+const getOptsByMenuId = async function (req, res, next) {
+  
+}
+
 module.exports = {
   getList,
   getTree,
@@ -87,4 +121,9 @@ module.exports = {
   getById,
   updateById,
   removeById,
+
+  // 角色组管理
+  createRoleGroup,
+  // 角色管理
+  getMenuList,
 }

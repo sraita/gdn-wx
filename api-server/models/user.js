@@ -26,8 +26,8 @@ const schema = new mongoose.Schema({
   mobile: Number,
   status: Number, // 0:禁用,1:启用
   createAt: Date,
-  orgs: [{type: mongoose.Schema.Types.ObjectId, ref: 'org'}], // 所属机构或部门
-  rootOrg: { type: mongoose.Schema.Types.ObjectId, ref: 'org'}, // 顶级机构
+  org: { type: mongoose.Schema.Types.ObjectId, ref: 'org'}, // 所属机构
+  departments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'department'}], // 所属部门信息
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
 });
 
