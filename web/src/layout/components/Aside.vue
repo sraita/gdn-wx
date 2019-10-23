@@ -5,7 +5,7 @@
       background-color="#fff"
       text-color="#6c757d"
       active-text-color="#727cf5"
-      :collapse="!this.$store.state.app.isSidebarOpen" 
+      :collapse="this.$store.state.app.sidebar.collapse" 
     >
       <el-menu-item index="1" @click="linkTo('dashboard')">
         <i class="el-icon-menu"></i>
@@ -54,6 +54,6 @@ export default {
 
 <style lang="scss">
 .el-menu:not(.el-menu--collapse) {
-  width: 200px;
+  width: 240px;
 }
 </style>

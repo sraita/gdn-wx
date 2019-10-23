@@ -28,6 +28,7 @@ const schema = new mongoose.Schema({
   createAt: Date,
   org: { type: mongoose.Schema.Types.ObjectId, ref: 'org'}, // 所属机构
   departments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'department'}], // 所属部门信息
+  departmentSources: [{ type: mongoose.Schema.Types.ObjectId, ref: 'department' }], // 部门结构树上所有结点信息
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
 });
 

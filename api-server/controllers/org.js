@@ -1,7 +1,30 @@
+var createError = require('http-errors');
+const { construct, destruct } = require('@aximario/json-tree');
+
 const { Org } = require('../models/org');
 const { RoleGroup } = require('../models/RoleGroup');
 const { Role } = require('../models/Role');
-const { construct, destruct } = require('@aximario/json-tree');
+const { User } = require('../models/user');
+
+const { Department } = require('../models/Department');
+
+async function findDepartmentParents(id) {
+  let parents = [];
+  while (id != null) {
+    let department = await Department.findById(id);
+    parents.push(id.toString());
+    id = department.parent;
+  };
+  return parents;
+}
+async function generateDepartmentSources(ids) {
+  let sources = ids;
+  for (var i = 0; i < ids.length;i++) {
+    let parents = await findDepartmentParents(ids[i]);
+    sources = sources.concat(parents);
+  }
+  return sources;
+}
 
 const getList = async function (req, res, next) {
   let query = JSON.stringify(req.query);
@@ -148,6 +171,53 @@ const getOptsByMenuId = async function (req, res, next) {
   
 }
 
+// 添加成员
+const addMember = async function (req, res, next) {
+  let { mobile, name, email, departments, roles} = req.body;
+  let isExist = await User.findOne({username: mobile});
+  if (isExist) {
+    return next(createError(409,'用户已存在！'))
+  }
+  let sources = await generateDepartmentSources(departments)
+
+  let user = new User({
+    username: mobile,
+    name,
+    mobile,
+    email, 
+    password: req.body.mobile.slice(-6), // 默认密码为手机号后6位
+    departments,
+    roles
+  });
+
+  
+  user.org = req.params._id;
+  user.departmentSources = sources; 
+  console.log(user);
+
+  user.save();
+  res.json({
+    status: 'success',
+    data: user
+  });
+}
+
+// 获取成员列表
+const getMembers = async function (req, res, next) {
+  let {_id, departmentId} = req.params;
+  let selector = {org: _id};
+  if (departmentId != '0') {
+    selector['departmentSources'] = {$in:[departmentId]};
+  }
+  list = await User.find(selector).populate('departments').populate('roles');
+  res.json({
+    status: 'success',
+    data:{
+      list: list,
+      total: list.length
+    }
+  });
+}
 
 module.exports = {
   getList,
@@ -164,4 +234,8 @@ module.exports = {
   createRole,
   getRoles,
   getRoleGroupMenuList, // 获取角色组可授权的菜单列表
+
+  // 成员管理（员工管理）
+  addMember,
+  getMembers
 }

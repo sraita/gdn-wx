@@ -1,12 +1,16 @@
 const app = {
   namespaced: true,
   state: {
-    isSidebarOpen: true
+    sidebar: {
+      collapse: false,
+      width: 240,
+      miniWidth: 60
+    }
   },
 
   mutations: {
     TOGGLE_SIDEBAR (state) {
-      state.isSidebarOpen = !state.isSidebarOpen;
+      state.sidebar.collapse = !state.sidebar.collapse;
     } 
   },
   actions: {

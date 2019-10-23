@@ -1,64 +1,88 @@
 <template>
-  <el-container style="height: 100%;">
-    <el-header>
-      <Header/>
-    </el-header>
-    <el-container>
-      <el-aside width="auto">
-        <Aside/>
-      </el-aside>
-      <el-main>
-        <router-view></router-view>
-      </el-main>
-    </el-container>
-  </el-container>
+  <div class="layout">
+    <div class="layout-header">
+      <Header />
+    </div>
+    <div class="layout-aside" :style="{width: sideBarWidth+'px'}">
+      <Aside />
+    </div>
+    <div class="layout-main" :style="{marginLeft: sideBarWidth+'px', height: tableHeight+'px'}">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
-import Header from './components/Header';
-import Aside from './components/Aside';
+import Header from "./components/Header";
+import Aside from "./components/Aside";
 export default {
-  name: 'defaultLayout',
+  name: "defaultLayout",
   components: {
     Header,
     Aside
   },
   methods: {
     getUserInfo() {
-      this.$api.auth.getUserInfo(localStorage.getItem('userId')).then(res=> {
-        this.$store.dispatch('user/updateUserInfo', res.data)
+      this.$api.auth.getUserInfo(localStorage.getItem("userId")).then(res => {
+        this.$store.dispatch("user/updateUserInfo", res.data);
       });
+    }
+  },
+  computed: {
+    sideBarWidth() {
+      return this.$store.state.app.sidebar.collapse
+        ? this.$store.state.app.sidebar.miniWidth
+        : this.$store.state.app.sidebar.width;
     }
   },
   mounted() {
     this.getUserInfo();
   }
-}
+};
 </script>
 
 <style lang="scss">
-  .el-header {
-    background: #fff;
-    padding: 0 !important;
-    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
-    z-index: 1;
+.layout {
+  height: 100%;
+  overflow: hidden;
+  background: pink;
+  .layout-header {
+    position: fixed;
+    height: 60px;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 9;
   }
-  .el-aside {
-    background-color: #fff;
-    box-shadow: 0 0 35px 0 rgba(154,161,171,.15);
-    z-index: 1;
-    .el-menu {
-      text-align: justify;border-right: none;
+  .layout-main {
+    padding-top: 60px;
+    margin-left: 200px;
+    background: #f1f4f7;
+    transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
+    overflow: auto;
+    .page {
+      padding: 15px;
     }
   }
-  .el-main {
-    background-color: #fafbfe; padding: 10px;
+  .layout-aside {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 60px;
+    min-height: 100%;
+    z-index: 8;
+    background: #fff;
+    .el-menu {
+      text-align: justify;
+      border-right: none;
+    }
   }
-  .inline-title {
-    font-size: 15px; font-weight: 600; line-height: initial; padding: 10px 0;
-  }
-  .page {height: 100%;}
-  .el-divider--horizontal {
-    margin: 10px 0;
-  }
+}
+.inline-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: initial;
+  padding: 10px 0;
+}
 </style>
