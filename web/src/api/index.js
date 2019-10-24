@@ -7,9 +7,10 @@ import org from './org';
 import menu from './menu';
 import element from './element';
 import opt from './opt';
-
+import user from './user'
 export default {
   auth,
+  user,
   menu,
   element,
   opt,

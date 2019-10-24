@@ -40,7 +40,7 @@ function refreshToken() {
 }
 
 function toLogin () {
-  store.dispatch('auth/updateTokens', '', '');
+  store.dispatch('auth/updateTokens');
   router.replace({
     path: "/login",
     query: { redirect: router.currentRoute.fullPath }
@@ -50,7 +50,7 @@ function toLogin () {
 // 请求拦截器
 instance.interceptors.request.use(
   async config => {
-    const token = localStorage.getItem('loginToken')
+    const token = localStorage.getItem('loginToken');
     token && (config.headers.Authorization = 'Bearer ' + token);
     return config;
   },

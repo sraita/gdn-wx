@@ -13,6 +13,8 @@ import user from '@/views/user'
 import Notfound from '../layout/components/Notfound'
 import Forbidden from '../layout/components/Forbidden'
 import 'nprogress/nprogress.css'
+
+var userApi = require('../api/user');
 Vue.use(Router)
 
 const routes = [
@@ -94,7 +96,7 @@ router.beforeEach((to, from, next) => {
   }
   // 判断用户是否登录
   if (!loginToken || loginToken === '' ) {
-    if (['login', 'Forbidden','Notfound'].includes(to.name)) {//如果是登录页面路径，就直接next()
+    if (['login', 'Forbidden', 'Notfound'].includes(to.name)) {//如果是登录页面路径，就直接next()
       next();
     } else {//不然就跳转到登录；
       next({
@@ -103,6 +105,9 @@ router.beforeEach((to, from, next) => {
       });
     }
   } else {
+    // userApi.default.getMenus("5db072d32b51c6a8de6c9133").then(res => {
+    //   console.log(res);
+    // });
     next();
   }
 });

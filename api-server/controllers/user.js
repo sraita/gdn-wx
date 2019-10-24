@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 var { User } = require('../models/user');
+const { Role } = require('../models/Role');
 const {SECRET} = require('../config');
 
 
@@ -49,7 +50,7 @@ const getUserList = async function (req, res) {
   console.log(query)
 
   const total = await User.countDocuments();
-  const list = await User.find({}).limit(limit).skip(skip);
+  const list = await User.find({}).limit(limit).skip(skip).populate("departments").populate("roles").populate('org');
   res.json({
     status: 'success',
     data:{
@@ -59,10 +60,27 @@ const getUserList = async function (req, res) {
   })
 };
 
+// 获取用户菜单列表
+const getMenus = async function (req, res, next) {
+  const _id = req.body._id;
+  console.log(req.body)
+
+  let user = await User.findOne(_id);
+  console.log(user)
+  let roles = await Role.find({_id:{$in: user.roles}}).populate('menus');
+  res.json({
+    status: 'success',
+    data:{
+      list: roles.menus
+    }
+  });
+}
+
 module.exports = {
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
-  getUserList
+  getUserList,
+  getMenus
 };

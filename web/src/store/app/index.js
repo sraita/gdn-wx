@@ -4,7 +4,7 @@ const app = {
     sidebar: {
       collapse: false,
       width: 240,
-      miniWidth: 60
+      miniWidth: 64
     }
   },
 

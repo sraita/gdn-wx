@@ -107,7 +107,7 @@ export default {
           this.$api.auth.doLogin(this.form).then(res=>{
             console.log(res);
             const {token, expire_in, refresh_token,userId} = res.data; 
-            this.$store.dispatch('auth/updateTokens', token, refresh_token);
+            this.$store.dispatch('auth/updateTokens', {token, refresh_token});
             this.$store.dispatch('user/updateUserId',userId);
             this.$router.replace({
               path: '/'
@@ -131,7 +131,9 @@ export default {
 </script>
 <style lang="scss">
   .page-login {
-    height: 100%;
+    position: absolute;
+    top: 0;left: 0;
+    height: 100%;width: 100%;
     background: url("../../assets/login_bg.jpg") center;
     background-size: cover;
     .el-main,.el-header{background: initial;}

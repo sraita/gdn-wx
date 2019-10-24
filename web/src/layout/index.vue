@@ -45,7 +45,6 @@ export default {
 .layout {
   height: 100%;
   overflow: hidden;
-  background: pink;
   .layout-header {
     position: fixed;
     height: 60px;
