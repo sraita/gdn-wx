@@ -45,7 +45,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item style="text-align: center;">
-                  <el-button type="primary" @click="submitForm('loginForm')" style="width:100%;">登 录</el-button>
+                  <el-button type="primary" @click="submitForm('loginForm')" style="width:100%;" :loading="isLogin" :disabled="isLogin">{{isLogin?'登录中':'登 录'}}</el-button>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -54,6 +54,7 @@
 
         <el-footer height>
           <!-- Footer content -->
+          <div class="login-message">{{loginMessage}}</div>
           <p class="copyright">@copyright 2019</p>
           <router-link to="#">隐私政策</router-link>
           <router-link to="#">用户服务协议</router-link>
@@ -121,7 +122,15 @@ export default {
   },
   mounted() {
     this.getVerifyCode();
-  }
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters.isLogin;
+    },
+    loginMessage() {
+      return this.$store.getters.loginMessage;
+    }
+  },
 };
 </script>
 <style lang="scss">
@@ -197,6 +206,7 @@ export default {
       font-size: 12px;
     }
     .el-footer {
+      .login-message{height: 20px; line-height: 20px;font-size: 12px;color: #a5a5a5;}
     }
 
     .el-main {

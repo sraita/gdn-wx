@@ -118,6 +118,11 @@ const actions = {
 
       resolve()
     })
+  },
+  resetToken({commit}) {
+    commit('SET_TOKEN', '')
+    removeToken();
+    removeRefreshToken();
   }
 }
 

@@ -2,6 +2,25 @@ import { construct, destruct } from '@aximario/json-tree';
 
 import authAPI from '@/api/auth';
 import userAPI from '@/api/user';
+import { dynamicRoutes, constantRoutes } from '@/router'
+
+
+function filterDynamicRoutes(routes, routeNames) {
+  const res = [];
+  
+  routes.forEach(route => {
+    const tmp = {...route};
+    console.log(tmp);
+    if (routeNames.includes(tmp.name)) {
+      if (tmp.children) {
+        tmp.children = filterDynamicRoutes(tmp.children, routeNames)
+      }
+      res.push(tmp);
+    }
+  });
+
+  return res;
+}
 
 const state = {
   sidebar: {
@@ -11,7 +30,9 @@ const state = {
   },
   menuTree: [], // 菜单树
   isLogin: false,
-  loginMessage: ''
+  loginMessage: '',
+  addRoutes:[],
+  routes:[]
 }
 
 const mutations = {
@@ -24,8 +45,12 @@ const mutations = {
   SET_LOGIN_MESSAGE(state, message) {
     state.loginMessage = message;
   },
-  SET_LOGIN_STATUS(state, starus) {
+  SET_LOGIN_STATUS(state, status) {
     state.isLogin = status;
+  },
+  SET_ROUTES: (state, routes) => {
+    state.addRoutes = routes
+    state.routes = constantRoutes.concat(routes)
   }
 }
 
@@ -51,12 +76,26 @@ const actions = {
         });
         commit('SET_MENU_TREE', menuTree);
 
-        resolve(res.data.list);
+        resolve(menuList);
       }).catch(err => {
         reject(err);
       })
     });
   },
+  // 创建路由
+  generateRoutes({commit}, {roles,menuList}) {
+    return new Promise((resolve, reject) => {
+      const routeNames = menuList.map(menu => menu.routerName);
+      let accessedRoutes
+      if (roles.includes('admin')) {
+        accessedRoutes = dynamicRoutes || []
+      } else {
+        accessedRoutes = filterDynamicRoutes(dynamicRoutes, routeNames);
+      }
+      commit('SET_ROUTES', accessedRoutes);
+      resolve(accessedRoutes);
+    });
+  }
 }
 
 export default {

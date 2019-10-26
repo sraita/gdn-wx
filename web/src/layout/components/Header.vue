@@ -81,9 +81,11 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('auth/updateTokens','','');
-        this.$router.replace({
-          path: "/login"
+        this.$store.dispatch('user/logout').then(res => {
+          this.$message({type: 'success', message:'您已退出登录！'});
+          this.$router.replace({
+            path: "/login"
+          });
         });
       });
     }

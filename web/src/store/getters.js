@@ -9,5 +9,7 @@ const getters = {
     return state.user.roles.map(item => item.name);
   },
   // permission_routes: state => state.permission.routes,
+  loginMessage: state => state.app.loginMessage,
+  isLogin: state => state.app.isLogin,
 }
 export default getters

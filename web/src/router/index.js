@@ -14,7 +14,7 @@ import Forbidden from '../layout/components/Forbidden'
 var userApi = require('../api/user');
 Vue.use(Router)
 
-//动态路由(所有角色的都在这里,我们都做好组件页面了所以我们一定有这个，防君子不防小人)
+
 export const constantRoutes = [
   { path: '/login', name: 'login', component: () => import('../views/login') },
   { path: '/403', name: 'Forbidden', component: Forbidden, meta: {title: '无权访问'}},
@@ -24,6 +24,7 @@ export const constantRoutes = [
   // dashboard
   {
     path: '/',
+    name: 'dashboard',
     component: Layout,
     redirect: '/dashboard',
     children: [
@@ -35,6 +36,10 @@ export const constantRoutes = [
       }
     ]
   },
+];
+//动态路由(所有角色的都在这里,我们都做好组件页面了所以我们一定有这个，防君子不防小人)
+export const dynamicRoutes = [
+  
   authRouter,// 权限管理
   {
     path: '/user',
@@ -61,27 +66,19 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/system', 
-    name: 'system', 
+    path: '/system',
+    name: 'system',
     component: Layout,
     meta: { title: '系统管理', icon: 'documentation', affix: true },
     children: [
-      { 
-        path: '/initialize', 
-        name: 'systemInitialize', 
-        component: () => import('../views/system/initialize'),  
+      {
+        path: '/initialize',
+        name: 'systemInitialize',
+        component: () => import('../views/system/initialize'),
         meta: { title: '初始化', icon: 'documentation', affix: true }
       },
     ]
   }
-];
-
-export const dynamicRoutes = [
-  { path: '/login', name: 'login', component: () => import('../views/login') },
-  { path: '/403', name: 'Forbidden', component: Forbidden, meta: { title: '无权访问' } },
-  { path: '/404', name: 'Notfound', component: Notfound, meta: { title: '页面不存在' } },
-  { path: '/initialize', name: 'systemInitialize', component: () => import('../views/system/initialize') },
-  { path: '*', redirect: '/404' },
 ]
 
 const createRouter = () => new Router({

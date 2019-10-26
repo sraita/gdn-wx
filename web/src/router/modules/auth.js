@@ -2,6 +2,7 @@ import Layout from '@/layout'
 
 const authRouter = {
   path: '/auth',
+  name: 'auth',
   component: Layout,
   children: [
     {
