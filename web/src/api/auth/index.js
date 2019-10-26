@@ -8,9 +8,11 @@ const logout = (()=>{
   });
 }); 
 
-const getUserInfo = (id => get(`/api/user/${id}`));
+const getUserInfo = (params => get('/auth/userinfo', params));
+const getMenus = (params => get('/auth/menus',params));
 export default {
   doLogin,
   logout,
-  getUserInfo
+  getUserInfo,
+  getMenus,
 }

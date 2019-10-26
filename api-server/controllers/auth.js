@@ -1,5 +1,6 @@
 const url = require('url');
 const jwt = require('jsonwebtoken');
+var createError = require('http-errors');
 const { SECRET } = require('../config');
 const { User } = require('../models/user');
 const {PUBLIC_ROUTES} = require('../config');
@@ -93,7 +94,30 @@ const refreshToken = function (req, res, next) {
       });
     }
 }
+
+const getUserInfo = async function (req, res, next) {
+  const raw = String(req.headers.authorization.split(' ').pop());
+  // 解密 token 获取对应的 id
+  try {
+    const { id } = jwt.verify(raw, SECRET);
+    const user = await User.findById(id).populate('org').populate('roles').populate('department');
+    res.json({
+      status: 'success',
+      data: user
+    });
+  } catch (err) {
+    // TokenExpiredError
+    return res.status(401).json({
+      status: 'error',
+      code: err.name === 'TokenExpiredError' ? 40101 : 40102,
+      name: err.name,
+      message: err.message
+    });
+  }
+}
+
 module.exports = {
   baseAuth,
-  refreshToken
+  refreshToken,
+  getUserInfo
 };

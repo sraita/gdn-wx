@@ -22,11 +22,6 @@ export default {
     Aside
   },
   methods: {
-    getUserInfo() {
-      this.$api.auth.getUserInfo(localStorage.getItem("userId")).then(res => {
-        this.$store.dispatch("user/updateUserInfo", res.data);
-      });
-    }
   },
   computed: {
     sideBarWidth() {
@@ -36,7 +31,6 @@ export default {
     }
   },
   mounted() {
-    this.getUserInfo();
   }
 };
 </script>

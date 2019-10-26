@@ -32,11 +32,11 @@
         <el-dropdown trigger="click" @command="userDropdownCommand">
           <a href="javascript:;" class="nav-link nav-user">
               <div class="user-avatar float-left">
-                <img :src="this.$store.state.user.avatar" alt="User Avatar"/>
+                <img :src="getAvatar" alt="User Avatar"/>
               </div>
               <div class="user-info">
-                <p class="user-name">{{this.$store.state.user.username}}</p>
-                <p class="user-job">SD</p>
+                <p class="user-name">{{getName}}</p>
+                <p class="user-job">{{getRoles}}</p>
               </div>
           </a>
           <el-dropdown-menu slot="dropdown" class="nav-user-box">
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import defaultAvatar from '@/assets/default-avatar.png'
 export default {
   name: 'Header',
   data() {
@@ -86,7 +87,22 @@ export default {
         });
       });
     }
-  }
+  },
+  computed: {
+    getName() {
+      return this.$store.getters.name;
+    },
+    getAvatar() {
+      let avatar = defaultAvatar;
+      if (this.$store.getters.avatar) {
+        avatar = this.$store.getters.avatar
+      }
+      return avatar;
+    },
+    getRoles() {
+      return this.$store.getters.roles.toString();
+    }
+  },
 }
 </script>
 

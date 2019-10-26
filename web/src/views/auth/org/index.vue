@@ -217,8 +217,6 @@ export default {
         this.treeListData = construct(list, {
           id: '_id',
           pid: 'parent',
-          name: 'name',
-          type: 'type',
           children: 'children'
         });
       });

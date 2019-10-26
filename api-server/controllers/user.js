@@ -66,12 +66,18 @@ const getMenus = async function (req, res, next) {
   console.log(req.body)
 
   let user = await User.findOne(_id);
-  console.log(user)
+  // console.log(user)
   let roles = await Role.find({_id:{$in: user.roles}}).populate('menus');
+  // console.log(roles)
+  let menus = [];
+  for (let [key, value] of roles.entries()) {
+    menus = menus.concat(value.menus);
+  }
+  console.log(menus)
   res.json({
     status: 'success',
     data:{
-      list: roles.menus
+      list: menus
     }
   });
 }

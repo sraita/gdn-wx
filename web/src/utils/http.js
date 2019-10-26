@@ -6,7 +6,7 @@ import { Message } from 'element-ui';
 
 import store from '../store/index'
 import router from '../router';
-import utils from './utils';
+import { getRefreshToken} from '../utils/auth';
 
 
 // 创建一个axios实例
@@ -35,7 +35,7 @@ let isRefreshing = false; // 是否正在刷新 token
 
 function refreshToken() {
   // instance是当前http.js中已创建的axios实例
-  const token = utils.getRefreshToken();
+  const token = getRefreshToken();
   return instance.get('/auth/refresh_token', {params:{token}}).then(res => res.data);
 }
 

@@ -30,7 +30,7 @@
               <i
                 :class="[data.type === 'role-group' ? 'iconfont icon-folder-account' : 'iconfont icon-account-key']"
               ></i>
-              {{ node.label }}
+              {{ data.name }}
             </span>
           </span>
         </el-tree>
@@ -199,6 +199,7 @@ var getJsonTree = function(data, parentId) {
     }
     return itemArr;
 };
+import { construct, destruct } from '@aximario/json-tree';
 export default {
   data() {
     return {
@@ -224,6 +225,7 @@ export default {
   },
   methods: {
     roleTreeNodeClick(data) {
+      this.selectdRoleTreeNode = data;
       console.log(data);
       let cb1 = (res) => {
         let list = res.data.list;
@@ -247,17 +249,35 @@ export default {
       }
       if (data.type === 'role-group') {
         this.$api.org.getRoleGroupMenuList(this.orgId).then(cb1);
-        this.$api.roleGroup.getById(data._id).then(cb2)
+        this.$api.roleGroup.getById(data.id).then(cb2)
       } else {
-        this.$api.role.getRoleMenus(data._id).then(cb1);
-        this.$api.role.getById(data._id).then(cb2);
+        this.$api.role.getRoleMenus(data.id).then(cb1);
+        this.$api.role.getById(data.id).then(cb2);
       }
     },
-    menuTreeNodeClick() {
-
+    menuTreeNodeClick(data) {
+      console.log(data);
+      this.selectdMenuTreeNode = data;
+      let _id = this.selectdRoleTreeNode.id;
+      let menuId = data._id;
+      if (this.selectdRoleTreeNode.type == 'role-group') {
+        this.$api.roleGroup.getRoleGroupElementsByMenuId(_id,menuId).then(res => {
+          this.elementsList = res.data.list;
+        });
+        this.$api.roleGroup.getRoleGroupOptsByMenuId(_id,menuId).then(res => {
+          this.optsList = res.data.list;
+        });
+      } else {
+        this.$api.role.getRoleElementsByMenuId(_id,menuId).then(res => {
+          this.elementsList = res.data.list;
+        });
+        this.$api.role.getRoleOptsByMenuId(_id,menuId).then(res => {
+          this.optsList = res.data.list;
+        });
+      }
     },
-    menuTreeCheckHandle() {
-
+    menuTreeCheckHandle(node, {checkedKeys}){
+      this.checkedMenus = checkedKeys;
     },
     fetchRoleGroupsTree() {
       this.$api.org.getRoleGroups(this.orgId).then(res => {
@@ -265,13 +285,13 @@ export default {
         let list = res.data.list;
         const treeList = list.map(item => {
           return {
-            _id: item._id,
-            label: item.name,
+            id: item._id,
+            name: item.name,
             type: "role-group",
-            children: item.roles.map(role => {
-              role.label = role.name;
-              role.type = "role";
-              return role;
+            children: construct(item.roles, {
+              id: '_id',
+              pid: 'parent',
+              children: 'children'
             })
           };
         });
@@ -333,7 +353,24 @@ export default {
 
     },
     updateRoleOrGroupAuth() {
-
+      let params = {
+        menus: this.checkedMenus,
+        elements: this.checkedElements,
+        opts: this.checkedOpts
+      };
+      const callback = (res) => {
+        this.$message({
+          type: 'success',
+          message: '权限已更新'
+        })
+      }
+      debugger;
+      console.log(params);
+      if (this.selectdRoleTreeNode.type === 'role-group') {
+        this.$api.roleGroup.updateRoleGroupAuth(this.selectdRoleTreeNode.id,JSON.stringify(params)).then(callback);
+      } else {
+        this.$api.role.updateRoleAuth(this.selectdRoleTreeNode.id,JSON.stringify(params)).then(callback);
+      }
     }
   },
   mounted() {

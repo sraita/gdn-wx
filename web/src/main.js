@@ -10,6 +10,7 @@ import VueCookies from 'vue-cookies'
 
 
 import ElementUI from 'element-ui';
+import './permission' // permission control
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/iconfont/iconfont.css';
 

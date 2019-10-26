@@ -92,11 +92,6 @@ export default {
     };
   },
   methods: {
-    getUserInfo() {
-      this.$api.auth.getUserInfo(localStorage.getItem('userId')).then(res=> {
-        console.log(res);
-      });
-    },
     getVerifyCode() {
       this.form.verifyCode = '';
       this.verifyCodeImg = '/auth/getCaptcha?' + Date.now();
@@ -104,18 +99,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$api.auth.doLogin(this.form).then(res=>{
-            console.log(res);
-            const {token, expire_in, refresh_token,userId} = res.data; 
-            this.$store.dispatch('auth/updateTokens', {token, refresh_token});
-            this.$store.dispatch('user/updateUserId',userId);
+          this.$store.dispatch('app/updateLoginMessage', '正在登录...');
+          this.$store.dispatch('app/updateLoginStatus', true);
+          this.$store.dispatch('user/loginByUserName', this.form).then(res => {
             this.$router.replace({
               path: '/'
             });
           }).catch(err => {
             console.log(err);
+            this.$store.dispatch('app/updateLoginMessage', '登录失败');
+            this.$store.dispatch('app/updateLoginStatus', false);
             this.getVerifyCode();
-          })
+          });
         } else {
           console.log('error submit!!');
           return false;
