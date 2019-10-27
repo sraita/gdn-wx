@@ -2,11 +2,11 @@
 var express = require('express');
 var router = express.Router();
 
-var authController = require('../controllers/auth');
+var authController = require('../../controllers/auth');
 
 var roleGroupRouter = require('./role-group');
 var roleRouter = require('./role');
-var userRouter = require('./user');
+var userRouter = require('../user');
 var orgRouter = require('./org');
 var customRouter = require('./custom');
 var menuRouter = require('./menu');

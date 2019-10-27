@@ -11,7 +11,7 @@ import Forbidden from '../layout/components/Forbidden'
 
 
 
-var userApi = require('../api/user');
+var userApi = require('../api/modules/user');
 Vue.use(Router)
 
 
@@ -36,6 +36,20 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/system',
+    name: 'system',
+    component: Layout,
+    meta: { title: '系统管理', icon: 'documentation', affix: true },
+    children: [
+      {
+        path: '/initialize',
+        name: 'systemInitialize',
+        component: () => import('../views/system/initialize'),
+        meta: { title: '初始化', icon: 'documentation', affix: true }
+      },
+    ]
+  }
 ];
 //动态路由(所有角色的都在这里,我们都做好组件页面了所以我们一定有这个，防君子不防小人)
 export const dynamicRoutes = [

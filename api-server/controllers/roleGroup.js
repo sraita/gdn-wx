@@ -63,7 +63,7 @@ const getList = async function (req, res, next) {
 
 const getRoleTree = async function (req, res, next) {
   try {
-    const list = await RoleGroup.find({ type: 'public' }).populate('roles');
+    const list = await RoleGroup.find({ org:null });
     return res.json({
       status: 'success',
       data: {
@@ -202,20 +202,29 @@ const updateRoleGroupAuth = async function (req, res, next) {
 
   // 重新配置用户组下相关角色的权限
   async function resetRolePromission(group_id) {
-    let subRoles = await Role.find({ group: group_id });
-    subRoles.forEach(async (role) => {
 
-      let role_menus = _.intersection(menus, changeObjectIdsToString(role.menus));
-      let role_elements = _.intersection(elements, changeObjectIdsToString(role.elements));
-      let role_opts = _.intersection(opts, changeObjectIdsToString(role.opts));
+    let role_menus = _.intersection(menus, changeObjectIdsToString(role.menus));
+    let role_elements = _.intersection(elements, changeObjectIdsToString(role.elements));
+    let role_opts = _.intersection(opts, changeObjectIdsToString(role.opts));
 
-      await Role.updateOne({ _id: role._id }, {
-        $set: {
-          menus: role_menus,
-          elements: role_elements,
-          opts: role_opts
-        }
-      });
+    // 1. 更新 默认角色权限
+    await Role.updateMany({
+      parent: group_id, 
+      type:{$in:['default']}
+    },{
+      $set:{menus,elements, opts}
+    });
+
+    // 2. 更新 普通角色 权限 
+    await Role.updateMany({
+      parent: group_id,
+      type: { $in: ['normal'] }
+    }, {
+      $set: {
+        menus: role_menus,
+        elements: role_elements,
+        opts: role_opts
+      }
     });
   }
 
@@ -226,13 +235,17 @@ const updateRoleGroupAuth = async function (req, res, next) {
     let group_menus = _.intersection(menus, changeObjectIdsToString(roleGroup.menus));
     let group_elements = _.intersection(elements, changeObjectIdsToString(roleGroup.elements));
     let group_opts = _.intersection(opts, changeObjectIdsToString(roleGroup.opts));
-
+    
+    let setObj = {
+      menus: group_menus,
+      elements: group_elements,
+      opts: group_opts
+    };
+    if (roleGroup.type.includes('default')) {
+      setObj = {menus, elements, opts}
+    }
     await RoleGroup.updateOne({ _id: _id }, {
-      $set: {
-        menus: group_menus,
-        elements: group_elements,
-        opts: group_opts
-      }
+      $set: setObj
     });
     await resetRolePromission(_id);
 
@@ -256,7 +269,7 @@ const updateRoleGroupAuth = async function (req, res, next) {
 }
 
 const getPublicRoleGroups = async function (req, res, next) {
-  const list = await RoleGroup.find({type: 'public'});
+  const list = await RoleGroup.find({org: null});
   res.json({
     status: 'success',
     data:{

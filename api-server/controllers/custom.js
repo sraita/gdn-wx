@@ -5,60 +5,86 @@ const { RoleGroup } = require('../models/RoleGroup');
 const { Role} = require('../models/Role');
 
 const create = async function (req, res, next) {
+  const {
+    name, // 机构名称
+    remark, // 机构备注信息
+    role_group_id, // 所选 public RoleGroup Id
+    manager_account, // 机构管理员登录账号
+    manager_name, // 管理员姓名
+    manager_mobile, // 管理员手机号
+    manager_password = '123456', // 机构管理员登录密码，默认值:123456
+    contact_name, // 联系人姓名
+    contact_mobile, // 联系人电话
+    contact_address, // 联系地址
+  } = req.body;
   try {
-    const isExist = await Org.findOne({name:req.body.name});
+    const isExist = await Org.findOne({name:name});
     if (isExist) {
       return res.status(422).send({
         message: '客户已存在，不能重复添加'
       });
     }
-    const accountIsExist = await User.findOne({username: req.body.account});
+    const accountIsExist = await User.findOne({username: manager_account});
     if (accountIsExist) {
       return res.status(422).json({
         status: 'error',
         message: '账号已被使用'
       });
     }
-    // 1. 创建对应客户管理员
-    let owner = new User({
-      username: req.body.account,
-      password: req.body.password,
-      name: req.body.ownerName,
-      mobile: req.body.ownerMobile
-    });
-    // 2. 建立对应的组织机构
+    // 1. 创建组织机构
     let org = new Org({
-      name: req.body.name,
-      parent: null,
-      type: 'company',
-      status: 1,
+      name,
+      remark,
+      contact:{
+        name: contact_name,
+        mobile: contact_mobile,
+        address: contact_address
+      }
     });
-    // 3. 设置机构默认管理员
-    org.owner = owner._id;
-    owner.org = org;
-    
-    // 4. 生成机构默认可分配权限表
-    let role_group = await RoleGroup.findById(req.body.roleGroupId);
-    let defaultRoleGroup = new RoleGroup({
-      name: '默认',
-      type:['default','private'],
-      canEdit: false,
-      menus: role_group.menus,
-      elements: role_group.elements,
-      opts: role_group.opts,
-      roles: role_group.roles
+    // 2. 创建主管理员
+    let manager = new User({
+      name: manager_name,
+      username: manager_account,
+      password: manager_password,
+      mobile: manager_mobile
+    });
+    // 3. 初始化默认角色组
+    let publicRoleGroup = await RoleGroup.findOne({_id: role_group_id});
+    let roleGroup = new RoleGroup({
+      name:'默认',
+      type: ['default','private'],
+      parent: publicRoleGroup._id,
+      menus: publicRoleGroup.menus,
+      elements: publicRoleGroup.elements,
+      opts: publicRoleGroup.opts
     });
 
-    defaultRoleGroup.org = org;
-    defaultRoleGroup.parent = role_group;
-    org.baseRoleGroup = role_group;
-    
-    
-    owner.roles = role_group.roles;
+    // 4. 初始化默认角色（管理员）
+    let role = new Role({
+      name: '管理员',
+      type: 'default',
+      menus: publicRoleGroup.menus,
+      elements: publicRoleGroup.elements,
+      opts: publicRoleGroup.opts,
+      isSingle: true, // 主管理员不能与其他角色共存
+    });
 
-    owner.save();
+    // 5. 建立关联关系
+    // 5.1 建立主管理员与组织的关联关系
+    org.managers.push(manager); 
+    manager.org = org; 
+    // 5.2 建立默认角色组与默认角色与组织的关联关系
+    role.group = roleGroup;
+    roleGroup.org = org;
+    // 5.3 给主管理员分配角色
+    owner.roles.push(role);
+
+    // 6. 保存（提交）
     org.save();
-    defaultRoleGroup.save();
+    owner.save();
+    roleGroup.save();
+    role.save();
+
     return res.json({
       status: 'success',
       data: org

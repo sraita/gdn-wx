@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-var controller = require('../controllers/custom');
+var controller = require('../../controllers/department');
 
 router.route('/').get(controller.getList);
 router.route('/').post(controller.create);
 
-router.route('/:_id')
+router.route('/:_id/')
   .get(controller.getById)
   .post(controller.updateById)
 

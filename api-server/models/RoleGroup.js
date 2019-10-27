@@ -5,25 +5,28 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // 状态. 0 - 禁用, 1 - 启用
   status: {
     type:Number,
     default: 1,
   },
+  // 类型: public - 系统公共角色组， private - 机构私有角色组, default - 默认角色组
   type: {
     type: [String],
-    enum: ['system','public', 'private','default'], // system - 系统内部角色组(用于系统管理), public - 系统公共角色组， private - 机构私有角色组, default - 机构默认角色组
+    enum: ['public', 'private','default'], 
     default: ['private']
   },
-  parent: { type: mongoose.Schema.Types.ObjectId, ref: 'roleGroup', default: null }, // 有上级，默认继承上级权限
+  // 上级角色组
+  parent: { type: mongoose.Schema.Types.ObjectId, ref: 'roleGroup', default: null },
   // 备注说明
   remark: {
     type:String, 
     default: '<无>'
   },
-  canEdit:{type: Boolean, default: true},
+  // 所属组织机构
   org: {type: mongoose.Schema.Types.ObjectId, ref: 'org', default: null},
-  roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'role'}],
   menus: [{type: mongoose.Schema.Types.ObjectId, ref: 'menu'}],
+  elements: [{ type: mongoose.Schema.Types.ObjectId, ref: 'element' }], // 页面元素
   opts: [{type: mongoose.Schema.Types.ObjectId, ref:'opt'}],
   createAt: {
     type: Date,

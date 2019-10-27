@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var controller = require('../controllers/roleGroup');
+var controller = require('../../controllers/roleGroup');
 
 router.route('/')
   .post(controller.create)

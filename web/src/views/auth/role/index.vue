@@ -285,11 +285,7 @@ export default {
             _id: item._id,
             label: item.name,
             type: "role-group",
-            children: item.roles.map(role => {
-              role.label = role.name;
-              role.type = "role";
-              return role;
-            })
+            children: []
           };
         });
         this.treeList = treeList;

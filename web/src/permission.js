@@ -10,7 +10,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['login', 'Forbidden', 'Notfound'];
+const whiteList = ['login', 'Forbidden', 'Notfound','systemInitialize'];
 router.beforeEach( async (to, from, next) => {
   // start progress bar
   NProgress.start()

@@ -1,35 +1,40 @@
 const mongoose = require('mongoose');
 
-const OrgSchema = new mongoose.Schema({
-  // 部门名称
+const contactSchema = new mongoose.Schema({
+  name: String,
+  mobile:Number,
+  address: String
+});
+
+const schema = new mongoose.Schema({
+  // 机构名称
   name: {
     type: String,
     required: true
   }, 
-  // 上级部门
-  parent: { type: mongoose.Types.ObjectId, ref: 'org', default: null },
-  type: {
+  logo: String,
+  // 状态. 0: 禁用, 1:启用
+  status:{
+    type:Number,
+    default: 1
+  }, 
+  managers: {type: mongoose.Types.ObjectId, ref: 'user'}, // 管理员
+  // 联系信息
+  contact: [contactSchema],
+  // 备注说明
+  remark:{
     type: String,
-    enum: ['company','department','team'],
-    default: 'department'
+    default:'<无>'
   },
-  owner: {type: mongoose.Types.ObjectId, ref: 'user'}, 
-  baseRoleGroup: { type: mongoose.Types.ObjectId, ref: 'roleGroup' }, 
-  status:Number, // 0: 禁用, 1:启用
   createAt: Date
 });
 
 // 设置索引
-OrgSchema.index({ code: 1 });
-OrgSchema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
-OrgSchema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
+schema.index({ name: 1 });
+schema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
+schema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
 
-OrgSchema.pre('find', function (next) {
-  this.populate('children')
-  next()
-})
-
-OrgSchema.pre('save', function (next) {
+schema.pre('save', function (next) {
   Org.findByIdAndUpdate(this.parent, {
     $addToSet:{
       children: this.id
@@ -38,6 +43,6 @@ OrgSchema.pre('save', function (next) {
   next();
 });
 
-const Org = mongoose.model('org', OrgSchema);
+const Org = mongoose.model('org', schema);
 
 module.exports = { Org };

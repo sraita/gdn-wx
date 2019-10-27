@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Dashboard",
+    "icon": "iconfont icon-view-dashboard",
+    "sort": 1,
+    "routerName": "dashboard",
+    "routerPath": "",
+    "elements": [],
+    "opts": [],
+    "children": []
+  },
+  {
+    "name": "权限管理",
+    "icon": "iconfont icon-account-key",
+    "sort": 2,
+    "routerName": "auth",
+    "routerPath": "/auth",
+    "elements": [],
+    "opts": [],
+    "children": [
+      {
+        "name": "组织机构",
+        "icon": "iconfont icon-file-tree",
+        "sort": 1,
+        "routerName": "org",
+        "routerPath": "/auth/org",
+        "elements": [],
+        "opts": [],
+        "children": []
+      },
+      {
+        "name": "菜单管理",
+        "icon": "iconfont icon-apps",
+        "sort": 2,
+        "routerName": "menu",
+        "routerPath": "/auth/menu",
+        "elements": [],
+        "opts": [],
+        "children": []
+      },
+      {
+        "name": "角色管理",
+        "icon": "iconfont icon-account-key",
+        "sort": 3,
+        "routerName": "role",
+        "routerPath": "/auth/role",
+        "elements": [],
+        "opts": [],
+        "children": []
+      },
+      {
+        "name": "岗位管理",
+        "icon": "iconfont icon-apps",
+        "sort": 4,
+        "routerName": "jobs",
+        "routerPath": "/auth/jobs",
+        "elements": [],
+        "opts": [],
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "用户管理",
+    "icon": "iconfont icon-account-card-details",
+    "sort": 3,
+    "routerName": "user",
+    "routerPath": "/user/index",
+    "elements": [],
+    "opts": [],
+    "children": []
+  },
+  {
+    "name": "租户管理",
+    "icon": "iconfont icon-cube",
+    "sort": 4,
+    "routerName": "custom",
+    "routerPath": "/custom/index",
+    "elements": [],
+    "opts": [],
+    "children": []
+  },
+  {
+    "name": "系统设置",
+    "icon": "iconfont icon-cube",
+    "sort": 5,
+    "routerName": "system",
+    "routerPath": "/system/index",
+    "elements": [],
+    "opts": [],
+    "children": [
+      {
+        "name": "初始化",
+        "icon": "iconfont icon-cube",
+        "sort": 1,
+        "routerName": "systemInitialize",
+        "routerPath": "/system/initialize",
+        "elements": [],
+        "opts": [],
+        "children": []
+      }
+    ]
+  }
+]

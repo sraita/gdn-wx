@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var controller = require('../controllers/menu');
+var controller = require('../../controllers/menu');
 
 router.route('/')
   .get(controller.getList)

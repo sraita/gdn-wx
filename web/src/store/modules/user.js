@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken} from '@/utils/auth'
-import authAPI from '../../api/auth';
+import authAPI from '@/api/modules/auth';
 
 const state = {
   token: getToken(),
@@ -91,8 +91,10 @@ const actions = {
         commit('SET_NAME', name);
         commit('SET_AVATAR', avatar);
         commit('SET_ROLES', roles);
-        commit('SET_ORG_ID', org._id);
-        commit('SET_ORG_NAME',org.name);
+        if (org) {
+          commit('SET_ORG_ID', org._id);
+          commit('SET_ORG_NAME',org.name);
+        }
         commit('SET_DEPARTMENTS', departments);
         resolve(user);
       }).catch(err => {

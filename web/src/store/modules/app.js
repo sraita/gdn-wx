@@ -1,7 +1,7 @@
 import { construct, destruct } from '@aximario/json-tree';
 
-import authAPI from '@/api/auth';
-import userAPI from '@/api/user';
+import authAPI from '@/api/modules/auth';
+import userAPI from '@/api/modules/user';
 import { dynamicRoutes, constantRoutes } from '@/router'
 
 
