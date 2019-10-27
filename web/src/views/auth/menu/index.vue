@@ -112,7 +112,7 @@
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
         <el-form-item label="图标:" prop="icon">
-          <el-input v-model="addForm.icom" placeholder></el-input>
+          <el-input v-model="addForm.icon" placeholder></el-input>
         </el-form-item>
         <el-form-item label="排序:" prop="sort">
           <el-input v-model="addForm.sort" placeholder></el-input>
@@ -360,6 +360,7 @@ export default {
     },
     submitEditForm(formName) {
       this.$refs[formName].validate(valid => {
+        debugger;
         if (valid) {
           this.$api.menu.update(this.addForm._id,this.addForm).then(res => {
             console.log(res);

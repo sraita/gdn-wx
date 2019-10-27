@@ -10,7 +10,6 @@ function filterDynamicRoutes(routes, routeNames) {
   
   routes.forEach(route => {
     const tmp = {...route};
-    console.log(tmp);
     if (routeNames.includes(tmp.name)) {
       if (tmp.children) {
         tmp.children = filterDynamicRoutes(tmp.children, routeNames)

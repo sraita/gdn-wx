@@ -390,7 +390,6 @@ export default {
           message: '权限已更新'
         })
       }
-      console.log(params);
       if (this.selectdRoleTreeNode.type === 'role-group') {
         this.$api.roleGroup.updateRoleGroupAuth(this.selectdRoleTreeNode._id,JSON.stringify(params)).then(callback);
       } else {

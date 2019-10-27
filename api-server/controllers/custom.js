@@ -51,6 +51,7 @@ const create = async function (req, res, next) {
 
     defaultRoleGroup.org = org;
     defaultRoleGroup.parent = role_group;
+    org.baseRoleGroup = role_group;
     
     
     owner.roles = role_group.roles;

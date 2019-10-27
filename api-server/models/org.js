@@ -14,7 +14,7 @@ const OrgSchema = new mongoose.Schema({
     default: 'department'
   },
   owner: {type: mongoose.Types.ObjectId, ref: 'user'}, 
-  defaultRoleGroup: { type: mongoose.Types.ObjectId, ref: 'roleGroup' }, 
+  baseRoleGroup: { type: mongoose.Types.ObjectId, ref: 'roleGroup' }, 
   status:Number, // 0: 禁用, 1:启用
   createAt: Date
 });

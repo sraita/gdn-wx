@@ -43,6 +43,7 @@ export const dynamicRoutes = [
   authRouter,// 权限管理
   {
     path: '/user',
+    name: 'user',
     component: Layout,
     children: [
       {
@@ -55,6 +56,7 @@ export const dynamicRoutes = [
   },
   {
     path: '/custom',
+    name: 'custom',
     component: Layout,
     children: [
       {

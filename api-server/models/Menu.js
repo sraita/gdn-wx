@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
   sort: Number,
   icon: {
     type: String,
-    default: 'icon-file-document-box'
+    default: 'iconfont icon-apps'
   },
   routerName: String,
   routerPath: String,

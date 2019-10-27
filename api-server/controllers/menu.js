@@ -29,6 +29,7 @@ const create = function (req, res, next) {
 }
 
 const updateById = function (req, res, next) {
+  console.log(req.body)
   Menu.findByIdAndUpdate(req.params._id, req.body, (err, data) => {
     if (err) {
       return res.json({ status: 'error', message: err.message });

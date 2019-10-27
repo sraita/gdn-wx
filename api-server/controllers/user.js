@@ -73,6 +73,7 @@ const getMenus = async function (req, res, next) {
   for (let [key, value] of roles.entries()) {
     menus = menus.concat(value.menus);
   }
+  menus = Array.from(new Set(menus));
   console.log(menus)
   res.json({
     status: 'success',

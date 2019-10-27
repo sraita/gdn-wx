@@ -4,9 +4,68 @@ var {Menu} = require('../models/Menu');
 var {Element} = require('../models/Element');
 var {Opt} = require('../models/Opt')
 
+const mongoose = require('mongoose');
+const _ = require('lodash');
+
+// 转换ObjectId 数组 为 String 数组
+function changeObjectIdsToString(arr) {
+  let tmp = arr.map(id => {
+    return mongoose.Types.ObjectId(id).toString()
+  });
+  return tmp;
+}
+
+// 重新配置用户组下相关角色的权限
+async function resetRolePromission(group_id) {
+  let subRoles = await Role.find({ group: group_id });
+  subRoles.forEach(async (role) => {
+    
+    let role_menus = _.intersection(menus, changeObjectIdsToString(role.menus));
+    let role_elements = _.intersection(elements, changeObjectIdsToString(role.elements));
+    let role_opts = _.intersection(opts, changeObjectIdsToString(role.opts));
+
+    await Role.updateOne({ _id: role._id }, {
+      $set: {
+        menus: role_menus,
+        elements: role_elements,
+        opts: role_opts
+      }
+    });
+  });
+}
+
+// 重新配置用户组和子用户组权限
+async function resetRoleGroupPromission(_id) {
+  let roleGroup = await RoleGroup.findById(_id);
+
+  let group_menus = _.intersection(menus, changeObjectIdsToString(roleGroup.menus));
+  let group_elements = _.intersection(elements, changeObjectIdsToString(roleGroup.elements));
+  let group_opts = _.intersection(opts, changeObjectIdsToString(roleGroup.opts));
+
+  await RoleGroup.updateOne({ _id: _id }, {
+    $set: {
+      menus: group_menus,
+      elements: group_elements,
+      opts: group_opts
+    }
+  });
+  await resetRolePromission(_id);
+
+  let subRoleGroups = await RoleGroup.find({ parent: _id });
+  if (subRoleGroups) {
+    subRoleGroups.forEach(role_group => {
+      resetRoleGroupPromission(role_group._id);
+    })
+  }
+}
+
+
 const create = function (req, res, next) {
-  const role_group = new RoleGroup(req.body);
-  role_group.org = req.body.org;
+  const data = req.body;
+  const role_group = new RoleGroup(data);
+  if (data.org) {
+    role_group.org = data.org;
+  }
   role_group.save(function (err, doc) {
     if (err) {
       return res.json({status: 'error', name: err.name, message: err.message});
@@ -137,23 +196,62 @@ const getRoleGroupOptsByMenuId = async function (req, res, next) {
   })
 }
 
-// 角色组功能权限授权
-const updateRoleGroupAuth = function (req, res, next) {
-  console.log('=====')
-  console.log(req.body.menus)
-  RoleGroup.update({_id:req.params._id}, {
-    $set: {
-      'menus': req.body.menus,
-      'elements': req.body.elements,
-      'opts': req.body.opts
-    }
-  },function (err, doc) {
-    if (err) {
-      res.json({status: 'error', name: err.name, message: err.message});
-    } else {
-      res.json({status: 'success', data: doc});
-    }
-  })
+/**
+ * 角色组功能权限授权
+ *  */ 
+const updateRoleGroupAuth = async function (req, res, next) {
+  const _id = req.params._id;
+  let {menus, elements, opts} = req.body;
+  // 处理menus, elements, opts, 转化为ObjectId
+  /** 使用事务
+  const session = await mongoose.startSession({
+    readPreference: { mode: 'primary' },
+  }); 
+  // Start a transaction
+  await session.startTransaction({
+    readConcern: { level: 'snapshot' },
+    writeConcern: { w: 'majority' },
+  });
+  
+  // Operations inside the transaction
+  try {
+    const doc = await RoleGroup.updateOne({_id:req.params._id}, {
+      $set: {
+        menus,
+        elements,
+        opts
+      }
+    },{session});
+    const subRoleGroup = await RoleGroup.updateMany({parent: doc._id},{
+      $set: {
+        menus,
+        elements,
+        opts
+      }
+    }, { session, multi: true});
+    console.log(subRoleGroup)
+    
+    await session.commitTransaction();
+    res.json({ status: 'success', data: doc });
+  } catch (err) {
+    console.error(err);
+    await session.abortTransaction();
+    res.json({ status: 'error', name: err.name, message: err.message });
+
+  } finally {
+    await session.endSession();
+  }
+  */
+
+  await resetRoleGroupPromission(_id);
+  // 重新更正自身权限
+  await RoleGroup.updateOne({_id: _id},{$set:{
+    menus,
+    elements,
+    opts
+  }});
+  
+  res.json({ status: 'success', message: '更新成功' });
 }
 
 const getPublicRoleGroups = async function (req, res, next) {
