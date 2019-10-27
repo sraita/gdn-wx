@@ -9,56 +9,12 @@ const _ = require('lodash');
 
 // 转换ObjectId 数组 为 String 数组
 function changeObjectIdsToString(arr) {
+  arr = arr || [];
   let tmp = arr.map(id => {
     return mongoose.Types.ObjectId(id).toString()
   });
   return tmp;
 }
-
-// 重新配置用户组下相关角色的权限
-async function resetRolePromission(group_id) {
-  let subRoles = await Role.find({ group: group_id });
-  subRoles.forEach(async (role) => {
-    
-    let role_menus = _.intersection(menus, changeObjectIdsToString(role.menus));
-    let role_elements = _.intersection(elements, changeObjectIdsToString(role.elements));
-    let role_opts = _.intersection(opts, changeObjectIdsToString(role.opts));
-
-    await Role.updateOne({ _id: role._id }, {
-      $set: {
-        menus: role_menus,
-        elements: role_elements,
-        opts: role_opts
-      }
-    });
-  });
-}
-
-// 重新配置用户组和子用户组权限
-async function resetRoleGroupPromission(_id) {
-  let roleGroup = await RoleGroup.findById(_id);
-
-  let group_menus = _.intersection(menus, changeObjectIdsToString(roleGroup.menus));
-  let group_elements = _.intersection(elements, changeObjectIdsToString(roleGroup.elements));
-  let group_opts = _.intersection(opts, changeObjectIdsToString(roleGroup.opts));
-
-  await RoleGroup.updateOne({ _id: _id }, {
-    $set: {
-      menus: group_menus,
-      elements: group_elements,
-      opts: group_opts
-    }
-  });
-  await resetRolePromission(_id);
-
-  let subRoleGroups = await RoleGroup.find({ parent: _id });
-  if (subRoleGroups) {
-    subRoleGroups.forEach(role_group => {
-      resetRoleGroupPromission(role_group._id);
-    })
-  }
-}
-
 
 const create = function (req, res, next) {
   const data = req.body;
@@ -242,6 +198,51 @@ const updateRoleGroupAuth = async function (req, res, next) {
     await session.endSession();
   }
   */
+
+
+  // 重新配置用户组下相关角色的权限
+  async function resetRolePromission(group_id) {
+    let subRoles = await Role.find({ group: group_id });
+    subRoles.forEach(async (role) => {
+
+      let role_menus = _.intersection(menus, changeObjectIdsToString(role.menus));
+      let role_elements = _.intersection(elements, changeObjectIdsToString(role.elements));
+      let role_opts = _.intersection(opts, changeObjectIdsToString(role.opts));
+
+      await Role.updateOne({ _id: role._id }, {
+        $set: {
+          menus: role_menus,
+          elements: role_elements,
+          opts: role_opts
+        }
+      });
+    });
+  }
+
+  // 重新配置用户组和子用户组权限
+  async function resetRoleGroupPromission(_id) {
+    let roleGroup = await RoleGroup.findById(_id);
+
+    let group_menus = _.intersection(menus, changeObjectIdsToString(roleGroup.menus));
+    let group_elements = _.intersection(elements, changeObjectIdsToString(roleGroup.elements));
+    let group_opts = _.intersection(opts, changeObjectIdsToString(roleGroup.opts));
+
+    await RoleGroup.updateOne({ _id: _id }, {
+      $set: {
+        menus: group_menus,
+        elements: group_elements,
+        opts: group_opts
+      }
+    });
+    await resetRolePromission(_id);
+
+    let subRoleGroups = await RoleGroup.find({ parent: _id });
+    if (subRoleGroups) {
+      subRoleGroups.forEach(role_group => {
+        resetRoleGroupPromission(role_group._id);
+      })
+    }
+  }
 
   await resetRoleGroupPromission(_id);
   // 重新更正自身权限
