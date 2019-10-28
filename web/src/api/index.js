@@ -9,6 +9,7 @@ import element from './modules/element';
 import opt from './modules/opt';
 import user from './modules/user'
 import system from './modules/system';
+import workflow from './modules/workflow';
 export default {
   auth,
   user,
@@ -19,5 +20,6 @@ export default {
   role,
   custom,
   org,
-  system
+  system,
+  workflow
 }

@@ -5,6 +5,7 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import authRouter from './modules/auth';
+import workflowRouter from './modules/workflow';
 
 import Notfound from '../layout/components/Notfound'
 import Forbidden from '../layout/components/Forbidden'
@@ -49,7 +50,8 @@ export const constantRoutes = [
         meta: { title: '初始化', icon: 'documentation', affix: true }
       },
     ]
-  }
+  },
+  workflowRouter
 ];
 //动态路由(所有角色的都在这里,我们都做好组件页面了所以我们一定有这个，防君子不防小人)
 export const dynamicRoutes = [

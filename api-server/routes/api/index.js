@@ -12,6 +12,8 @@ var customRouter = require('./custom');
 var menuRouter = require('./menu');
 var elementRouter = require('./element');
 var optRouter = require('./opt');
+var workflowRouter = require('./workflow');
+
 
 /* GET home page. */
 router.all('/*', authController.baseAuth);
@@ -23,5 +25,6 @@ router.use('/opt', optRouter);
 router.use('/user',userRouter);
 router.use('/org', orgRouter);
 router.use('/custom', customRouter);
+router.use('/workflow', workflowRouter);
 
 module.exports = router;
