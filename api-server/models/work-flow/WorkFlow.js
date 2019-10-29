@@ -26,6 +26,6 @@ const schema = new mongoose.Schema({
   operator: {type: mongoose.Schema.Types.ObjectId, ref: 'user'}, // 操作人员
 });
 
-const WorkFlow = mongoose.model('workflow', schema);
+const WorkFlow = mongoose.model('flow', schema);
 
 module.exports = { WorkFlow };

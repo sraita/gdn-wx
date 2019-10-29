@@ -20,7 +20,7 @@ const workflowRouter = {
     {
       path: ':_id/design',
       name: 'designWorkFlow',
-      component: () => import('@/views/workflow/design'),
+      component: () => import('@/views/workflow/design/index'),
       meta: { title: '流程设计' }
     },
   ]
