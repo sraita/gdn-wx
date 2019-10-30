@@ -36,7 +36,7 @@
     </el-dialog>
     
     <!-- 表单设计 -->
-    <el-dialog title="表单设计器" :visible.sync="formDisignerVisible" width="90%" top="5%">
+    <el-dialog title="表单设计器" :visible.sync="formDisignerVisible" width="90%" top="5%" :lock-scroll="false" :modal="false">
       <fm-making-form ref="makingform" style="height: 500px;" preview generate-json>
         <template slot="action"></template>
       </fm-making-form>
