@@ -36,7 +36,6 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="名称" prop="name"></el-table-column>
         <el-table-column label="分类" prop="category.name"></el-table-column>
-        <el-table-column label="泳道" prop="pools"></el-table-column>
         <el-table-column label="创建时间" prop="createdAt"></el-table-column>
         <el-table-column label="更新时间" prop="updateAt"></el-table-column>
         <el-table-column label="状态" prop="status"></el-table-column>
@@ -51,10 +50,10 @@
       </el-table>
     </el-card>
 
-    <!-- Dialog 新增工作流模型 -->
-    <el-dialog title="新增模型" :visible.sync="dialogVisible" width="400px">
+    <!-- Dialog 新增工作流 -->
+    <el-dialog title="新增工作流程定义" :visible.sync="dialogVisible" width="400px">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="模型名称:" prop="name">
+        <el-form-item label="名称:" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="所属分类:" prop="category">
@@ -130,7 +129,7 @@ export default {
         if (valid) {
           this.$api.workflow.create(this.form).then(res => {
             this.fetchData();
-            this.$message({ type: "success", message: "已新增模型！" });
+            this.$message({ type: "success", message: "工作流程定义新增成功！" });
             this.dialogVisible = false;
           });
         } else {

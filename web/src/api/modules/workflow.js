@@ -10,6 +10,9 @@ const create = (params => post('/api/workflow', params));
 const update = ((_id, params)  => post(`api/workflow/${_id}`, params));
 const remove = ((_id,params) => post(`/api/workflow/${_id}/remove`, params));
 
+const createForm = (params => post('/api/workflow/form/create',params));
+const designForm = ((_id, params) => post(`/api/workflow/form/${_id}/design`,params));
+const getFormList = (_id => get(`/api/workflow/${_id}/form`));
 export default {
   getCategories,
   createCategory,
@@ -19,5 +22,10 @@ export default {
   getList,
   create,
   update,
-  remove
+  remove,
+
+  // form
+  createForm,
+  designForm,
+  getFormList
 }

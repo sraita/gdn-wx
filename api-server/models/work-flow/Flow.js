@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  category: { type: mongoose.Schema.Types.ObjectId, ref:'workflowCategory', default: null},
+  category: { type: mongoose.Schema.Types.ObjectId, ref:'flowCategory', default: null},
   status: {
     type: Number,
     default: 1, // 0 - 禁用, 1 - 启用, -1 -  历史版本
@@ -26,6 +26,6 @@ const schema = new mongoose.Schema({
   operator: {type: mongoose.Schema.Types.ObjectId, ref: 'user'}, // 操作人员
 });
 
-const WorkFlow = mongoose.model('flow', schema);
+const Flow = mongoose.model('flow', schema);
 
-module.exports = { WorkFlow };
+module.exports = { Flow };

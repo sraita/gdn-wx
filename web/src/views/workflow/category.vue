@@ -24,9 +24,9 @@
     </el-card>
 
     <!-- Dialog 新增 -->
-    <el-dialog :title="isEdit?'更新模型分类':'新增模型分类'" :visible.sync="dialogVisible" width="400px">
+    <el-dialog :title="isEdit?'更新分类':'新增分类'" :visible.sync="dialogVisible" width="400px">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="模型名称:" prop="name">
+        <el-form-item label="分类名称:" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="备注说明:">

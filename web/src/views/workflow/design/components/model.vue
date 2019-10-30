@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" @click="dialogVisible = true">新增</el-button>
     </div>
     <!-- 模型列表 -->
-    <el-table :data="tableData" stripe size="mini">
+    <el-table :data="tableData" stripe size="mini" v-loading="loading">
       <el-table-column label="名称" prop="name"></el-table-column>
       <el-table-column label="引用结点" prop="node.name"></el-table-column>
       <el-table-column label="创建时间" prop="createAt"></el-table-column>
@@ -54,6 +54,8 @@ export default {
   name: "WorkFlowModel",
   data() {
     return {
+      flowId: this.$router.currentRoute.params._id,
+      loading: false,
       dialogVisible: false,
       formDisignerVisible: false,
       tableData: [{}],
@@ -66,16 +68,49 @@ export default {
     };
   },
   methods: {
+    fetchData() {
+      this.loading = true;
+      this.$api.workflow.getFormList(this.flowId).then(res => {
+        this.tableData = res.data.list;
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
     designForm(row) {
       this.currentRow = row;
       this.formDisignerVisible = true;
     },
     saveData(refName) {
       let {config, list} = this.$refs[refName].getJSON();
-      this.form.config = config;
-      this.form.list = list;
-      console.log(form);
+      this.$api.workflow.designForm(this.currentRow._id, {config, list}).then(res => {
+        console.log(res);
+        this.$message({type: 'success', message: '已保存!'});
+      }).catch(e => {
+        this.$message({type: 'error', message: '保存失败!'})
+      });
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let params = {
+            flowId: this.flowId,
+            name: this.form.name
+          }
+          this.$api.workflow.createForm(params).then(res => {
+            this.fetchData();
+            this.dialogVisible = false;
+            this.$message({type: 'success', message: '新增表单成功!'});
+          }).catch(e => {
+            this.$message({type: 'error', message: '新增表单失败!'})
+          });
+        } else {
+          return false;
+        }
+      });
     }
-  }
+  },
+  mounted() {
+    this.fetchData();
+  },
 };
 </script>

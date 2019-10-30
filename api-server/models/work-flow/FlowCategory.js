@@ -11,6 +11,6 @@ const schema = new mongoose.Schema({
   }
 });
 
-const WorkFlowCategory = mongoose.model('workflowCategory', schema);
+const FlowCategory = mongoose.model('flowCategory', schema);
 
-module.exports = { WorkFlowCategory };
+module.exports = { FlowCategory };
