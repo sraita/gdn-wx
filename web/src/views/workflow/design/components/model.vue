@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-button type="primary" size="mini" @click="dialogVisible = true">新增</el-button>
+      <el-button type="primary" size="mini" @click="dialogVisible = true">新增表单</el-button>
     </div>
     <!-- 模型列表 -->
     <el-table :data="tableData" stripe size="mini" v-loading="loading">
@@ -51,7 +51,7 @@
 
 <script>
 export default {
-  name: "WorkFlowModel",
+  name: "FlowModel",
   data() {
     return {
       flowId: this.$router.currentRoute.params._id,

@@ -6,11 +6,11 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // 任务类型. human - 人工执行, service - 系统服务
+  // 任务类型. normal - 普通任务, service - 系统服务
   type:{
     type: String,
-    enum:['human', 'service'],
-    default: 'human'
+    enum:['normal', 'service'],
+    default: 'normal'
   },
   // 所属结点
   node: { type: mongoose.Schema.Types.ObjectId, ref: 'flowNode' },
