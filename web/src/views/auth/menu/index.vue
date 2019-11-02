@@ -5,50 +5,30 @@
       shadow="never"
       class="page-org"
     >
-      <div class="left">
-        <el-form :inline="true">
-          <el-form-item>
-            <el-input placeholder="搜索菜单">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
-          </el-form-item>
-          <el-form-item label>
-            <el-button type="text" icon="el-icon-plus" @click="addMenu"></el-button>
-          </el-form-item>
-        </el-form>
-        <el-divider></el-divider>
-
-        <el-tree
-          :data="treeList"
-          :props="defaultProps"
-          @node-click="checkOrgNode"
-          default-expand-all
-          highlight-current	
-          :current-node-key="0"
-          :expand-on-click-node="false"
-        >
-          <span class="custom-tree-node" slot-scope="{ node, data }">
-            <span>
-              <i class="el-icon-folder"></i>
-              {{ node.label }}
-            </span>
-          </span>
-        </el-tree>
-      </div>
-      <div class="main">
-        <div class="inline-title">
-          <div class="float-right">
-            <el-button type="text" size="mini" @click="addSubMenu">添加子菜单</el-button>
-            <el-divider direction="vertical"></el-divider>
-            <el-button type="text" size="mini" @click="editMenu">编辑</el-button>
-            <el-divider direction="vertical"></el-divider>
-            <el-button type="text" size="mini" @click="deleteMenu">删除</el-button>
-          </div>
-          <span>{{selectedNode.name}}[启用]</span>
-        </div>
-        <el-divider></el-divider>
-        
-      </div>
+      <el-table
+        :data="tableData"
+        style="width: 100%;margin-bottom: 20px;"
+        row-key="id"
+        default-expand-all
+        size="mini"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      >
+        <el-table-column prop="name" label="名称" width="160" sort-by="sort"></el-table-column>
+        <el-table-column prop="icon" label="图标" width="56">
+          <template slot-scope="scope">
+            <i :class="scope.row.icon"></i>
+          </template>
+        </el-table-column>
+        <el-table-column prop="routerName" label="路由" width="160"></el-table-column>
+        <el-table-column prop="routerPath" label="路径"></el-table-column>
+        <el-table-column label="操作" width="180" align="right">
+          <template slot-scope="scope">
+            <el-button type="text" size="mini" @click="addSubMenu(scope.row)">添加子菜单</el-button>
+            <el-button type="text" size="small" @click="editMenu(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="deleteMenu(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
 
     <!-- Dialog 添加菜单 -->
@@ -80,36 +60,25 @@
 
       <span slot="footer">
         <el-button size="small" @click="addDialogVisible = false">取 消</el-button>
-        <el-button v-if="addForm.isEdit" size="small" type="primary" @click="submitEditForm('addForm')">保存</el-button>
+        <el-button
+          v-if="addForm.isEdit"
+          size="small"
+          type="primary"
+          @click="submitEditForm('addForm')"
+        >保存</el-button>
         <el-button v-else size="small" type="primary" @click="submitAddForm('addForm')">提 交</el-button>
-        
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-var getJsonTree = function(data, parentId) {
-    var itemArr = [];
-    for (var i = 0; i < data.length; i++) {
-      var node = data[i];
-      if (node.parent == parentId) {
-
-        var newNode = {
-          _id:node._id,
-          label: node.name,
-          data: node            
-        };
-        newNode.children = getJsonTree(data, node._id);
-        itemArr.push(newNode);
-      }
-    }
-    return itemArr;
-};
+import { construct, destruct } from "@aximario/json-tree";
 export default {
   name: "menuPage",
   data() {
     return {
+      tableData: [],
       addDialogVisible: false, // 新增菜单 Dialog
       addForm: {},
       addFromRules: {},
@@ -128,112 +97,39 @@ export default {
     };
   },
   methods: {
-    checkOrgNode(node) {
-      this.selectedNode = node.data;
-      this.fetchOptsByMenuId(this.selectedNode._id);
-      this.fetchElementsByMenuId(this.selectedNode._id);
-    },
     addMenu() {
       this.addForm = {};
       this.addDialogVisible = true;
     },
-    addSubMenu() {
+    addSubMenu(row) {
       this.addForm = {
-        parent: this.selectedNode._id,
+        parent: row._id
       };
       this.addDialogVisible = true;
     },
-    editMenu() {
-      this.addForm = this.selectedNode;
+    editMenu(row) {
+      this.addForm = row;
       this.addForm.isEdit = true;
       this.addDialogVisible = true;
-    },  
-    deleteMenu() {
-      this.$confirm(`是否删除菜单「${this.selectedNode.name}」?`).then(()=>{
-        this.$api.menu.remove(this.selectedNode._id).then(res => {
+    },
+    deleteMenu(row) {
+      this.$confirm(`是否删除菜单「${row.name}」?`).then(() => {
+        this.$api.menu.remove(row._id).then(res => {
           console.log(res);
           this.fetchMenuList();
-          this.$message({type: 'success', message: "删除成功"})
-        })
-      });
-    },
-    // 添加页面元素
-    addElement() {
-      this.addElementForm = {
-        menu: this.selectedNode._id
-      };
-      this.addElementDialogVisible = true;
-    },
-    // 编辑页面元素
-    editElement(row) {
-      this.addElementForm = {
-        isEdit: true,
-        _id: row._id,
-        name: row.name,
-        sort: row.sort
-      };
-      this.addElementDialogVisible = true;
-    },
-    // 删除页面元素
-    removeElement(row) {
-      this.$confirm(`是否删除元素「${row.name}」?`).then(()=>{
-        this.$api.element.remove(row._id).then(res => {
-          console.log(res);
-          this.fetchElementsByMenuId(this.selectedNode._id);
-          this.$message({type: 'success', message: "删除成功"})
-        })
-      });
-    },
-    // 新增操作
-    addOptItem () {
-      this.addOptForm = {
-        menu: this.selectedNode._id
-      };
-      this.addOptDialogVisible = true;
-    },
-    editOptItem(row) {
-      this.addOptForm = row;
-      this.addOptForm.isEdit = true;
-      this.addOptDialogVisible = true;
-    },
-    removeOptItem(row) {
-      this.$confirm(`是否「${row.name}」?`).then(()=>{
-        this.$api.opt.remove(row._id).then(res => {
-          console.log(res);
-          this.fetchOptsByMenuId(this.selectedNode._id);
-          this.$message({type: 'success', message: "删除成功"})
-        })
+          this.$message({ type: "success", message: "删除成功" });
+        });
       });
     },
     fetchMenuList() {
       this.$api.menu.getMenus().then(res => {
-        let list = res.data.list;
-        let treeList = list
-          .filter(item => {
-            return item.parent === null;
-          })
-          .map(item => {
-            return {
-              label: item.name,
-              data: item,
-              children: getJsonTree(res.data.list,item._id)
-            };
-          });
-        this.treeList = treeList;
-        console.log(treeList);
+        const list = res.data.list;
+        this.tableData = construct(list, {
+          id: "_id",
+          pid: "parent",
+          children: "children"
+        });
       });
-    },
-    fetchElementsByMenuId(menuId) {
-      this.$api.element.getListByMenuId(menuId).then(res => {
-        console.log(res);
-        this.elementListTable = res.data.list;
-      })
-    },
-    fetchOptsByMenuId(menuId) {
-      this.$api.opt.getListByMenuId(menuId).then(res => {
-        console.log(res);
-        this.optsListTable = res.data.list;
-      })
     },
     submitAddForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -251,13 +147,13 @@ export default {
       this.$refs[formName].validate(valid => {
         debugger;
         if (valid) {
-          this.$api.menu.update(this.addForm._id,this.addForm).then(res => {
+          this.$api.menu.update(this.addForm._id, this.addForm).then(res => {
             console.log(res);
             this.addDialogVisible = false;
             this.fetchMenuList();
             this.$message({
-              type: 'success',
-              message: '修改成功'
+              type: "success",
+              message: "修改成功"
             });
           });
         } else {
@@ -265,82 +161,8 @@ export default {
         }
       });
     },
-    submitAddOptForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$api.opt.create(this.addOptForm).then(res => {
-            this.addOptDialogVisible = false;
-            this.fetchOptsByMenuId(this.selectedNode._id);
-            this.$message({
-              type: 'success',
-              message: '添加成功'
-            });
-          })
-        } else {
-          return false;
-        }
-      })
-    },
-
-    submitEditOptForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$api.opt.update(this.addOptForm._id, this.addOptForm).then(res => {
-            console.log(res);
-            this.addOptDialogVisible = false;
-            this.fetchOptsByMenuId(this.selectedNode._id);
-            this.$message({
-              type: 'success',
-              message: '修改成功'
-            });
-          });
-        } else {
-          return false;
-        }
-      })
-    },
-    submitAddElementForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$api.element.create(this.addElementForm).then(res => {
-            this.addElementDialogVisible = false;
-            this.fetchElementsByMenuId(this.selectedNode._id);
-            this.$message({
-              type: 'success',
-              message: '添加成功'
-            });
-          })
-        } else {
-          return false;
-        }
-      })
-    },
-    submitEditElementForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$api.element.update(this.addElementForm._id, this.addElementForm).then(res => {
-            console.log(res);
-            this.addElementDialogVisible = false;
-            this.fetchElementsByMenuId(this.selectedNode._id);
-            this.$message({
-              type: 'success',
-              message: '修改成功'
-            });
-          });
-        } else {
-          return false;
-        }
-      })
-    }
   },
-  computed: {
-    getOptsCount() {
-      return this.optsListTable.length;
-    },
-    getElementsCount() {
-      return this.elementListTable.length;
-    }
-  },
+  computed: {},
   mounted() {
     this.fetchMenuList();
   }
@@ -362,7 +184,9 @@ export default {
     border-right: 1px solid #eee;
     .el-tree {
       background: transparent;
-      .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+      .el-tree--highlight-current
+        .el-tree-node.is-current
+        > .el-tree-node__content {
         background-color: #727cf5;
         color: #fff;
       }

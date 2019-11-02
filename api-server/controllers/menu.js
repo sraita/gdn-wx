@@ -1,12 +1,14 @@
 var { Menu } = require('../models/Menu');
 
 const getList = async function (req, res, next) {
-  const total = await Menu.countDocuments();
-  const list = await Menu.find({}).limit(10).skip(0);
+  let selector = {};
+  if (req.query.parent) {
+    selector = {parent: req.query.parent};
+  }
+  const list = await Menu.find(selector).sort({sort:1});
   res.json({
     status: 'success',
     data: {
-      total: total,
       list: list
     }
   })
