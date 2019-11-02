@@ -40,6 +40,8 @@ router.route('/flow-forms').get(flowFormController.getList);
 
 // flow Node
 router.route('/flow-node').post(flowNodeController.create);
+router.route('/flow-node/:_id/update').post(flowNodeController.updateById);
+router.route('/flow-node/:_id/remove').post(flowNodeController.removeById);
 router.route('/flow-nodes').get(flowNodeController.getList);
 
 // flow Task

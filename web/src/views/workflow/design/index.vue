@@ -54,12 +54,13 @@
           <div>
             <el-button type="primary" size="mini" @click="addTaskVisible = true">添加任务</el-button>
           </div>
-          <el-table :data="taskList" stripe v-loading="loading">
+          <el-table :data="taskList" stripe v-loading="loading" size="mini">
             <el-table-column label="任务名称" prop="name"></el-table-column>
             <el-table-column label="任务类型" prop="type"></el-table-column>
             <el-table-column label="办理时限" prop="expireIn"></el-table-column>
             <el-table-column label="超时处理" prop="ifExpired"></el-table-column>
-            <el-table-column label="任务分配" prop="ifExpired"></el-table-column>
+            <el-table-column label="办理人" prop="users"></el-table-column>
+            <el-table-column label="办理角色" prop="roles"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="update(scope.row)">编辑</el-button>
@@ -71,7 +72,6 @@
       </el-tabs>
     </el-card>
 
-    <!-- 新增模型字段 -->
     <!-- Node ContextMenu -->
     <v-contextmenu ref="contextmenu" theme="dark" event-type="click">
       <v-contextmenu-item
@@ -107,7 +107,7 @@
 
     <!-- Dialog 新增节点 -->
     <el-dialog
-      :title="isEdit ? '编辑节点': '新增节点'"
+      :title="isEditNode ? '编辑节点': '新增节点'"
       :visible.sync="dialogVisible"
       width="400px"
       size="small"
@@ -163,7 +163,7 @@
             <el-option label="部门主管" value="normal"></el-option>
             <el-option label="财务" value="service"></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="办理时限:">
           <el-slider
             v-model="addTaskForm.expireIn"
@@ -201,7 +201,7 @@ export default {
       contextmenuNode: {},
       selectedNode: {},
       dialogVisible: false,
-      isEdit: false,
+      isEditNode: false,
       form: {
         type: "normal",
         condition: "all"
@@ -236,35 +236,66 @@ export default {
           this.addTaskForm.node = this.selectedNode._id;
 
           this.addTaskVisible = true;
+        case "editNode":
+          this.form = this.selectedNode;
+          this.isEditNode = true;
+          this.dialogVisible = true;
+          break;
+        case "removeNode":
+          this.$confirm("此操作将永久删除该环节, 是否继续?", "提示", {
+            type: "warning"
+          }).then(() => {
+            this.$api.workflow.removeNode(this.selectedNode._id).then(res => {
+              this.$message({ type: "success", message: "已删除!" });
+              this.getNodeList();
+            })
+            .catch(e => {
+              this.$message({ type: "error", message: "删除失败!" });
+            });
+          });
+          break;
         default:
           break;
       }
     },
     getNodeList() {
-      this.$api.workflow.getNodeList({flow:this.flowId}).then(res => {
+      this.$api.workflow.getNodeList({ flow: this.flowId }).then(res => {
         console.log(res);
         this.nodeList = res.data.list;
       });
     },
     getNodeTasks() {
-      this.$api.workflow.getNodeTasks({flow: this.flowId, node: this.selectedNode._id}).then(res => {
-        this.taskList = res.data.list;
-      })
+      this.$api.workflow
+        .getNodeTasks({ flow: this.flowId, node: this.selectedNode._id })
+        .then(res => {
+          this.taskList = res.data.list;
+        });
     },
     submitNodeForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$api.workflow
-            .createNode(this.form)
-            .then(res => {
-              console.log(res);
-              this.getNodeList();
-              this.dialogVisible = false;
-              this.$message({ type: "success", message: "新增节点成功!" });
-            })
-            .catch(e => {
-              this.$message({ type: "error", message: "新增节点失败!" });
-            });
+          if (this.isEditNode) {
+            this.$api.workflow.updateNode(this.form._id, this.form).then(res => {
+                this.getNodeList();
+                this.dialogVisible = false;
+                this.$message({ type: "success", message: "更新节点成功!" });
+              })
+              .catch(e => {
+                this.$message({ type: "error", message: "更新节点失败!" });
+              });
+          } else {
+            this.$api.workflow
+              .createNode(this.form)
+              .then(res => {
+                console.log(res);
+                this.getNodeList();
+                this.dialogVisible = false;
+                this.$message({ type: "success", message: "新增节点成功!" });
+              })
+              .catch(e => {
+                this.$message({ type: "error", message: "新增节点失败!" });
+              });
+          }
         } else {
           return false;
         }
@@ -273,15 +304,17 @@ export default {
     submitTaskForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$api.workflow.createTask(this.addTaskForm).then(res => {
-            console.log(res);
-            this.getNodeTasks();
-            this.dialogVisible = false;
-            this.$message({ type: "success", message: "新增任务成功!" });
-          })
-          .catch(e => {
-            this.$message({ type: "error", message: "新增任务失败!" });
-          });
+          this.$api.workflow
+            .createTask(this.addTaskForm)
+            .then(res => {
+              console.log(res);
+              this.getNodeTasks();
+              this.dialogVisible = false;
+              this.$message({ type: "success", message: "新增任务成功!" });
+            })
+            .catch(e => {
+              this.$message({ type: "error", message: "新增任务失败!" });
+            });
         } else {
           return false;
         }

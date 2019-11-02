@@ -16,6 +16,8 @@ const getFormList = (params => get('/api/flow-forms',params));
 
 // 环节（节点）
 const createNode = (params => post('/api/flow-node', params));
+const updateNode = ((_id, params) => post(`/api/flow-node/${_id}/update`,params));
+const removeNode = ((_id, params) => post(`/api/flow-node/${_id}/remove`, params));
 const getNodeList = (params => get('/api/flow-nodes/', params));
 
 const createTask = (params => post('/api/flow-task', params));
@@ -38,6 +40,8 @@ export default {
 
   getNodeList,
   createNode,
+  updateNode,
+  removeNode,
 
   createTask,
   getNodeTasks
