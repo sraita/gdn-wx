@@ -51,7 +51,8 @@ const removeById = async function (req, res, next) {
 }
 
 const getList = async function (req,res, next) {
-  let list = await FlowForm.find({flow: req.params._id});
+  const {flow} = req.query;
+  let list = await FlowForm.find({flow: flow});
   res.json({
     status: 'success',
     data: {

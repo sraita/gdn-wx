@@ -1,6 +1,6 @@
 const { FlowCategory } = require('../models/work-flow/FlowCategory');
 const { Flow } = require('../models/work-flow/Flow');
-
+const { FlowNode } = require('../models/work-flow/FlowNode');
 
 // 工作流模型分类信息维护
 // 新建分类
@@ -47,11 +47,27 @@ const getCategories = async function (req, res, next) {
 
 // 新建工作流程定义
 const create = async function (req, res, next) {
-  let doc = new Flow(req.body);
-  doc.save();
+  let flow = new Flow(req.body);
+  // 初始化Start 环节 和 End 环节
+  let start = new FlowNode({
+    name: 'Start',
+    type: 'start',
+    flow: flow,
+  });
+  let end = new FlowNode({
+    name: 'End',
+    type: 'end',
+    flow: flow,
+    next: null
+  });
+  start.next = end;
+  
+  start.save();
+  end.save();
+  flow.save();
   res.json({
     status: 'success',
-    data: doc
+    data: flow
   });
 }
 // 更新工作流

@@ -12,6 +12,8 @@ const schema = new mongoose.Schema({
     enum:['normal', 'service'],
     default: 'normal'
   },
+  // 所属工作流
+  flow: { type: mongoose.Schema.Types.ObjectId, ref: 'flow' },
   // 所属结点
   node: { type: mongoose.Schema.Types.ObjectId, ref: 'flowNode' },
   // 任务执行有效时限, 单位为 秒 . -1 - 永久有效
@@ -36,8 +38,7 @@ const schema = new mongoose.Schema({
   updateAt: {
     type: Date,
     default: new Date(),
-  },
-  operator: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }, // 操作人员
+  }
 });
 
 const FlowTask = mongoose.model('flowTask', schema);

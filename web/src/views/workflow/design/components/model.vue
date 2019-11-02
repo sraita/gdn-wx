@@ -70,7 +70,7 @@ export default {
   methods: {
     fetchData() {
       this.loading = true;
-      this.$api.workflow.getFormList(this.flowId).then(res => {
+      this.$api.workflow.getFormList({flow:this.flowId}).then(res => {
         this.tableData = res.data.list;
       }).finally(() => {
         this.loading = false;

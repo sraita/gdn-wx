@@ -10,9 +10,16 @@ const create = (params => post('/api/workflow', params));
 const update = ((_id, params)  => post(`api/workflow/${_id}`, params));
 const remove = ((_id,params) => post(`/api/workflow/${_id}/remove`, params));
 
-const createForm = (params => post('/api/workflow/form/create',params));
-const designForm = ((_id, params) => post(`/api/workflow/form/${_id}/design`,params));
-const getFormList = (_id => get(`/api/workflow/${_id}/form`));
+const createForm = (params => post('/api/flow-form',params));
+const designForm = ((_id, params) => post(`/api/flow-form/${_id}/design`,params));
+const getFormList = (params => get('/api/flow-forms',params));
+
+// 环节（节点）
+const createNode = (params => post('/api/flow-node', params));
+const getNodeList = (params => get('/api/flow-nodes/', params));
+
+const createTask = (params => post('/api/flow-task', params));
+const getNodeTasks = (params => get('/api/flow-tasks',params));
 export default {
   getCategories,
   createCategory,
@@ -27,5 +34,11 @@ export default {
   // form
   createForm,
   designForm,
-  getFormList
+  getFormList,
+
+  getNodeList,
+  createNode,
+
+  createTask,
+  getNodeTasks
 }

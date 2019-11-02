@@ -6,16 +6,16 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // 节点类型: solt(subFlow) - 插槽, normal - 普通结点 （多租户自定流程处理???)
+  // 节点类型: slot(subFlow) - 插槽, normal - 普通结点 （多租户自定流程处理???)
   type:{
     type: String,
-    enum: ['normal', 'solt'],
+    enum: ['normal', 'slot','start','end'],
     default: 'normal'
   },
   // 所属工作流
   flow: { type: mongoose.Schema.Types.ObjectId, ref: 'flow' },
   // 下一节点
-  next: {type: mongoose.Schema.Types.ObjectId, ref: 'flowNode'},
+  next: {type: mongoose.Schema.Types.ObjectId, ref: 'flowNode',default:null},
   // 节点执行有效时间
   expireIn:{
     type: Number,

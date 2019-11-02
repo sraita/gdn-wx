@@ -6,35 +6,34 @@
           <FlowModel />
         </el-tab-pane>
         <el-tab-pane label="流程设计" name="tasks">
-          <div class="workflow-process-diagram">
-            <div class="node node-start">
-              <div class="node-content"></div>
-            </div>
-            <div class="node node-normal is-select" v-contextmenu:contextmenu>
-              <div class="node-content">
-                <span class="node-name">提交申请</span>
+          <el-scrollbar
+            :native="false"
+            wrapClass="diagram-scroll-wrap"
+            viewClass="diagram-scroll-view"
+            class="diagram-scroll-bar"
+          >
+            <div class="workflow-process-diagram">
+              <div
+                v-for="item in sortedNodeList"
+                :key="item._id"
+                :class="['node','node-'+item.type,{'is-select':item._id == selectedNode._id}]"
+                @click="nodeClickHandle(item)"
+              >
+                <div class="node-content" v-if="item.type == 'end'">
+                  <span class="node-name">{{item.name}}</span>
+                </div>
+                <div class="node-content" v-else v-contextmenu:contextmenu>
+                  <div class="node-icon" v-if="item.type == 'normal'">
+                    <i class="iconfont icon-package-variant-closed"></i>
+                  </div>
+                  <div class="node-icon" v-if="item.type == 'slot'">
+                    <i class="iconfont icon-package-variant"></i>
+                  </div>
+                  <span class="node-name">{{item.name}}</span>
+                </div>
               </div>
             </div>
-            <div class="node node-solt" v-contextmenu:contextmenu>
-              <div class="node-content">
-                <span class="node-name">Solt</span>
-              </div>
-            </div>
-            <div class="node node-end" v-contextmenu:contextmenu>
-              <div class="node-content"></div>
-            </div>
-            <div
-              v-for="item in nodeList"
-              :key="item._id"
-              :class="['node','node-'+item.type]"
-              v-contextmenu:contextmenu
-              @click="nodeClickHandle(item)"
-            >
-              <div class="node-content">
-                <span class="node-name">{{item.name}}</span>
-              </div>
-            </div>
-          </div>
+          </el-scrollbar>
           <el-divider></el-divider>
           <div class="inline-title">
             <span>节点信息</span>
@@ -55,7 +54,7 @@
           <div>
             <el-button type="primary" size="mini" @click="addTaskVisible = true">添加任务</el-button>
           </div>
-          <el-table :data="tableData" stripe v-loading="loading">
+          <el-table :data="taskList" stripe v-loading="loading">
             <el-table-column label="任务名称" prop="name"></el-table-column>
             <el-table-column label="任务类型" prop="type"></el-table-column>
             <el-table-column label="办理时限" prop="expireIn"></el-table-column>
@@ -74,18 +73,34 @@
 
     <!-- 新增模型字段 -->
     <!-- Node ContextMenu -->
-    <v-contextmenu ref="contextmenu" theme="dark">
-      <v-contextmenu-item @click="dialogVisible = true">
+    <v-contextmenu ref="contextmenu" theme="dark" event-type="click">
+      <v-contextmenu-item
+        @click="menuItemClickHandle"
+        key="addNode"
+        :disabled="selectedNode.type == 'end'"
+      >
         <i class="iconfont icon-plus-box-outline"></i> 添加节点
       </v-contextmenu-item>
-      <v-contextmenu-item @click="addTaskVisible = true">
+      <v-contextmenu-item
+        @click="menuItemClickHandle"
+        key="addTask"
+        :disabled="['slot','end'].includes(selectedNode.type)"
+      >
         <i class="iconfont icon-note-plus-outline"></i> 添加任务
       </v-contextmenu-item>
       <v-contextmenu-item divider></v-contextmenu-item>
-      <v-contextmenu-item :disabled="selectedNode.type != 'normal'">
+      <v-contextmenu-item
+        @click="menuItemClickHandle"
+        key="editNode"
+        :disabled="['start','end'].includes(selectedNode.type)"
+      >
         <i class="iconfont icon-pencil-box-outline"></i> 编辑
       </v-contextmenu-item>
-      <v-contextmenu-item :disabled="selectedNode.type != 'normal'">
+      <v-contextmenu-item
+        @click="menuItemClickHandle"
+        key="removeNode"
+        :disabled="['start','end'].includes(selectedNode.type)"
+      >
         <i class="iconfont icon-trash"></i> 删除
       </v-contextmenu-item>
     </v-contextmenu>
@@ -125,7 +140,7 @@
           <el-input type="textarea" :rows="2" v-model="form.remark" placeholder></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('form')">提 交</el-button>
+          <el-button type="primary" @click="submitNodeForm('form')">提 交</el-button>
           <el-button @click="dialogVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -143,12 +158,12 @@
             <el-option label="系统服务" value="service"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务分配:">
+        <!-- <el-form-item label="任务分配:">
           <el-select v-model="addTaskForm.roles" placeholder="请选择" multi>
             <el-option label="部门主管" value="normal"></el-option>
             <el-option label="财务" value="service"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="办理时限:">
           <el-slider
             v-model="addTaskForm.expireIn"
@@ -166,7 +181,7 @@
       </el-form>
       <span slot="footer">
         <el-button @click="addTaskVisible = false">取 消</el-button>
-        <el-button type="primary">提 交</el-button>
+        <el-button type="primary" @click="submitTaskForm('addTaskForm')">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -179,9 +194,11 @@ export default {
   name: "designWorkFlow",
   data() {
     return {
+      flowId: this.$router.currentRoute.params._id,
       activeName: "model",
       modelTableData: [],
       nodeList: [],
+      contextmenuNode: {},
       selectedNode: {},
       dialogVisible: false,
       isEdit: false,
@@ -194,35 +211,141 @@ export default {
       // 添加任务
       addTaskVisible: false,
       addTaskForm: {},
-      addTaskRules: {}
+      addTaskRules: {},
+
+      taskList: [],
+      loading: false
     };
   },
   methods: {
     tabClickHandle() {},
     nodeClickHandle(node) {
       this.selectedNode = node;
+      this.getNodeTasks();
+    },
+    // menuItemClick
+    menuItemClickHandle(vm, event) {
+      switch (vm.$vnode.key) {
+        case "addNode":
+          this.form.node = this.selectedNode._id;
+          this.form.flow = this.flowId;
+          this.dialogVisible = true;
+          break;
+        case "addTask":
+          this.addTaskForm.flow = this.flowId;
+          this.addTaskForm.node = this.selectedNode._id;
+
+          this.addTaskVisible = true;
+        default:
+          break;
+      }
+    },
+    getNodeList() {
+      this.$api.workflow.getNodeList({flow:this.flowId}).then(res => {
+        console.log(res);
+        this.nodeList = res.data.list;
+      });
+    },
+    getNodeTasks() {
+      this.$api.workflow.getNodeTasks({flow: this.flowId, node: this.selectedNode._id}).then(res => {
+        this.taskList = res.data.list;
+      })
+    },
+    submitNodeForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.workflow
+            .createNode(this.form)
+            .then(res => {
+              console.log(res);
+              this.getNodeList();
+              this.dialogVisible = false;
+              this.$message({ type: "success", message: "新增节点成功!" });
+            })
+            .catch(e => {
+              this.$message({ type: "error", message: "新增节点失败!" });
+            });
+        } else {
+          return false;
+        }
+      });
+    },
+    submitTaskForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$api.workflow.createTask(this.addTaskForm).then(res => {
+            console.log(res);
+            this.getNodeTasks();
+            this.dialogVisible = false;
+            this.$message({ type: "success", message: "新增任务成功!" });
+          })
+          .catch(e => {
+            this.$message({ type: "error", message: "新增任务失败!" });
+          });
+        } else {
+          return false;
+        }
+      });
     }
   },
   components: {
     FlowModel
+  },
+  computed: {
+    sortedNodeList: {
+      get() {
+        let list = [];
+        let tmpArr = this.nodeList.filter(item => item.type == "start");
+        if (tmpArr.length == 0) {
+          return list;
+        }
+
+        let start = tmpArr[0];
+        list.push(start);
+
+        function pushNext(next, nodeList) {
+          if (next) {
+            for (var i = 0; i < nodeList.length; i++) {
+              let node = nodeList[i];
+              if (node._id == next) {
+                list.push(node);
+                pushNext(node.next, nodeList);
+                break;
+              }
+            }
+          }
+        }
+
+        pushNext(start.next, this.nodeList);
+        return list;
+      }
+    }
+  },
+  mounted() {
+    this.getNodeList();
   }
 };
 </script>
 
 <style lang="scss">
-.workflow-process-diagram {
-  border: 1px solid #8c8c8c;
+.diagram-scroll-bar {
+  border: 1px solid #ddd;
   border-radius: 4px;
   margin: 15px 0;
-  padding: 10px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
+}
+.diagram-scroll-wrap {
+  overflow-y: hidden;
+}
+.workflow-process-diagram {
+  padding: 32px 10px;
+  white-space: nowrap;
+
   .node {
     display: inline-block;
     position: relative;
-    padding: 10px;
-    margin-right: 64px;
+    padding: 5px;
+    margin-right: 50px;
+    vertical-align: middle;
 
     &::after,
     &::before {
@@ -233,26 +356,25 @@ export default {
     }
     &::after {
       height: 2px;
-      width: 84px;
-      margin-left: -10px;
+      width: 55px;
+      margin-left: -5px;
       margin-top: -1px;
       border: 1px solid #8c8c8c;
       border-bottom-color: transparent;
     }
     &::before {
-      margin-left: 67px;
       border: 6px solid transparent;
       border-left-color: #8c8c8c;
       width: 6px;
       height: 6px;
-      margin-left: 68px;
+      margin-left: 50px;
       border: 4px solid transparent;
       border-left: 6px solid #8c8c8c;
       margin-top: -4px;
     }
 
     &:last-child {
-      margin-right: 10px;
+      margin-right: 30px;
     }
     &:last-child::before,
     &:last-child:after {
@@ -264,12 +386,23 @@ export default {
   }
   .node .node-content {
     border-radius: 4px;
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 1px solid #8c8c8c;
+    padding: 5px;
     font-size: 12px;
+    cursor: pointer;
+  }
+  .node .node-name {
+    padding-left: 20px;
+    line-height: 20px;
+    display: block;
+  }
+  .node .node-icon {
+    color: #8c8c8c;
+    line-height: 20px;
+    float: left;
   }
   .node-normal .node-content,
-  .node-solt .node-content {
+  .node-slot .node-content {
     height: 64px;
     min-width: 120px;
   }
@@ -278,6 +411,9 @@ export default {
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    .node-name {
+      display: none;
+    }
   }
   .node-end .node-content {
     border-width: 2px;
