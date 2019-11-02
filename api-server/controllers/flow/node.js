@@ -14,27 +14,27 @@ const getList = async function (req, res, next) {
 
 const create = async function (req, res, next) {
   const {
-    flowId, // 所属工作流Id
-    nodeId, // 上一节点Id
+    flow, // 所属工作流Id
+    node, // 上一节点Id
     name,
     type,
     condition
   } = req.body;
 
-  let prevNode = await FlowNode.findOne({_id: nodeId});
-  let node = new FlowNode({
+  let prevNode = await FlowNode.findOne({_id: node});
+  let newNeode = new FlowNode({
     name,
     type,
-    flow: flowId,
+    flow,
     condition
   });
-  node.next = prevNode.next;
-  prevNode.next = node;
+  newNeode.next = prevNode.next;
+  prevNode.next = newNeode;
   prevNode.save();
-  node.save();
+  newNeode.save();
   res.json({
     status:'success',
-    data: node
+    data: newNeode
   })
 }
 

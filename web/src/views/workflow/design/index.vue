@@ -48,6 +48,7 @@
           </el-row>
           <el-divider></el-divider>
 
+          <div v-if="selectedNode.type == 'normal'">
           <div class="inline-title">
             <span>任务列表</span>
           </div>
@@ -63,11 +64,13 @@
             <el-table-column label="办理角色" prop="roles"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
+                <el-button type="primary" size="mini" @click="assignTaskRoleVisible = true">ASSIGN</el-button>
                 <el-button type="primary" size="mini" @click="updateTask(scope.row)">编辑</el-button>
                 <el-button type="danger" size="mini" @click="removeTask(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -84,7 +87,7 @@
       <v-contextmenu-item
         @click="menuItemClickHandle"
         key="addTask"
-        :disabled="['slot','end'].includes(selectedNode.type)"
+        :disabled="['start','slot','end'].includes(selectedNode.type)"
       >
         <i class="iconfont icon-note-plus-outline"></i> 添加任务
       </v-contextmenu-item>
@@ -122,13 +125,13 @@
             <el-option label="插槽" value="slot"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="判定条件:">
+        <el-form-item label="判定条件:" v-if="form.type == 'normal'">
           <el-radio-group v-model="form.condition">
             <el-radio label="all">所有任务</el-radio>
             <el-radio label="one">任意一个任务</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="办理时限:">
+        <el-form-item label="办理时限:" v-if="form.type == 'normal'">
           <el-slider
             v-model="form.expireIn"
             :min="-1"
@@ -159,12 +162,6 @@
             <el-option label="系统服务" value="service"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="任务分配:">
-          <el-select v-model="taskForm.roles" placeholder="请选择" multi>
-            <el-option label="部门主管" value="normal"></el-option>
-            <el-option label="财务" value="service"></el-option>
-          </el-select>
-        </el-form-item>-->
         <el-form-item label="办理时限:">
           <el-slider
             v-model="taskForm.expireIn"
@@ -185,6 +182,23 @@
         <el-button type="primary" @click="submitTaskForm('taskForm')">提 交</el-button>
       </span>
     </el-dialog>
+
+    <!-- Dialog 任务分配 - 指定角色 -->
+    <el-dialog
+      title="任务分配"
+      :visible.sync="assignTaskRoleVisible"
+      width="540px">
+      <el-transfer
+        v-model="taskForm.roles"
+        :titles="['角色', '已分配']"
+        :data="roleList">
+      </el-transfer>
+      <span slot="footer">
+        <el-button @click="assignTaskRoleVisible = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
+    
   </div>
 </template>
 
@@ -216,7 +230,10 @@ export default {
       taskRules: {},
 
       taskList: [],
-      loading: false
+      loading: false,
+
+      assignTaskRoleVisible: false,
+      roleList:[],
     };
   },
   methods: {
@@ -338,7 +355,7 @@ export default {
     submitTaskForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (isEditTask) {
+          if (this.isEditTask) {
             this.$api.workflow
               .updateTask(this.taskForm._id,this.taskForm)
               .then(res => {
