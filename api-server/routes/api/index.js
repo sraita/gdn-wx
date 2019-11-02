@@ -46,6 +46,8 @@ router.route('/flow-nodes').get(flowNodeController.getList);
 
 // flow Task
 router.route('/flow-task').post(flowTaskController.create);
+router.route('/flow-task/:_id/update').post(flowTaskController.updateById);
+router.route('/flow-task/:_id/remove').post(flowTaskController.removeById);
 router.route('/flow-tasks').get(flowTaskController.getTasksByNodeId);
 
 module.exports = router;

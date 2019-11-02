@@ -21,6 +21,8 @@ const removeNode = ((_id, params) => post(`/api/flow-node/${_id}/remove`, params
 const getNodeList = (params => get('/api/flow-nodes/', params));
 
 const createTask = (params => post('/api/flow-task', params));
+const updateTask = ((_id, params) => post(`/api/flow-task/${_id}/update`, params));
+const removeTask = ((_id, params) => post(`/api/flow-task/${_id}/remove`, params));
 const getNodeTasks = (params => get('/api/flow-tasks',params));
 export default {
   getCategories,
@@ -44,5 +46,7 @@ export default {
   removeNode,
 
   createTask,
+  updateTask,
+  removeTask,
   getNodeTasks
 }

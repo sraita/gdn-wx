@@ -22,7 +22,31 @@ const getTasksByNodeId = async function (req, res, next) {
   });
 }
 
+const updateById = async function (req, res, next) {
+  let setObj = { ...req.body };
+  delete setObj._id;
+  let result = await FlowTask.findOneAndUpdate({ _id: req.params._id }, {
+    $set: setObj
+  });
+
+  res.json({
+    status: 'success',
+    data: result
+  })
+}
+
+const removeById = async function (req, res, next) {
+  let result = await FlowTask.findOneAndRemove({ _id: req.params._id });
+
+  res.json({
+    status: 'success',
+    data: result
+  })
+}
+
 module.exports = {
   create,
+  updateById,
+  removeById,
   getTasksByNodeId
 }
