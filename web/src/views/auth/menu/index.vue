@@ -47,59 +47,12 @@
           <span>{{selectedNode.name}}[启用]</span>
         </div>
         <el-divider></el-divider>
-
-        <div class="inline-title clearfix">
-          <div>
-            <span>操作列表[{{getOptsCount}}]</span>
-            <el-button size="mini" icon="el-icon-plus" @click="addOptItem">新增</el-button>
-          </div>
-        </div>
-        <el-table :data="optsListTable" stripe size="mini">
-          <el-table-column label="排序" prop="sort"></el-table-column>
-          <el-table-column label="名称" prop="name"></el-table-column>
-          <el-table-column label="API 名称" prop="apiName"></el-table-column>
-          <el-table-column label="API Path" prop="apiPath"></el-table-column>
-          <el-table-column label="状态" prop="status">
-            <template slot-scope="scope">
-              <el-tag type="danger" size="mini" v-if="scope.row.status === 0" >禁用</el-tag>
-              <el-tag type="success" size="mini" v-else >启用</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button @click="editOptItem(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="removeOptItem(scope.row)" type="text" class="text-danger" size="small">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <div class="inline-title clearfix">
-          <div>
-            <span>页面元素[{{getElementsCount}}]</span>
-            <el-button size="mini" icon="el-icon-plus" @click="addElement">新增</el-button>
-          </div>
-        </div>
-        <el-table :data="elementListTable" stripe size="mini">
-          <el-table-column label="排序" prop="sort"></el-table-column>
-          <el-table-column label="名称" prop="name"></el-table-column>
-          <el-table-column label="状态" prop="status">
-            <template slot-scope="scope">
-              <el-tag type="danger" size="mini" v-if="scope.row.status === 0" >禁用</el-tag>
-              <el-tag type="success" size="mini" v-else >启用</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button @click="editElement(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="removeElement(scope.row)" type="text" class="text-danger" size="small">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        
       </div>
     </el-card>
 
     <!-- Dialog 添加菜单 -->
-    <el-dialog title="添加菜单" :visible.sync="addDialogVisible" width="320px;">
+    <el-dialog title="添加菜单" :visible.sync="addDialogVisible" width="360px">
       <el-form
         :model="addForm"
         ref="addForm"
@@ -130,70 +83,6 @@
         <el-button v-if="addForm.isEdit" size="small" type="primary" @click="submitEditForm('addForm')">保存</el-button>
         <el-button v-else size="small" type="primary" @click="submitAddForm('addForm')">提 交</el-button>
         
-      </span>
-    </el-dialog>
-
-    <!-- Dialog 新增操作 -->
-    <el-dialog 
-      :title="addOptForm.isEdit? '编辑操作权限':'新增操作权限'" 
-      :visible.sync="addOptDialogVisible" width="320px">
-      <el-form
-        :model="addOptForm"
-        ref="addOptForm"
-        :rules="addFromRules"
-        label-width="80px"
-        size="small"
-        label-position="left"
-      >
-        <el-form-item label="名称:" prop="name">
-          <el-input v-model="addOptForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="排序:" prop="sort">
-          <el-input v-model="addOptForm.sort" placeholder></el-input>
-        </el-form-item>
-        <el-form-item label="Method:" prop="method">
-          <el-radio-group v-model="addOptForm.method">
-            <el-radio label="post">POST</el-radio>
-            <el-radio label="get">GET</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="API 名称:" prop="apiName">
-          <el-input v-model="addOptForm.apiName" placeholder></el-input>
-        </el-form-item>
-        <el-form-item label="API 路径:" prop="apiPath">
-          <el-input v-model="addOptForm.apiPath" placeholder></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer">
-        <el-button size="mini" @click="addOptDialogVisible = false">取 消</el-button>
-         <el-button v-if="addOptForm.isEdit" size="mini" type="primary" @click="submitEditOptForm('addOptForm')">保 存</el-button>  
-        <el-button v-else size="mini" type="primary" @click="submitAddOptForm('addOptForm')">提 交</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- Dialog 新增页面元素 -->
-    <el-dialog 
-      :title="addElementForm.isEdit? '编辑页面元素':'新增页面元素'" 
-      :visible.sync="addElementDialogVisible" width="320px">
-      <el-form
-        :model="addElementForm"
-        ref="addElementForm"
-        :rules="addFromRules"
-        label-width="64px"
-        size="small"
-        label-position="left"
-      >
-        <el-form-item label="名称:" prop="name">
-          <el-input v-model="addElementForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="排序:" prop="sort">
-          <el-input v-model="addElementForm.sort" placeholder></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer">
-        <el-button size="mini" @click="addElementDialogVisible = false">取 消</el-button>
-        <el-button v-if="addElementForm.isEdit" size="mini" type="primary" @click="submitEditElementForm('addElementForm')">保 存</el-button>  
-        <el-button v-else size="mini" type="primary" @click="submitAddElementForm('addElementForm')">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -317,7 +206,7 @@ export default {
       });
     },
     fetchMenuList() {
-      this.$api.menu.list().then(res => {
+      this.$api.menu.getMenus().then(res => {
         let list = res.data.list;
         let treeList = list
           .filter(item => {
