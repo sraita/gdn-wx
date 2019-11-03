@@ -17,6 +17,7 @@ Vue.use(Router)
 
 
 export const constantRoutes = [
+  { path: '/custom-register', name: "customRegister", component:() => import('../views/custom/register/index')},
   { path: '/login', name: 'login', component: () => import('../views/login') },
   { path: '/403', name: 'Forbidden', component: Forbidden, meta: {title: '无权访问'}},
   { path: '/404', name: 'Notfound', component: Notfound, meta: {title: '页面不存在'}},

@@ -6,7 +6,7 @@
           type="primary"
           size="small"
           icon="el-icon-plus"
-          @click="addDialogVisible = true"
+          @click="addVisible = true"
         >添加客户</el-button>
       </div>
       <el-form :model="form" ref="customQueryForm" :inline="true" label-width="80px" size="small">
@@ -21,9 +21,9 @@
 
     <el-table :data="tableData" stripe size="mini">
       <el-table-column prop="name" label="客户名称"></el-table-column>
-      <el-table-column prop="owner.name" label="管理员"></el-table-column>
-      <el-table-column prop="owner.mobile" label="管理员联系电话"></el-table-column>
-      <el-table-column prop="defaultRoleGroup.name" label="默认角色组"></el-table-column>
+      <el-table-column prop="manager.name" label="管理员"></el-table-column>
+      <el-table-column prop="manager.mobile" label="管理员联系电话"></el-table-column>
+      <el-table-column prop="remark" label="备注"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag size="small" v-if="scope.row.status === 1">启用</el-tag>
@@ -32,80 +32,73 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            size="small"
-            icon="iconfont icon-lock-open"
-            v-if="scope.row.status==1"
-            @click="changeStatus(scope.row, 0)"
-          ></el-button>
-          <el-button
-            type="text"
-            size="small"
-            icon="iconfont icon-lock"
-            v-else
-            @click="changeStatus(scope.row, 0)"
-          ></el-button>
-          <el-button type="text" size="small" icon="iconfont icon-pencil"></el-button>
-          <el-button
-            type="text"
-            size="small"
-            icon="iconfont icon-delete"
-            @click="removeItem(scope.row)"
-          ></el-button>
+          <el-button type="text" size="small" @click="editItem(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="removeItem(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- Dialog: 添加客户 -->
-    <el-dialog title="添加客户" :visible.sync="addDialogVisible" width="450px">
+    <el-dialog title="添加客户" :visible.sync="addVisible" width="450px">
       <el-form
-        :model="addForm"
-        :rules="addRules"
-        ref="customAddForm"
+        :model="form"
+        :rules="rules"
+        ref="form"
         label-width="120px"
         size="small"
-        label-position="left"
-      >
+        label-position="left">
         <fieldset>
-          <legend>客户信息</legend>
-          <el-form-item label="客户名称：" prop="name">
-            <el-input v-model="addForm.name" placeholder></el-input>
+          <legend>团队信息</legend>
+          <el-form-item label="团队名称:" prop="name">
+            <el-input v-model="form.name" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="用户组:" prop="roleGroupId">
-            <el-select v-model="addForm.roleGroupId" placeholder="">
-              <el-option v-for="group in roleGroups"
-                :key="group._id"
-                :label="group.name"
-                :value="group._id">
-              </el-option>
-            </el-select>
-            
+          <el-form-item label="简介:" prop="remark">
+            <el-input type="textarea" :rows="2" v-model="form.remark" placeholder=""></el-input>
           </el-form-item>
-          
         </fieldset>
         <fieldset>
           <legend>管理员信息</legend>
-          <el-form-item label="登录账户：" prop="account">
-            <el-input v-model="addForm.account" placeholder></el-input>
+          <el-form-item label="管理员姓名：" prop="manager_name">
+            <el-input v-model="form.manager_name" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="默认密码：" prop="password">
-            <el-input v-model="addForm.password" placeholder></el-input>
+          <el-form-item label="管理员手机号：" prop="manager_mobile">
+            <el-input v-model="form.manager_mobile" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="管理员姓名：" prop="ownerName">
-            <el-input v-model="addForm.ownerName" placeholder></el-input>
+          <el-form-item label="管理员密码:" prop="manager_password">
+            <el-input v-model="form.manager_password" placeholder></el-input>
           </el-form-item>
-          <el-form-item label="管理员手机号：" prop="ownerMobile">
-            <el-input v-model="addForm.ownerMobile" placeholder></el-input>
+          <el-form-item label="密码确认:" prop="manager_confirmPass">
+            <el-input v-model="form.manager_confirmPass" placeholder></el-input>
           </el-form-item>
         </fieldset>
+
       </el-form>
 
       <span slot="footer">
-        <el-button size="small" @click=" addDialogVisible= false">取 消</el-button>
-        <el-button size="small" type="primary" @click="addSubmit('customAddForm')">提 交</el-button>
+        <el-button size="small" @click=" addVisible= false">取 消</el-button>
+        <el-button size="small" type="primary" @click="addSubmit('customform')">提 交</el-button>
       </span>
     </el-dialog>
+    <!-- Dialog 编辑客户信息 -->
+    <el-dialog
+      title="编辑客户信息"
+      :visible.sync="editVisible"
+      width="400px">
+      <el-form :model="editForm" ref="editForm" :rules="editRules" size="small">
+        <el-form-item label="客户名称:" prop="name">
+          <el-input v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="简介:" prop="remark">
+          <el-input type="textarea" :rows="2" v-model="editForm.remark" placeholder=""></el-input>
+        </el-form-item>
+      </el-form>
+      
+      <span slot="footer">
+        <el-button size="small" @click="editVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="submitForm('editForm')">提 交</el-button>
+      </span>
+    </el-dialog>
+    
   </div>
 </template>
 
@@ -125,29 +118,30 @@ export default {
       }
     }
     return {
+      addVisible: false,
       form: {},
-      addForm: {},
-      addRules: {
-        name: [{ required: true, message: "请输入客户名称", trigger: "blur" }],
-        account: [
-          { required: true, message: "请输入默认管理账户", trigger: "blur" }
-        ],
-        password: [
-          { required: true, message: "请输入默认密码", trigger: "blur" }
-        ],
-        ownerName: [{ required: true, message: "请输入管理员姓名", trigger:"blur"}],
-        ownerMobile: [
-          { required: true, validator:mobileVaildate, trigger:"blur"},
-        ]
+      rules: {
+        name:[{required: true, message:'请输入团队名称',trigger:'blur'}],
+        manager_name:[{required: true, message:'请输入管理员姓名',trigger:'blur'}],
+        manager_mobile:[{required: true, message:'请输入管理员手机号',trigger:'blur'}],
+        manager_password:[{required: true, message:'请输入管理员登录密码',trigger:'blur'}],
+        manager_confirmPass:[{required: true, message:'请再次输入管理密码',trigger:'blur'}],
       },
-      addDialogVisible: false,
+
+      editVisible: false,
+      editForm:{},
+      editRules:{
+        name:[{required: true, message:'请输入团队名称',trigger:'blur'}],
+      },
+
+      currentRow: null,
       tableData: [{}],
       roleGroups: []
     };
   },
   methods: {
     fetchData() {
-      this.$api.custom.getList({ page: 1, limit: 10 }).then(res => {
+      this.$api.team.getList({ page: 1, limit: 10 }).then(res => {
         this.tableData = res.data.list;
       });
     },
@@ -171,29 +165,62 @@ export default {
         this.tableData = res.data.list;
       });
     },
+    editItem(row) {
+      this.currentRow = row;
+      this.editForm = {
+        name: row.name,
+        remark: row.remark
+      }
+      this.editVisible = true;
+    },
     removeItem(row) {
-      this.$confirm("此操作将永久删除该客户, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该团队, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$api.custom.remove(row._id).then(res => {
-          this.tableData = res.data.list;
+        this.$api.team.remove(row._id).then(res => {
+          this.fetchData();
+          this.$message({
+            type: 'success',
+            message: '已删除'
+          })
+        }).catch(err => {
+          this.$message({
+            type: 'error',
+            message: '删除失败!'
+          })
         });
       });
     },
-    addSubmit(formName) {
+    submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$api.custom.create(this.addForm).then(res => {
-            this.fetchData();
-            this.addDialogVisible = false;
-            this.$refs[formName].resetFields();
-            this.$message({
-              type: 'success',
-              message: '客户已添加'
-            })
-          });
+          if (formName == 'editForm') {
+            this.$api.team.update(this.currentRow._id, this.editForm).then(res => {
+              this.fetchData();
+              this.editVisible = false;
+              this.$message({
+                type: 'success',
+                message: '已更新'
+              })
+            }).catch(err => {
+              this.$message({
+                type: 'error',
+                message: '更新失败!'
+              })
+            });
+          } else {
+            this.$api.team.create(this.form).then(res => {
+              this.fetchData();
+              this.addVisible = false;
+              this.$refs[formName].resetFields();
+              this.$message({
+                type: 'success',
+                message: '客户已添加'
+              })
+            });
+          }
         } else {
           return false;
         }
@@ -201,7 +228,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchPublicRoleGroups();
     this.fetchData();
   }
 };

@@ -2,7 +2,7 @@
 import auth from './modules/auth';
 import roleGroup from './modules/role-group';
 import role from './modules/role';
-import custom from './modules/custom';
+import team from './modules/team';
 import org from './modules/org';
 import menu from './modules/menu';
 import element from './modules/element';
@@ -18,7 +18,7 @@ export default {
   opt,
   roleGroup,
   role,
-  custom,
+  team,
   org,
   system,
   workflow

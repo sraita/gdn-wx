@@ -1,5 +1,4 @@
 var { Role } = require('../models/Role');
-var { RoleGroup } = require('../models/RoleGroup');
 var { User } = require('../models/user');
 
 const create = async function (req, res, next) {

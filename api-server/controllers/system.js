@@ -4,11 +4,8 @@ var createError = require('http-errors');
 const { SYSTEM_UNLOCK_PASS} = require('../config');
 
 const { System } = require('../models/System');
-const { RoleGroup } = require('../models/RoleGroup');
 const { Role } = require('../models/Role');
 const { Menu } = require('../models/Menu');
-const { Element } = require('../models/Element');
-const { Opt } = require('../models/Opt');
 const { User } = require('../models/user');
 
 
@@ -22,21 +19,7 @@ const initSysResources = async function (req, res, next) {
     //读取json文件
     const json = fs.readFileSync(filePath, 'utf-8');
     const menuList = JSON.parse(json);
-  
-    async function createElements(list, parent) {
-      for (var i = 0; i < list.length; i++) {
-        let element = new Element(list[i]);
-        element.menu = parent;
-        element.save();
-      }
-    }
-    async function createOpts(list, parent) {
-      for (var i =0; i < list.length; i++) {
-        let opt = new Opt(list[i]);
-        opt.menu = parent;
-        opt.save();
-      }
-    }
+
     async function createMenu(data, parent) {
       const {name, icon, sort, routerName, routerPath, children} = data;
       console.log(data);
@@ -51,12 +34,6 @@ const initSysResources = async function (req, res, next) {
         menu.parent = parent;
       }
       menu.save();
-      if (data.elements) {
-        createElements(data.elements, menu);
-      }
-      if (data.opts) {
-        createOpts(data.opts, menu);
-      }
       if (children) {
         for (var i =0; i < children.length; i++) {
           createMenu(children[i], menu);
@@ -77,18 +54,6 @@ const initSysResources = async function (req, res, next) {
 // 2. 初始化系统角色组
 const initSysRoles = async function (req, res, next) {
   let menus = await Menu.find();
-  let elements = await Element.find();
-  let opts = await Opt.find();
-
-  // 1. 初始化默认管理组
-  let roleGroup = new RoleGroup({
-    name: '系统管理',
-    remark: '系统管理组',
-    type: ['default'],
-    menus,
-    elements,
-    opts
-  });
 
   // 初始化默认角色 (超级管理员)
   let role = new Role({
@@ -97,14 +62,8 @@ const initSysRoles = async function (req, res, next) {
     remark: '系统超级管理',
     type: 'default',
     isSingle: true,
-    menus,
-    elements,
-    opts    
+    menus,  
   });
-
-  role.group = roleGroup;
-
-  roleGroup.save();
   role.save();
   
   return res.json({status: 'success', message: '系统角色资源创建成功!'});

@@ -15,7 +15,6 @@ const schema = new mongoose.Schema({
     type: Date, // 创建时间
     default: new Date()
   },
-  onwer: {type: mongoose.Schema.Types.ObjectId, ref: 'user'}, // 租户所有权人
   managers:[{type: mongoose.Schema.Types.ObjectId, ref:'user'}], // 租户管理者
   status: {
     type: Number, // 0 - 禁用, 1 - 启用

@@ -6,18 +6,13 @@ var authController = require('../../controllers/auth');
 
 var roleController = require('../../controllers/role');
 var userController = require('../../controllers/user');
-var customController = require('../../controllers/custom');
+var teamController = require('../../controllers/team');
 
-var orgRouter = require('./org');
-var customRouter = require('./custom');
 var menuRouter = require('./menu');
 
 /* GET home page. */
 // router.all('/*', authController.baseAuth);
 router.use('/menu',menuRouter);
-
-router.use('/org', orgRouter);
-router.use('/custom', customRouter);
 
 router.route('/roles').get(roleController.getRoles);
 router.route('/role').post(roleController.create);
@@ -33,7 +28,10 @@ router.route('/user/:_id').post(userController.updateById);
 router.route('/user/:_id/remove').post(userController.removeById);
 router.route('/user/:_id/change-pass').post(userController.changePass);
 
-// Custom
-router.route('/customs').get(customController.getList);
+// Team
+router.route('/teams').get(teamController.getList);
+router.route('/team').post(teamController.create);
+router.route('/team/:_id').post(teamController.updateById);
+router.route('/team/:_id/remove').post(teamController.removeById);
 
 module.exports = router;
