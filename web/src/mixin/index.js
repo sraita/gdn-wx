@@ -5,9 +5,9 @@ export default {
     return {
       sidebarWidth: 200,
       navHeight: 60,
-      clientHeight: window.screen.availHeight, // 这里是给到了一个默认值 （这个很重要）
-      clientWidth: window.screen.availWidth,
-      tableHeight: window.screen.availHeight - 90, // 表格高度 
+      clientHeight: window.innerHeight, // 这里是给到了一个默认值 （这个很重要）
+      clientWidth: window.innerWidth,
+      tableHeight: window.innerHeight - 60, // 表格高度 
     }
 
   },
@@ -23,8 +23,8 @@ export default {
     window.onresize = () => {
       console.log(11)
       return (() => {
-        let width = window.screen.availWidth;
-        let height = window.screen.availHeight
+        let width = window.innerWidth;
+        let height = window.innerHeight
         this.clientHeight = height;
         this.clientWidth = width;
         this.tableHeight = height - this.navHeight;

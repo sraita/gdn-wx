@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <el-menu
-      default-active="1-4-1"
-      background-color="#fff"
-      text-color="#6c757d"
-      active-text-color="#727cf5"
-      :collapse="this.$store.state.app.sidebar.collapse" 
-    >
-      <menu-tree v-for="item in menuTree" :key="item.id" :menu="item"></menu-tree>
-    </el-menu>
-  </div>
+  <el-menu
+    default-active="1-4-1"
+    background-color="#fff"
+    text-color="#6c757d"
+    active-text-color="#727cf5"
+    :collapse="this.$store.state.app.sidebar.collapse" 
+  >
+    <menu-tree v-for="item in menuTree" :key="item.id" :menu="item"></menu-tree>
+  </el-menu>
 </template>
 
 <script>

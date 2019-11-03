@@ -1,10 +1,16 @@
 <template>
   <div class="page page-menu">
     <el-card
-      :body-style="{ padding: '0px' ,display: 'flex',height:'100%'}"
+      :body-style="{ padding: '10px'}"
       shadow="never"
       class="page-org"
     >
+      <div slot="header" class="clearfix">
+        <div class="float-right">
+          <el-button size="mini" icon="el-icon-plus" type="primary" @click="addMenu">新增菜单</el-button>
+        </div>
+        <span>菜单管理</span>
+      </div>
       <el-table
         :data="tableData"
         style="width: 100%;margin-bottom: 20px;"
@@ -23,9 +29,9 @@
         <el-table-column prop="routerPath" label="路径"></el-table-column>
         <el-table-column label="操作" width="180" align="right">
           <template slot-scope="scope">
-            <el-button type="text" size="mini" @click="addSubMenu(scope.row)">添加子菜单</el-button>
-            <el-button type="text" size="small" @click="editMenu(scope.row)">编辑</el-button>
-            <el-button type="text" size="small" @click="deleteMenu(scope.row)">删除</el-button>
+            <el-button type="text" size="mini" class="text-primary" @click="addSubMenu(scope.row)">添加子菜单</el-button>
+            <el-button type="text" size="small" class="text-info" @click="editMenu(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" class="text-danger" @click="deleteMenu(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -113,7 +119,7 @@ export default {
       this.addDialogVisible = true;
     },
     deleteMenu(row) {
-      this.$confirm(`是否删除菜单「${row.name}」?`).then(() => {
+      this.$confirm(`是否删除菜单「${row.name}」?`,'提示',{type:'warning'}).then(() => {
         this.$api.menu.remove(row._id).then(res => {
           console.log(res);
           this.fetchMenuList();

@@ -6,7 +6,7 @@
     <div class="layout-aside" :style="{width: sideBarWidth+'px'}">
       <Aside />
     </div>
-    <div class="layout-main" :style="{marginLeft: sideBarWidth+'px', height: tableHeight+'px'}">
+    <div class="layout-main" :style="{marginLeft: sideBarWidth+'px'}">
       <router-view></router-view>
     </div>
   </div>
@@ -53,6 +53,7 @@ export default {
     background: #f1f4f7;
     transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     overflow: auto;
+    height: 100%;
     .page {
       padding: 15px;
     }
@@ -62,10 +63,11 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    bottom:0;
     padding-top: 60px;
-    min-height: 100%;
     z-index: 8;
     background: #fff;
+    overflow-y: auto;
     .el-menu {
       text-align: justify;
       border-right: none;

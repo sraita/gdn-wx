@@ -6,9 +6,9 @@
 <template>
   <div class="page page-role">
     <el-card :body-style="{ padding: '10px' }">
-      <div slot="header">
+      <div slot="header" class="clearfix">
         <div class="float-right">
-          <el-button size="mini" icon="el-icon-plus" @click="addRole">新增角色</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-plus" @click="addRole">新增角色</el-button>
         </div>
         <span>角色管理</span>
       </div>
