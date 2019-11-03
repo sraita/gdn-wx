@@ -22,13 +22,14 @@ const schema = new mongoose.Schema({
   avatar: {
     type: String
   },
-  name: String,
+  name: String, // 真实姓名
   mobile: Number,
+  tel: String,
+  email: String,
   status: Number, // 0:禁用,1:启用
   createAt: Date,
-  org: { type: mongoose.Schema.Types.ObjectId, ref: 'org'}, // 所属机构
-  departments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'department'}], // 所属部门信息
-  departmentSources: [{ type: mongoose.Schema.Types.ObjectId, ref: 'department' }], // 部门结构树上所有结点信息
+  wechat: {type: mongoose.Schema.Types.ObjectId, ref: 'wechat'}, // 微信账号绑定关系
+  custom:{type: mongoose.Schema.Types.ObjectId, ref:'custom'}, // 所属团队
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
 });
 

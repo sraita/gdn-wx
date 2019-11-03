@@ -73,17 +73,10 @@ const actions = {
         const user = res.data;
         const {_id, username, name, avatar} = user;
 
-        const org = user.org;
         const roles = user.roles.map(role => {
           return {
             _id: role._id,
             name: role.name
-          }
-        });
-        const departments = user.departments.map(item => {
-          return {
-            _id: item._id,
-            name: item.name
           }
         });
         commit('SET_ID',_id);
@@ -91,11 +84,6 @@ const actions = {
         commit('SET_NAME', name);
         commit('SET_AVATAR', avatar);
         commit('SET_ROLES', roles);
-        if (org) {
-          commit('SET_ORG_ID', org._id);
-          commit('SET_ORG_NAME',org.name);
-        }
-        commit('SET_DEPARTMENTS', departments);
         resolve(user);
       }).catch(err => {
         reject(err);

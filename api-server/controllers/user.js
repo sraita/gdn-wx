@@ -5,7 +5,7 @@ const { Role } = require('../models/Role');
 const {SECRET} = require('../config');
 
 
-const createUser = async function (req, res) {
+const create = async function (req, res) {
   console.log(req.body);
   const isUserHas = await User.findOne({
     username: req.body.username
@@ -20,8 +20,7 @@ const createUser = async function (req, res) {
   res.send(user);
 }
 
-
-const getUserById = async function (req, res) {
+const getById = async function (req, res) {
   console.log(req.params)
   const data = await User.findById(req.params._id).populate('org').populate('roles').populate('department');
   res.json({
@@ -30,14 +29,22 @@ const getUserById = async function (req, res) {
   });
 }
 
-const updateUserById = async function (req, res) {
-  
+const updateById = async function (req, res) {
+  const _id = req.params._id;
+  let setObj = {...req.body};
+  let result = await User.findOneAndUpdate({_id: _id},{
+    $set: setObj
+  });
+  res.json({
+    status: 'success',
+    data: result
+  });
 }
 
-const deleteUserById = async function (req, res) {
+const removeById = async function (req, res) {
   
 }
-const getUserList = async function (req, res) {
+const getUsers = async function (req, res) {
   let query = JSON.stringify(req.query);
   const { page = 1, limit = 10 } = JSON.parse(query, (k, v)=>{
     // 自动处理数字格式
@@ -60,34 +67,23 @@ const getUserList = async function (req, res) {
   })
 };
 
-// 获取用户菜单列表
-const getMenus = async function (req, res, next) {
-  const _id = req.body._id;
-  console.log(req.body)
-
-  let user = await User.findOne(_id);
-  // console.log(user)
-  let roles = await Role.find({_id:{$in: user.roles}}).populate('menus');
-  // console.log(roles)
-  let menus = [];
-  for (let [key, value] of roles.entries()) {
-    menus = menus.concat(value.menus);
-  }
-  menus = Array.from(new Set(menus));
-  console.log(menus)
+// 修改密码 - 管理员
+const changePass = async function (req, res, next) {
+  const {password } = req.body;
+  let result = await User.findOneAndUpdate({_id: req.params._id},{
+    $set: {password:password}
+  });
   res.json({
     status: 'success',
-    data:{
-      list: menus
-    }
-  });
+    data: result
+  })
 }
 
 module.exports = {
-  createUser,
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  getUserList,
-  getMenus
+  create,
+  getById,
+  updateById,
+  removeById,
+  getUsers,
+  changePass
 };

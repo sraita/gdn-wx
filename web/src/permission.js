@@ -25,8 +25,9 @@ router.beforeEach( async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
-      if (hasRoles) {
+      // 判断用户信息是否获取
+      const userId = store.getters.userId;
+      if (userId) {
         next()
       } else {
         try {

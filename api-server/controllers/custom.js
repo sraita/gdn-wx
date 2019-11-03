@@ -142,7 +142,7 @@ const getList = async function (req, res, next) {
   console.log(query)
 
   // populate 进行表关联查询
-  const list = await Org.find({parent: null}).limit(limit).skip(skip).populate('owner').populate('defaultRoleGroup');
+  const list = await Org.find({parent: null}).limit(limit).skip(skip).populate('owner');
   res.json({
     status: 'success',
     data: {

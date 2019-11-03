@@ -8,5 +8,6 @@ router.route('/login').post(controller.doLogin);
 router.route('/getCaptcha').get(controller.getCaptcha);
 router.route('/refresh_token').get(authController.refreshToken);
 router.route('/userinfo').get(authController.getUserInfo);
+router.route('/user-menus').get(authController.getMenus);
 
 module.exports = router;

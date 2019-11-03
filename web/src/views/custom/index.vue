@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$api.custom.list({ page: 1, limit: 10 }).then(res => {
+      this.$api.custom.getList({ page: 1, limit: 10 }).then(res => {
         this.tableData = res.data.list;
       });
     },

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 var createError = require('http-errors');
 const { SECRET } = require('../config');
 const { User } = require('../models/user');
+const { Role } = require('../models/Role');
 const {PUBLIC_ROUTES} = require('../config');
 
 
@@ -116,8 +117,43 @@ const getUserInfo = async function (req, res, next) {
   }
 }
 
+// 获取用户菜单列表
+const getMenus = async function (req, res, next) {
+  const raw = String(req.headers.authorization.split(' ').pop());
+  // 解密 token 获取对应的 id
+  try {
+    const { id } = jwt.verify(raw, SECRET);
+    let user = await User.findOne({_id:id});
+    
+    let roles = await Role.find({ _id: { $in: user.roles } }).populate('menus');
+ 
+    let menus = [];
+    for (let [key, value] of roles.entries()) {
+      menus = menus.concat(value.menus);
+    }
+    menus = Array.from(new Set(menus));
+
+    res.json({
+      status: 'success',
+      data: {
+        list: menus
+      }
+    });
+  } catch (err) {
+    // TokenExpiredError
+    return res.status(401).json({
+      status: 'error',
+      code: err.name === 'TokenExpiredError' ? 40101 : 40102,
+      name: err.name,
+      message: err.message
+    });
+  }
+
+}
+
 module.exports = {
   baseAuth,
   refreshToken,
-  getUserInfo
+  getUserInfo,
+  getMenus
 };

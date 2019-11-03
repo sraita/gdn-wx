@@ -9,7 +9,7 @@ const logout = (()=>{
 }); 
 
 const getUserInfo = (params => get('/auth/userinfo', params));
-const getMenus = (params => get('/auth/menus',params));
+const getMenus = (params => get('/auth/user-menus',params));
 export default {
   doLogin,
   logout,

@@ -65,7 +65,7 @@ const actions = {
   },
   getMenus({ commit }) {
     return new Promise((resolve, reject) => {
-      userAPI.getMenus().then(res => {
+      authAPI.getMenus().then(res => {
         let menuList = res.data.list;
         // 动态加载路由
         let menuTree = construct(menuList, {
