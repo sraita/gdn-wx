@@ -9,5 +9,6 @@ router.route('/getCaptcha').get(controller.getCaptcha);
 router.route('/refresh_token').get(authController.refreshToken);
 router.route('/userinfo').get(authController.getUserInfo);
 router.route('/user-menus').get(authController.getMenus);
+router.route('/login-with-unionid').post(authController.loginWithUnionId);
 
 module.exports = router;

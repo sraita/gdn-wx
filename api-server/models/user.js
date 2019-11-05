@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 // });
 
 const schema = new mongoose.Schema({
+  openId:{type: String,default:null},
   username: {
     type: String,
     unique: true

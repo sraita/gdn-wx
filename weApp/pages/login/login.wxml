@@ -1,0 +1,14 @@
+<!--pages/login.wxml-->
+<view class="page-login">
+  <view class="logo">
+    <image mode="accaspectFit" src="/images/logo.png" class="logo-image"></image>
+    <text class="logo-text">高德纳系统</text>
+  </view>
+  <view class="actions">
+    <button class="action-button" type="primary" open-type="getUserInfo" bindgetuserinfo="getUserInfo">微信授权登录</button>
+  </view>
+  <rich-text class="tip-text">若未绑定高德纳账号，需要绑定手机号</rich-text>
+  <view class="footer">
+    <text></text>
+  </view>
+</view>

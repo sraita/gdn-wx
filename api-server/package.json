@@ -19,6 +19,8 @@
     "lodash": "^4.17.15",
     "mongoose": "^5.7.4",
     "morgan": "~1.9.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {

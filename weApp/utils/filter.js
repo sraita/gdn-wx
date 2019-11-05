@@ -32,7 +32,7 @@ function identityFilter(pageObj) {
         console.log('reject')
         //跳转到登录页
         wx.redirectTo({
-          url: "/pages/login"
+          url: "/pages/login/login"
         });
       });
     }

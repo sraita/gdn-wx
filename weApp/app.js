@@ -3,6 +3,8 @@ let {get} = require('./utils/http.js');
 
 App({
   onLaunch: function () {
+    console.log('launch...')
+    return false;
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -42,5 +44,7 @@ App({
   },
   globalData: {
     userInfo: null
-  }
+  },
+  api: require('./api/index.js'),
+  
 })

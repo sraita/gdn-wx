@@ -1,11 +1,52 @@
 const url = require('url');
+var rp = require('request-promise');
 const jwt = require('jsonwebtoken');
+var crypto = require('crypto');
+
 var createError = require('http-errors');
-const { SECRET } = require('../config');
+const { SECRET, WECHAT_MINI_PROGRAM, PUBLIC_ROUTES } = require('../config');
 const { User } = require('../models/user');
 const { Role } = require('../models/Role');
-const {PUBLIC_ROUTES} = require('../config');
+const {WeChatAccount} = require('../models/WeChatAccount');
 
+
+/**
+ * 微信登录信息解密函数
+ * @param {*} appId 
+ * @param {*} sessionKey 
+ */
+function WXBizDataCrypt(appId, sessionKey) {
+  this.appId = appId
+  this.sessionKey = sessionKey
+}
+
+WXBizDataCrypt.prototype.decryptData = function (encryptedData, iv) {
+  // base64 decode
+  console.log('key:',this.sessionKey);
+  var sessionKey = Buffer.from(this.sessionKey, 'base64')
+  encryptedData = Buffer.from(encryptedData, 'base64')
+  iv = Buffer.from(iv, 'base64')
+
+  try {
+    // 解密
+    var decipher = crypto.createDecipheriv('aes-128-cbc', sessionKey, iv)
+    // 设置自动 padding 为 true，删除填充补位
+    decipher.setAutoPadding(true)
+    var decoded = decipher.update(encryptedData, 'binary', 'utf8')
+    decoded += decipher.final('utf8')
+
+    decoded = JSON.parse(decoded)
+
+  } catch (err) {
+    throw new Error('Illegal Buffer')
+  }
+
+  if (decoded.watermark.appid !== this.appId) {
+    throw new Error('Illegal Buffer')
+  }
+
+  return decoded
+};
 
 const baseAuth = function (req, res, next) {
   const {pathname, query} = url.parse(req.path);
@@ -151,9 +192,47 @@ const getMenus = async function (req, res, next) {
 
 }
 
+//  微信小程序登录
+const loginWithUnionId = async function (req, res, next) {
+  console.log(req.body);
+  let { APP_ID, APP_SECRET} = WECHAT_MINI_PROGRAM;
+  let { encryptedData, iv, code } = req.body;
+  // 使用 临时登录凭证code 获取 session_key 和 openid 等
+  var wx_url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + APP_ID + '&secret=' + APP_SECRET + '&js_code=' + code + '&grant_type=authorization_code'
+
+  rp(wx_url).then(async (wx_res) => {
+    console.log(wx_res);
+    let { session_key, openid } = JSON.parse(wx_res);
+    var pc = new WXBizDataCrypt(APP_ID, session_key);
+    var wx_userinfo = pc.decryptData(encryptedData, iv);
+    let account = await WeChatAccount.findOne({openId: openid});
+    if (!account) {
+      account = new WeChatAccount(wx_userinfo);
+      account.save();
+    }
+    let user = await User.findOne({openId: openid});
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        code: 40103,
+        name: 'User not Bind',
+        message: '请绑定用户'
+      });
+    }
+    res.json({
+      status: 'success',
+      data: user
+    });
+  }).catch(function (err) {
+    console.log('err:' + err);
+    createError(500, err.message);
+  });
+}
+
 module.exports = {
   baseAuth,
   refreshToken,
   getUserInfo,
-  getMenus
+  getMenus,
+  loginWithUnionId
 };

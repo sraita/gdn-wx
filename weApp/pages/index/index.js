@@ -3,6 +3,9 @@
 const app = getApp()
 let filter = require('../../utils/filter.js');
 Page(filter.identityFilter({
+  created: function () {
+    console.log('Component-1 lifetimes >> created');
+  },
   data: {
     motto: 'Hello World',
     userInfo: {},
