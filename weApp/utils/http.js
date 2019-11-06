@@ -76,7 +76,7 @@ const request = function (url,method, params) {
                 }
               } else if(code == '40103') { // 需要进行用户绑定
                 wx.redirectTo({
-                  url: '/pages/bindAccount',
+                  url: '/pages/bindAccount/bind-account',
                 })
               } else { // 用户未登录
                 return toLogin();
