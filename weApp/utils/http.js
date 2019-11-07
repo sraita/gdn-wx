@@ -99,10 +99,7 @@ const request = function (url,method, params) {
         }
       },
       fail: function (res) {
-        console.log('Filed:', res);
-        switch(res) {
-
-        }
+        Toast('网络异常!','error')
         reject(res);
       },
     })

@@ -97,6 +97,9 @@ Page({
           })
         });
       }
+      wx.showLoading({
+        title: '正在登录',
+      });
       getCode().then(code => {
         return getUnionId(code)
       }).then(data => {
@@ -120,10 +123,13 @@ Page({
 
         }).catch(err => {
           console.log(err);
+          Toast('登录失败!', 'error');
         });
       }).catch(err => {
         Toast('登录失败!', 'error');
         console.log('登录失败:',err);
+      }).finally(() => {
+        wx.hideLoading();
       });
       
     } else {

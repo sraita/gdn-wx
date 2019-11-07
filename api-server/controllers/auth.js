@@ -95,12 +95,23 @@ const baseAuth = function (req, res, next) {
 
       next();
     } catch (err) {
-      console.log(err);
+      let code = 40102;
+      let message = 'Token 无效';
+
+      if (err.name === 'TokenExpiredError') {
+        code = 40101;
+        message = 'Token 已过期';
+      } 
       return res.status(401).json({
         status: 'error',
-        code: err.name === 'TokenExpiredError' ? 40101 : 40102,
+        code: code,
         name: err.name,
-        message: err.message
+        message: message,
+        error:{
+          code: code,
+          name: err.name,
+          message: message,
+        }
       });
     }
   }
@@ -217,11 +228,19 @@ const loginWithUnionId = async function (req, res, next) {
       return res.status(401).json({
         status: 'error',
         code: 40103,
-        name: 'User not Bind',
-        message: '请绑定用户',
+        name: 'Need binding Account',
+        message: '该微信号未绑定用户',
+        error: {
+          code: 40103,
+          name: 'Need binding Account',
+          message: '该微信号未绑定用户',
+        },
         data: {
           openId: openid
-        }
+        },
+        links:[
+          { "rel": "bindWeAppAccount", "method": "post", "href": "/auth/bind-weapp-account" }
+        ]
       });
     }
     const { _id } = user

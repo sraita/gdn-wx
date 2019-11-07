@@ -15,6 +15,20 @@ const generateToken = function (userId, expire) {
   return token;
 }
 
+const verifyToken = function (raw) {
+  try {
+    const data = jwt.verify(raw, SECRET);
+    return data;
+  } catch (err) {
+    if (err.name == 'TokenExpiredError') {
+      return new Error('Token 已过期')
+    } else {
+      return new Error('Token 无效')
+    }
+  }
+}
+
 module.exports = {
-  generateToken
+  generateToken,
+  verifyToken
 }
