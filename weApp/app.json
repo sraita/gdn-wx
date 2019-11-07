@@ -3,7 +3,7 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/login/login",
-    "pages/bindAccount/band-account"
+    "pages/bindAccount/bind-account"
   ],
   "window": {
     "backgroundTextStyle": "light",

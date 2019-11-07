@@ -9,6 +9,8 @@ const { User } = require('../models/user');
 const { Role } = require('../models/Role');
 const {WeChatAccount} = require('../models/WeChatAccount');
 
+const { generateToken } = require('../utils/token');
+
 
 /**
  * 微信登录信息解密函数
@@ -216,12 +218,22 @@ const loginWithUnionId = async function (req, res, next) {
         status: 'error',
         code: 40103,
         name: 'User not Bind',
-        message: '请绑定用户'
+        message: '请绑定用户',
+        data: {
+          openId: openid
+        }
       });
     }
+    const { _id } = user
     res.json({
       status: 'success',
-      data: user
+      data: {
+        userId: _id,
+        user,
+        token: generateToken(_id, 3600),
+        expire_in: 3600, //token接口调用凭证超时时间，单位（秒）
+        refresh_token: generateToken(_id, 604800), // 刷新 token 过期时间为 7 天
+      }
     });
   }).catch(function (err) {
     console.log('err:' + err);
@@ -229,10 +241,38 @@ const loginWithUnionId = async function (req, res, next) {
   });
 }
 
+// 微信账号绑定
+const bindWeAppAccount = async function (req, res, next) {
+  const {mobile, openId} = req.body;
+  let user = await User.findOneAndUpdate({ username: mobile }, {
+    $set: { openId: openId }
+  });
+  if (!user) {
+    user = new User({
+      username: mobile,
+      openId,
+      mobile,
+      password: openId
+    });
+    user.save();
+  }
+  const {_id} = user
+  res.json({
+    status: 'success',
+    data: {
+      userId: user._id,
+      user,
+      token: generateToken(_id, 3600),
+      expire_in: 3600, //token接口调用凭证超时时间，单位（秒）
+      refresh_token: generateToken(_id, 604800), // 刷新 token 过期时间为 7 天
+    }
+  });
+}
 module.exports = {
   baseAuth,
   refreshToken,
   getUserInfo,
   getMenus,
-  loginWithUnionId
+  loginWithUnionId,
+  bindWeAppAccount
 };

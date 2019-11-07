@@ -75,8 +75,11 @@ const request = function (url,method, params) {
                   })
                 }
               } else if(code == '40103') { // 需要进行用户绑定
-                wx.redirectTo({
-                  url: '/pages/bindAccount/bind-account',
+                let openId = result.data.openId;
+                wx.setStorageSync('openId', openId)
+                return wx.redirectTo({
+                  url: '../../pages/bindAccount/bind-account',
+                  fail: function (res) { console.log(res) }
                 })
               } else { // 用户未登录
                 return toLogin();

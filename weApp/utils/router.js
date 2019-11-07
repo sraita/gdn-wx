@@ -1,9 +1,10 @@
 const { Toast } = require('../utils/util.js');
 
-let WHITE_LIST = ['login'];
+let WHITE_LIST = ['login',''];
 
 // 页面加载之前判断用户是否登录
 const beforeLaunch = function (pageName) {
+  debugger;
   if (!WHITE_LIST.includes(pageName)) {
     const token = wx.getStorageSync('loginToken');
     const userId = wx.getStorageSync('userId');

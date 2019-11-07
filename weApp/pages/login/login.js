@@ -108,7 +108,18 @@ Page({
         };
         app.api.auth.loginWithUnionId(params).then(res => {
           console.log(res);
+          const { token, refresh_token, expire_in,userId, user} = res.data;
+          wx.setStorageSync('loginToken', token);
+          wx.setStorageSync('refreshToken', refresh_token);
+          wx.setStorageSync('userId', userId);
+          wx.setStorageSync('user', user);
+          wx.redirectTo({
+            url: '../../pages/index/index',
+            fail: function (res) { console.log(res) }
+          })
 
+        }).catch(err => {
+          console.log(err);
         });
       }).catch(err => {
         Toast('登录失败!', 'error');
