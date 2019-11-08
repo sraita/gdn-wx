@@ -77,7 +77,6 @@ res = {
 ### 认证出错参考(401 Unauthorized)
 错误名称 | 描述
 |------|------|
-`need_login` | 需要登录
 `user_not_found` | 用户不存在
 `incorrect_password` | 密码错误
 `user_was_locked` | 账号被锁定
