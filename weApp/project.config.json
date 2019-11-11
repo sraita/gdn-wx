@@ -67,6 +67,19 @@
 					"pathName": "pages/bindAccount/band-account",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/create-normal/index",
+					"pathName": "pages/order/create-normal/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/index",
+					"pathName": "pages/order/index",
+					"scene": null
 				}
 			]
 		}

@@ -116,7 +116,7 @@ Page({
           wx.setStorageSync('refreshToken', refresh_token);
           wx.setStorageSync('userId', userId);
           wx.setStorageSync('user', user);
-          wx.redirectTo({
+          wx.switchTab({
             url: '../../pages/index/index',
             fail: function (res) { console.log(res) }
           })

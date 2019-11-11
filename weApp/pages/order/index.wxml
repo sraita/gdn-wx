@@ -1,0 +1,28 @@
+<!--pages/order/index.wxml-->
+<nav-bar title="订单列表"/>
+<view class="page page-order">
+<van-tabs active="a">
+  <van-tab title="未完成" name="a">
+    <view class="order-list">
+      <view class="order-item" bindtap="clickItem">
+        <view class="order-header">
+          <text>订单号:NO.2019110901002</text>
+          <view>待支付</view>
+        </view>
+        <view class="order-body">
+          <view class="info">
+            <view class="name">普通订单</view>
+            <view class="price">￥2500.00</view>
+          </view>
+          <view class="meta">
+            <text class="transfer">译员: 未指派</text>
+            <text class="lang">英</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </van-tab>
+  <van-tab title="已完成" name="b">内容 2</van-tab>
+  <van-tab title="已终止" name="c">内容 3</van-tab>
+</van-tabs>
+</view>

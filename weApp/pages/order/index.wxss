@@ -1,0 +1,51 @@
+/* pages/order/index.wxss */
+.page-order {
+  padding-top: 64px;
+}
+.order-item {
+  margin: 15px;
+  background: #fff;
+  color: #8c8c8c;
+  font-size: 12px;
+  border-radius: 4px;
+  box-shadow: 1px 5px 15px -8px #727cf5;
+}
+
+.order-header {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+.order-body {
+  padding: 10px;
+}
+.order-body .info {
+  display: flex;
+}
+.order-body .name {
+  width: 50%;
+  font-size: 16px;
+  line-height: 18px;
+  margin-bottom: 10px;
+  color: #727cf5;
+}
+.order-body .price {
+  color: orange;
+  font-size: 15px;
+}
+.order-body .meta {
+  display: flex;
+  justify-content: space-between;
+}
+.order-body .lang {
+  display: inline-block;
+  font-size: 10px;
+  background: #727cf5;
+  line-height: 16px;
+  width: 16px;
+  text-align: center;
+  border-radius: 3px;
+  color: #fff;
+  box-shadow: 0px 1px 8px -3px #727df5a1;
+}

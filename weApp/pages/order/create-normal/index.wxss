@@ -1,0 +1,76 @@
+
+
+.page-order {
+  padding: 64px 0;
+}
+form {
+  font-size: 12px;
+}
+.link-text {
+  color: #f56723;
+}
+.van-cell-group {
+  display: block;
+  margin: 10px;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.van-checkbox {
+  margin: 10px 15px;
+}
+
+/* Submit Bar */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  user-select: none;
+  z-index: 100;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.submit-bar_tip {
+  padding: 8px 12px;
+  color: #f56723;
+  line-height: 1.5;
+  background-color: #fff7cc;
+}
+.submit-bar_content {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+}
+.submit-bar-left {
+  padding: 5px 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.submit-bar_price {
+  color: #1a1a1a;
+}
+.submit-bar_price .suffix, .submit-bar_price .price{
+  font-weight: 500;
+  font-size: 16px;
+  color: #FF5722;
+}
+.submit-bar_text {
+  font-size: 10px;
+  color: #8c8c8c;
+}
+.submit-bar_button {
+  display: block;white-space: nowrap;
+  background: #FF5722;
+  border: 1px solid #FF5722;
+  color: #fff;
+  margin: 10px;
+  font-size: 14px;
+  padding: 0 16px;
+  line-height: 36px;
+}
+.submit-bar_button::before,.submit-bar_button::after{
+  border: none; outline: none;
+}

@@ -1,0 +1,4 @@
+<nav-bar title="订单详情" left-text="返回" bind:click-left="pageBack" />
+<view class="page page-order">
+
+</view>

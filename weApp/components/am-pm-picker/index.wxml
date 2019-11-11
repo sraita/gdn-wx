@@ -1,0 +1,3 @@
+<picker bind:change="datePickerChange" bindcolumnchange="dateColumnChange" mode="multiSelector" value="{{selectDate}}" range="{{dateRange}}">
+  <slot></slot>
+</picker>

@@ -7,7 +7,7 @@ const METHOD = {
   DELETE: 'DELETE'
 }
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://192.168.0.13:3000";
 
 
 function toLogin() {

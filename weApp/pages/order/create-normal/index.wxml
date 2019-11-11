@@ -1,0 +1,63 @@
+<!--pages/order/create-normal/index.wxml-->
+<view class="page page-order" style="padding-top: 64px;">
+  <nav-bar title="普通订单" left-text="返回" bind:click-left="pageBack" />
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <van-cell-group>
+      <van-field id="name" value="{{ form.name }}" required clearable label="姓名" placeholder="请输入姓名" bindchange="onFieldChange"/>
+      <van-field id="mobile" value="{{ form.mobile }}" required clearable label="联系电话" bindchange="onFieldChange"  placeholder="请输入联系电话" />
+    </van-cell-group>
+    <van-cell-group>
+      <van-field id="analysor" value="{{ form.analysor }}" required clearable label="分析师" bindchange="onFieldChange" placeholder="请输入分析师名字" />
+      <van-field id="subject" value="{{ form.subject }}" required clearable label="会议主题" bindchange="onFieldChange" placeholder="请输入会议主题" />
+      <van-field id="address" value="{{ form.address }}" required clearable label="会议地点" bindchange="onFieldChange" placeholder="请输入会议地点"/>
+      <am-pm-picker value="{{datetime}}" bind:change="ampmPickerChange">
+      <van-field value="{{ displayDate +' '+ displayTime }}" required readonly is-link label="会议时间" placeholder="请选择会议时间" />
+      </am-pm-picker>
+      <picker bindchange="bindPickerChange" value="{{index}}" range="{{langs}}" range-key="label">
+      <van-field value="{{ langDisplay }}" required readonly is-link label="翻译类型" placeholder="请选择翻译类型" />
+      </picker>
+    </van-cell-group>
+    <van-cell-group>
+      <van-field wx:if="{{!showDialog}}" value="{{ remark }}" type="textarea" id="remark" bindchange="onFieldChange" placeholder="请输入项目特殊性..." autosize border="{{ false }}" />
+      <text wx:else>{{remark}}</text>
+    </van-cell-group>
+    <van-checkbox value="{{ isAggree }}" checked-color="#f56723" icon-size="18px" bind:change="onCheckBoxChange">
+      我已阅读并同意
+      <text class="link-text">《高德纳系统合约条款》</text>
+    </van-checkbox>
+  </form>
+
+  <!-- SubmitBar Start -->
+  <view class="submit-bar">
+    <view class="submit-bar_content">
+      <view class="submit-bar-left">
+        <view class="submit-bar_price">
+          预估费用
+          <text class="price">{{amount}}</text>
+        </view>
+        <view class="submit-bar_text">最终价格以批复后产生的价格为准！</view>
+      </view>
+      <button class="submit-bar_button">提交订单</button>
+    </view>
+  </view>
+  <!-- Submit Bar/ End -->
+  <half-screen-dialog is-true="{{showDialog}}" title="《高德纳系统合约条款》" confirm-text="我已阅读并同意" count-down count="5" bind:submit="onDialogSubmit">
+    <view class="weui-article">
+      <view class="weui-article__p">最近修訂日期：2014年8月1日</view>
+      <view class="weui-article__h3">介紹</view>
+      <view class="weui-article__section">
+        <view class="weui-article__p">
+          歡迎您使用騰訊的服務！我們能夠為用戶提供多樣化的服務。您使用我們的產品和服務（「服務」或「我們的服務」）須受本《服務條款》（「本條款」）所限制，請詳細閲讀。
+        </view>
+        <view class="weui-article__p">
+          多謝您詳細審閲本條款，希望您對我們的服務感到滿意。
+        </view>
+        <view class="weui-article__p">
+          如果你對本條款有任何疑問或您希望就本條款向我們發出任何通知，請通過termsconditions@qq.com聯繫我們。
+        </view>
+      </view>
+    </view>
+  </half-screen-dialog>
+</view>
+
+<!-- Half Screen Dialog -->

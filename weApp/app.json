@@ -1,19 +1,45 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
     "pages/login/login",
-    "pages/bindAccount/bind-account"
+    "pages/bindAccount/bind-account",
+    "custom-tab-bar/index",
+    "pages/order/index",
+    "pages/mime/index",
+    "pages/order/create-normal/index",
+    "pages/order/detail/index"
   ],
+  "tabBar": {
+    "custom": true,
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#000000",
+    "list": [
+      {
+        "pagePath": "pages/index/index"
+      },
+      {
+        "pagePath": "pages/order/index"
+      },
+      {
+        "pagePath": "pages/mime/index"
+      }
+    ]
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "",
     "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationStyle": "custom",
+    "backgroundColor": "#000043"
   },
   "sitemapLocation": "sitemap.json",
   "usingComponents": {
+    "am-pm-picker":"components/am-pm-picker/index",
+    "half-screen-dialog": "components/half-screen-dialog/index",
+    "nav-bar": "components/nav-bar/index",
+    "card": "components/card/index",
     "van-action-sheet": "vant-weapp/action-sheet/index",
     "van-area": "vant-weapp/area/index",
     "van-button": "vant-weapp/button/index",
@@ -59,6 +85,8 @@
     "van-collapse": "vant-weapp/collapse/index",
     "van-collapse-item": "vant-weapp/collapse-item/index",
     "van-picker": "vant-weapp/picker/index",
-    "van-overlay": "vant-weapp/overlay/index"
+    "van-overlay": "vant-weapp/overlay/index",
+    "van-grid": "vant-weapp/grid/index",
+    "van-grid-item": "vant-weapp/grid-item/index"
   }
 }

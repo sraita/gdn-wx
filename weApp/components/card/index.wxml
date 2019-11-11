@@ -1,0 +1,7 @@
+<!--components/card/index.wxml-->
+<view class="card {{shadow?'shadow':''}}" :style="{{style}}">
+  <slot name="header"></slot>
+  <view class="card-body" style="{{bodyStyle}}">
+    <slot></slot>
+  </view>
+</view>

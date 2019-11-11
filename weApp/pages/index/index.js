@@ -7,18 +7,11 @@ Page(filter.identityFilter({
     console.log('Component-1 lifetimes >> created');
   },
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    activeTabbar: 'home',
   },
   //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
   onShow: function () {
+    this.getTabBar().init();
     console.log('afetrLoad')
     if (app.globalData.userInfo) {
       this.setData({
@@ -47,12 +40,9 @@ Page(filter.identityFilter({
       })
     }
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
+  onTabbarChange: function (event) {
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
+      activeTabbar: event.detail
+    });
   }
 }));

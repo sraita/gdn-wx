@@ -1,0 +1,17 @@
+<!--components/nav-bar/index.wxml-->
+<view class="nav-bar {{theme+'-theme'}} {{transparent?'nav-bar-transparent':''}}">
+  <view class="nav-bar_left" bind:tap="onClickLeft">
+    <block wx:if="{{ leftArrow || leftText }}">
+      <view wx:if="{{ leftText }}" class="van-nav-bar__text" hover-class="van-nav-bar__text--hover" hover-stay-time="70">{{ leftText }}</view>
+    </block>
+  </view>
+  <view class="nav-bar_title">
+    <block wx:if="{{ title }}">{{ title }}</block>
+    <slot wx:else name="title" />
+  </view>
+  <view class="nav-bar_right" bind:tap="onClickRight">
+    <block wx:if="{{ textRight }}">
+      <view class="nab-bar_text">{{textRight}}</view>
+    </block>
+  </view>
+</view>
