@@ -1,57 +1,30 @@
-var { Menu } = require('../models/Menu');
-
-const getList = async function (req, res, next) {
-  let selector = {};
-  if (req.query.parent) {
-    selector = {parent: req.query.parent};
-  }
-  const list = await Menu.find(selector).sort({sort:1});
-  res.json({
-    status: 'success',
-    data: {
-      list: list
-    }
-  })
-};
-
-const create = function (req, res, next) {
-  console.log(req.body);
-  Menu.create(req.body).then(menu => {
-    res.json({
-      status: 'success',
-      data: menu
-    });
-  }).catch(reason => {
-    console.log(reason);
-    res.json({
-      status: 'error',
-      message: reason
-    })
-  });
-}
-
-const updateById = function (req, res, next) {
-  console.log(req.body)
-  Menu.findByIdAndUpdate(req.params._id, req.body, (err, data) => {
-    if (err) {
-      return res.json({ status: 'error', message: err.message });
-    }
-    return res.json({ status: 'success', data: data });
-  })
-}
-
-const remove = function (req, res, next) {
-  Menu.findByIdAndRemove(req.params._id, (err, data) => {
-    if (err) {
-      return res.json({status: 'error', message: err.message});
-    }
-    return res.json({status: 'success', data: data});
-  })
-}
+const { Menu } = require('../models/Menu');
+const { resSuccess, resError } = require('../utils/response');
 
 module.exports = {
-  getList,
-  create,
-  updateById,
-  remove
+  // 获取菜单列表
+  index: async (req, res, next) => {
+    const list = await Menu.find({});
+    const total = await Menu.countDocuments();
+    resSuccess(res,'', {
+      list,
+      total
+    });
+  },
+  // 新增菜单
+  newMenu: async (req, res, next) => {
+    const newMenu = new Menu(req.body);
+    const menu = await newMenu.save();
+    resSuccess(res, '', menu);
+  },
+  // 更新菜单
+  updateMenu: async (req, res, next) => {
+    const menu = await Menu.findByIdAndUpdate(req.params._id, req.body);
+    resSuccess(res, '', menu);
+  },
+  // 删除菜单
+  deleteMenu: async (req, res, next) => {
+    const menu = await Menu.findByIdAndRemove(req.params._id);
+    resSuccess(res,'success',{});
+  }
 }

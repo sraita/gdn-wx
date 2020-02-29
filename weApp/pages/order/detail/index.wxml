@@ -1,4 +1,45 @@
-<nav-bar title="订单详情" left-text="返回" bind:click-left="pageBack" />
+<nav-bar transparent theme="light" title="订单详情" left-text="返回" bind:click-left="pageBack" />
 <view class="page page-order">
+  <view class="banner">
+    <text class="status">审核中</text>
+  </view>
 
+  <view class="steps">
+    <view class="step-item">
+      <van-icon name="checked" custom-class="step-icon" />
+      <text class="title">运输中</text>
+      <view class="sub-steps">
+        <view class="sub-step">
+          <rich-text class="desc">扫描完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+        <view class="sub-step">
+          <rich-text class="desc">拣货完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+        <view class="sub-step">
+          <rich-text class="desc">你的订单已打印完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+      </view>
+    </view>
+    <view class="step-item">
+      <van-icon name="checked" custom-class="step-icon" />
+      <text class="title">仓库处理中</text>
+      <view class="sub-steps">
+        <view class="sub-step">
+          <rich-text class="desc">扫描完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+        <view class="sub-step">
+          <rich-text class="desc">拣货完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+        <view class="sub-step">
+          <rich-text class="desc">你的订单已打印完成</rich-text>
+          <text class="time">2019-11-12 22:30</text>
+        </view>
+      </view>
+    </view>
+  </view>
 </view>

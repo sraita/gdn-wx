@@ -1,62 +1,81 @@
-var { Role } = require('../models/Role');
-var { User } = require('../models/user');
+const { Role } = require('../models/Role');
+const { Menu } = require('../models/Menu');
+const { resSuccess, resError } = require('../utils/response');
 
-const create = async function (req, res, next) {
-  const role = new Role(req.body);
-  await role.save();
-  return res.json({ status: 'success', data: role });
-}
+const { construct, destruct } = require('@aximario/json-tree');
 
-const updateById = function (req, res, next) {
-  let setObj = {...req.body};
-  delete setObj._id;
-  
-  Role.findByIdAndUpdate(req.params._id, setObj, (err, result) => {
-    if (err) {
-      res.json({ status: 'error', name: err.name, message: err.message })
-    } else {
-      res.json({ status: 'success', data: result });
-    }
-  });
-}
-
-const removeById = async function (req, res, next) {
-  const result = await Role.findByIdAndRemove(req.params._id);
-  return res.json({status: 'success', data: result});
-}
-
-// 角色功能权限授权
-const updateRoleAuth = function (req, res, next) {
-  console.log('=====')
-  console.log(req.body.menus)
-  Role.update({ _id: req.params._id }, {
-    $set: {
-      'menus': req.body.menus,
-      'elements': req.body.elements,
-      'opts': req.body.opts
-    }
-  }, function (err, doc) {
-    if (err) {
-      res.json({ status: 'error', name: err.name, message: err.message });
-    } else {
-      res.json({ status: 'success', data: doc });
-    }
-  })
-}
-
-const getRoles = async function (req, res, next) {
-  const list = await Role.find({});
-  return res.send({
-    status: 'success',
-    data: {
-      list,
-    }
-  });
-}
 module.exports = {
-  create,
-  updateById,
-  removeById,
-  getRoles,
-  updateRoleAuth
+  // 获取所有路由
+  getRoutes: async (req, res, next) => {
+    let list = await Menu.find({});
+    let data = list.map(item => {
+
+      let obj = Object.assign({},item);
+      obj = {
+        _id: item._id,
+        name: item.name,
+        parent: item.parent,
+        component: item.component,
+        path: item.url,
+        meta: {
+          title: item.title,
+          icon: item.icon
+        }
+      }
+      return obj;
+    });
+
+    console.log(data);
+
+    const result = construct(data, {
+      id: '_id',
+      pid: 'parent',
+      children: 'children'
+    });
+
+    console.log(result);
+
+    resSuccess(res,'',result);
+
+  },
+  // 获取所有角色
+  getRoles: async (req, res, next) => {
+    const list = await Role.find({});
+    const total = await Role.countDocuments();
+    resSuccess(res, '', {
+      list,
+      total
+    });
+  },
+  // 获取角色具有的路由
+  getRoleRoutes: async (req, res, next) => {
+    Role.findOne({ _id: req.params._id }).populate({
+      path: 'menu'
+    }).exec(function (err, data) {
+      console.log(data);
+      resSuccess(res, '', data);
+      
+    });
+  },
+  // 获取角色信息
+  getRole: async (req, res, next) => {
+    const role = await Role.findOne({ _id: req.params._id }).populate('menus').exec();
+    resSuccess(res,'',role);
+  },
+  // 新增角色
+  addRole: async (req, res, next) => {
+    const newRole = new Role(req.body);
+    const role = await newRole.save();
+    resSuccess(res, '', role);
+  },
+  // 更新角色
+  updateRole: async (req, res, next) => {
+    const role = await Role.findByIdAndUpdate(req.params._id, req.body);
+    resSuccess(res, '', role);
+  },
+  // 删除角色
+  deleteRole: async (req, res, next) => {
+    const role = await Role.findByIdAndRemove(req.params._id);
+    resSuccess(res, 'success', {});
+  }
 }

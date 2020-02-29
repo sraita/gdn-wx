@@ -15,10 +15,12 @@ const generateToken = function (userId, expire) {
   return token;
 }
 
-const verifyToken = function (raw) {
+const verifyToken = function (req,res,next) {
   try {
-    const data = jwt.verify(raw, SECRET);
-    return data;
+    console.log(req.headers.authorization)
+    const raw = String(req.headers.authorization.split(' ').pop());
+    const {id} = jwt.verify(raw, SECRET);
+    return id;
   } catch (err) {
     if (err.name == 'TokenExpiredError') {
       return new Error('Token 已过期')

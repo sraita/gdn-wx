@@ -1,15 +1,19 @@
-var createError = require('http-errors');
 var express = require('express');
-require('express-async-errors');
 
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var timeout = require('connect-timeout'); //express v4
+
+// global CONFIG
+global.CONFIG = require('./config');
+console.log(CONFIG.JWT_SECRET);
 
 var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
-var apiRouter = require('./routes/api/index');
-var systemRouter = require('./routes/system');
+const userRouter = require('./routes/user');
+const menuRouter = require('./routes/menu');
+const roleRouter = require('./routes/role');
+const routeRouter = require('./routes/route');
 
 require('./db');
 
@@ -17,39 +21,57 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
 
+// Middlewares
+function haltOnTimedout(req, res, next) {
+  if (!req.timedout) next();
+}
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(timeout(1200000));
+app.use(haltOnTimedout);
+// Routes
 app.use('/', indexRouter);
-app.use('/auth', loginRouter);
-app.use('/api', apiRouter);
-app.use('/system',systemRouter);
+app.use('/api/user', userRouter);
+app.use('/api/menus', menuRouter);
+app.use('/api/roles', roleRouter);
+app.use('/api/routes',routeRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+
+// Catch 404 and forward them to error handler
+app.use(function (req, res, next) {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  console.log(err)
-  // send error messages
-  res.status(err.status || 500);
-  res.json({
+// Error handler function
+app.use(function (err, req, res, next) {
+  const error = app.get('env') === 'development' ? err : {};
+  const status = err.status || 500;
+  // Respond to client
+  res.status(status).json({
     status: 'error',
-    name: err.name,
-    message: err.message
-  });
+    name: error.name,
+    message: error.message
+  })
+  // Respond to ourselves
+  
+  console.error(err);
 });
 
-process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+process.on('unhandledRejection', (err) => {
+  console.log('Unhandled Rejection at:', err.name, 'message:', err.message);
+  console.log('stack', err.stack)
   // application specific logging, throwing an error, or other logic here
+  
 });
+
 
 module.exports = app;

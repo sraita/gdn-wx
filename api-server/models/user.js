@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-// Mongo.connect('mongodb://localhost:27017/class-demo', {
-//   useNewUrlParser: true,
-//   useCreateIndex: true
-// });
-
 const schema = new mongoose.Schema({
-  openId:{type: String,default:null},
   username: {
     type: String,
     unique: true
@@ -30,7 +24,7 @@ const schema = new mongoose.Schema({
   status: Number, // 0:禁用,1:启用
   createAt: Date,
   wechat: {type: mongoose.Schema.Types.ObjectId, ref: 'wechat'}, // 微信账号绑定关系
-  custom:{type: mongoose.Schema.Types.ObjectId, ref:'custom'}, // 所属团队
+  team: { type: mongoose.Schema.Types.ObjectId, ref:'team'}, // 所属团队
   roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
 });
 

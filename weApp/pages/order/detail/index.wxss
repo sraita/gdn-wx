@@ -1,1 +1,94 @@
 /* pages/order/detail/index.wxss */
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40%;
+  background: #727cf5;
+  color: #fff;
+}
+
+.banner .status {
+  font-size: 18px;
+
+}
+
+.steps {
+  background: #fff;
+  border-radius: 6px;
+  margin: 0;
+  min-height: 100px;
+  margin-top: -20px;
+  overflow: hidden;
+  position: relative;
+  padding: 10px;
+  padding-left: 30px;
+}
+.step-item {
+  position: relative;
+  font-weight: normal;
+  font-size: 12px;
+  color: #8c8c8c;
+  padding-left: 30px;
+  margin-bottom: 10px;
+}
+.step-item::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0px;
+  bottom: -10px;
+  width: 1px;
+  background: #eee;
+}
+.step-item:last-child::before{
+  content: none;
+}
+.step-item van-icon {
+  position: absolute;
+  color: #727cf5;
+  font-size: 24px;
+  left: -12px;
+  top: -6px;
+}
+.step-item .title{
+  display: block;
+  color: #1a1a1a;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 5px;
+}
+.step-item .desc {
+  line-height: 20px;
+}
+.sub-step{
+  position: relative;
+  padding-bottom: 10px;
+}
+.sub-step:last-child{ margin-bottom: 0;}
+.sub-step::after{
+  position: absolute;
+  content: "";
+  top: 7px;
+  left: -33px;
+  width: 6px;
+  height: 6px;
+  background: #ddd;
+  border-radius: 50%;
+}
+.sub-step:first-child::after{
+  content: none;
+}
+.sub-step::before{
+  position: absolute;
+  content: "";
+  top: -4px;
+  left: -30px;
+  bottom: -8px;
+  width: 1px;
+  background: #eee;
+}
+/* .sub-step:first-child::before, */
+.sub-step:last-child::before{
+  content: none;
+}
