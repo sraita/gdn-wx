@@ -9,6 +9,7 @@ App({
   },
   // 全局方法或者变量，可在不同page中使用
   _: require('./utils/global.js'),
+  userId: "5db5bc565515122cea2e938d",
   getUserInfo: function (cb) {
     var that = this
     if (this.globalData.userInfo) {

@@ -3,7 +3,7 @@ const { formatDate, currencyFormater} = require('../../../utils/util.js');
 const { newOrder } = require('../../../api/order');
 const { deepClone } = require('../../../utils/util.js');
 import WxValidate from '../../../utils/WxValidate';
-const { _ } = getApp();
+const { _ ,userId} = getApp();
 Page({
 
   /**
@@ -152,6 +152,7 @@ Page({
     }
 
     let orderParams = {
+      creator: userId,
       type: 'normal',
       contact: {
         name: params.name,

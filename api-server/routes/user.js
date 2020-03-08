@@ -21,4 +21,7 @@ router.route('/info')
 router.route('/logout')
   .post(controller.logout);
 
+router.route('/:_id/orders')
+  .get(controller.getUserOrders);
+
 module.exports = router;

@@ -161,7 +161,7 @@ module.exports = {
   // 获取用户的订单列表
   getUserOrders: async (req, res, next) => {
     let selector = {
-      userId: req.params._id
+      creator: req.params._id
     };
     const list = await Order.find(selector);
     const total = await Order.countDocuments(selector);

@@ -4,19 +4,19 @@
 <van-tabs active="a">
   <van-tab title="未完成" name="a">
     <view class="order-list">
-      <view class="order-item" bindtap="clickItem">
+      <view wx:for="{{list}}" class="order-item" bindtap="clickItem">
         <view class="order-header">
           <text>订单号:NO.2019110901002</text>
           <view>待支付</view>
         </view>
         <view class="order-body">
           <view class="info">
-            <view class="name">普通订单</view>
+            <view class="name">{{item.type == 'normal' ? '普通订单': '特殊订单'}}</view>
             <view class="price">￥2500.00</view>
           </view>
           <view class="meta">
             <text class="transfer">译员: 未指派</text>
-            <text class="lang">英</text>
+            <text class="lang">{{item.meeting.transType}}</text>
           </view>
         </view>
       </view>
