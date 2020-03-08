@@ -1,0 +1,19 @@
+<nav-bar title="绑定团队" left-text="关闭" bind:click-left="pageBack" />
+<view class="page">
+  <form>
+    <view class="cu-form-group margin-top">
+      <view class="title">选择团队</view>
+      <picker bindchange="PickerChange" value="{{index}}" range="{{picker}}">
+        <view class="picker">{{index?picker[index]:'禁止换行，超出容器部分会以 ... 方式截断'}}</view>
+      </picker>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">校验码</view>
+      <input placeholder="输入框带标签"></input>
+      <view class="cu-capsule radius">
+        <view class="cu-tag bg-blue">+86</view>
+        <view class="cu-tag line-blue">中国大陆</view>
+      </view>
+    </view>
+  </form>
+</view>

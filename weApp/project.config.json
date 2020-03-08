@@ -9,7 +9,8 @@
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
-		"autoAudits": false,
+		"nodeModules": true,
+		"autoAudits": true,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
@@ -17,11 +18,10 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		},
-		"nodeModules": true
+		}
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.9.2",
+	"libVersion": "2.10.2",
 	"appid": "wxc40b73dedc26f90d",
 	"projectname": "weApp",
 	"debugOptions": {
@@ -86,6 +86,28 @@
 					"id": -1,
 					"name": "pages/order/detail/index",
 					"pathName": "pages/order/detail/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/mime/index",
+					"pathName": "pages/mime/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 6,
+					"name": "团队管理",
+					"pathName": "pages/team/index/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "邀请新成员",
+					"pathName": "pages/team/invite/invite",
+					"query": "",
 					"scene": null
 				}
 			]

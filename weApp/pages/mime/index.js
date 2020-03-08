@@ -1,11 +1,29 @@
 // pages/mime/index.js
+const app = getApp();
+
+const defaultUser = {
+
+};
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    userInfo: null
+  },
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    var that = this
+    //调用应用实例的方法获取全局数据
+    app.getUserInfo(function (userInfo) {
+      //更新数据
+      that.setData({
+        userInfo: userInfo
+      })
+    })
   },
   onShow: function () {
     this.getTabBar().init();
@@ -44,5 +62,15 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  // 打开页面
+  openPage(e) {
+    const page = e.currentTarget.dataset.page;
+    wx.navigateTo({
+      url: page,
+      fail: function (e) {
+        console.log(e)
+      }
+    })
   }
 })

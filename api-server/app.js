@@ -14,6 +14,8 @@ const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');
 const roleRouter = require('./routes/role');
 const routeRouter = require('./routes/route');
+const teamRouter = require('./routes/team');
+const orderRouter = require('./routes/order');
 
 require('./db');
 
@@ -42,6 +44,8 @@ app.use('/api/user', userRouter);
 app.use('/api/menus', menuRouter);
 app.use('/api/roles', roleRouter);
 app.use('/api/routes',routeRouter);
+app.use('/api/teams', teamRouter);
+app.use('/api/orders', orderRouter);
 
 
 // Catch 404 and forward them to error handler

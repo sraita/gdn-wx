@@ -1,0 +1,32 @@
+<nav-bar title="创建团队" left-text="关闭" bind:click-left="pageBack" />
+<view class="page">
+  <view class="cu-form">
+  <form  bindsubmit="formSubmit" bindreset="formReset">
+    <view class="cu-form-group">
+      <view class="title">团队名称</view>
+      <input placeholder="请输入团队名称" value="{{team.name}}" bindinput="keyInput" data-field="name"></input>
+    </view>
+    <view class="cu-form-group align-start">
+      <view class="title">团队介绍</view>
+      <textarea maxlength="-1" disabled="{{modalName!=null}}" bindinput="keyInput"  data-field="introduction" placeholder="多行文本输入框"></textarea>
+    </view>
+  </form>
+  </view>
+
+  <view class="cu-form margin-top-lg">
+  <form  bindsubmit="formSubmit" bindreset="formReset">
+    <view class="cu-form-group">
+      <view class="title">联系人</view>
+      <input placeholder="请输入联系人姓名"></input>
+    </view>
+    <view class="cu-form-group">
+      <view class="title">联系电话</view>
+      <input placeholder="请输入联系电话"></input>
+    </view>
+  </form>
+  </view>
+
+  <view class="padding flex flex-direction">
+    <button class="cu-btn bg-blue margin-tb-sm lg" bind:tap="submit">创建团队</button>
+  </view>
+</view>

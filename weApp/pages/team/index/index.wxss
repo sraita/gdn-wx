@@ -1,0 +1,4 @@
+/* pages/team/index/index.wxss */
+.page {
+  padding-top: 64px;
+}

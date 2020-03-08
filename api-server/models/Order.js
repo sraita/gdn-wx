@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const meetingSchema = new mongoose.Schema({
   subject: String, // 会议主题名称
-  analyst: String, // 分析师姓名
+  analysor: String, // 分析师姓名
   date: Date, // 会议日期
   time: { // 时段
     type: String, 
@@ -11,7 +11,7 @@ const meetingSchema = new mongoose.Schema({
   },
   transType: { // 翻译类型
     type: String,
-    enum: ['1', '2']
+    enum: ['en', 'zh_Yue']
   },
   projectType: { // 项目类型
     type: String,

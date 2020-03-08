@@ -1,5 +1,6 @@
 // pages/login.js
 var {Toast} = require('../../utils/util.js')
+const { login, getInfo} = require('../../api/user.js');
 const app = getApp();
 Page({
 
@@ -7,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    visible: false, // 页面是否可见
   },
 
   /**
@@ -67,7 +68,17 @@ Page({
   },
   getUserInfo: function (e){
     if (e.detail.userInfo) {
-      console.log(e.detail.userInfo)
+      const userInfo = {...e.detail.userInfo};
+      let params = {
+        avatar: userInfo.avatarUrl,
+        city: userInfo.city,
+        country: userInfo.country,
+        nickName: userInfo.nickName,
+        sex: userInfo.sex,
+        province: userInfo.province
+      }
+      console.log(params);
+      
       let getCode = () => {
         return new Promise((resolve, reject) => {
           wx.login({
@@ -84,47 +95,24 @@ Page({
           });
         });
       }
-      let getUnionId = function(code) {
-        return new Promise((resolve, reject) => {
-          wx.getUserInfo({
-            success(res) {  
-              res.code = code;
-              resolve(res);
-            },
-            fail(res) {
-              reject(res.errMsg);
-            }
-          })
-        });
-      }
       wx.showLoading({
         title: '正在登录',
       });
+      const {code } = getCode();
       getCode().then(code => {
-        return getUnionId(code)
-      }).then(data => {
-        let { code, userInfo, signature, encryptedData, iv } = data;
-        let params = {
-          encryptedData,
-          iv,
-          code
-        };
-        app.api.auth.loginWithUnionId(params).then(res => {
-          console.log(res);
-          const { token, refresh_token, expire_in,userId, user} = res.data;
+        login({code}).then(res => {
+          console.log(res.data);
+          const {token} = res.data;
           wx.setStorageSync('loginToken', token);
-          wx.setStorageSync('refreshToken', refresh_token);
-          wx.setStorageSync('userId', userId);
-          wx.setStorageSync('user', user);
-          wx.switchTab({
-            url: '../../pages/index/index',
-            fail: function (res) { console.log(res) }
+          // getUserInfo
+          getInfo(token).then(res => {
+            console.log(res);
+            // 隐藏登录页面
+            app.globalData.userInfo = {...res.data};
+            console.log(app.globalData);
+            wx.navigateBack();
           })
-
-        }).catch(err => {
-          console.log(err);
-          Toast('登录失败!', 'error');
-        });
+        })
       }).catch(err => {
         Toast('登录失败!', 'error');
         console.log('登录失败:',err);

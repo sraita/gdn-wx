@@ -1,8 +1,12 @@
 const { construct, destruct } = require('@aximario/json-tree');
+//处理node request请求
+const request = require('request');
 
 const { User } = require('../models/User');
 const { Menu } = require('../models/Menu');
 const { Role } = require('../models/Role');
+const { Order } = require('../models/Order');
+
 const { verifyToken, generateToken} = require('../utils/token');
 const { resSuccess, resError } = require('../utils/response');
 
@@ -47,6 +51,50 @@ module.exports = {
       }
     });
     return resSuccess(res, '登录成功', {token});
+  },
+  // 微信小程序登录 - 关联user 与 微信 openid
+  wxLogin: async (req, res, next) => {
+    //微信小程序设置
+    const wx = CONFIG.WECHAT_MINI_PROGRAM; //文件中存储了appid 和 secret
+
+    // 获取 openid, session_key
+    let wxRequestOptions = {
+      method: 'POST',
+      url: 'https://api.weixin.qq.com/sns/jscode2session?',
+      formData: {
+        appid: wx.APP_ID,
+        secret: wx.APP_SECRET,
+        js_code: req.body.code,
+        grant_type: 'authorization_code'
+      }
+    }
+    const wxreq = options => new Promise((resolve, reject) => {
+      request(options, (err, response, body)=> {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(body);
+        }
+      })
+    });
+    const { session_key, openid} = await wxreq(wxRequestOptions);
+    
+    const user = await User.findOne({ openid: openid });
+    if (!user) {
+      const newUser = {
+        openid,
+        session_key
+      };
+      user = await new User(newUser);
+      user.save();
+    }
+    // 创建 token
+    const token = generateToken(user._id, 3600);
+    // update user token
+    await User.findByIdAndUpdate(user._id,{
+      $set:{token: token}
+    });
+    resSuccess(res,'',{token});
   },
   // Get User Info
   info: async (req, res, next) => {
@@ -110,4 +158,16 @@ module.exports = {
     }});
     return resSuccess(res, '你已退出登录');
   },
+  // 获取用户的订单列表
+  getUserOrders: async (req, res, next) => {
+    let selector = {
+      userId: req.params._id
+    };
+    const list = await Order.find(selector);
+    const total = await Order.countDocuments(selector);
+    resSuccess(res, '获取用户订单列表成功', {
+      list,
+      total
+    })
+  }
 };

@@ -1,12 +1,17 @@
 // 团队
 const mongoose = require('mongoose');
 
+const contactSchema = new mongoose.Schema({
+  name: String,
+  mobile: Number,
+})
+
 const schema = new mongoose.Schema({
   name: String, // 团队名称
   logo: String,
   introduction: String, // 介绍
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }, // 所有者
-  contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 联系人员
+  contact: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 联系人信息
   reviewers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 审核人员
   createAt: Date,
 });

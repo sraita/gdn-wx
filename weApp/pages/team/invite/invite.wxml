@@ -1,0 +1,16 @@
+<nav-bar title="邀请新成员" left-text="返回" bind:click-left="pageBack" />
+<view class="page">
+  <view class="cu-card article margin-top-lg">
+    <view class="card">
+    <rich-text class="team-name">团队名称</rich-text>
+    <view class="qrcode-content">
+      <rich-text>邀请码: 129870</rich-text>
+      <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="aspectFit" src="{{qrcodeSrc}}"></image>
+    </view>
+    </view>
+  </view>
+
+  <view class="padding flex flex-direction">
+    <button class="cu-btn bg-blue margin-tb-sm lg">保存二维码</button>
+  </view>
+</view>

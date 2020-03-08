@@ -1,0 +1,30 @@
+/* pages/team/invite/invite.wxss */
+.page { padding-top: 64px;}
+
+.card {
+  margin: 20px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.team-name {
+  display: inline-block;
+  width: 100%;
+  font-size: 18px;
+  padding-bottom: 10px;
+  text-align: center;
+  border-bottom: 1px dashed #8c8c8c;
+}
+
+.qrcode-content {
+  margin: 20px auto;
+  text-align: center;
+}
+.qrcode-content rich-text{
+  font-size: 14px;
+  color: #8c8c8c;
+}
+.qrcode-content image {
+  margin-top: 15px;
+}

@@ -11,8 +11,13 @@ router.route('/:_id/routes')
 
 router.route('/login')
   .post(controller.login);
+
+router.route('/wx-login')
+  .post(controller.wxLogin);
+
 router.route('/info')
   .get(controller.info);
+  
 router.route('/logout')
   .post(controller.logout);
 
