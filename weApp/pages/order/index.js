@@ -22,7 +22,7 @@ Page({
   },
   fetchData() {
     let pagination = this.data.pagination;
-    getUserOrders(userId,{}).then(res => {
+    getUserOrders(userId(),{}).then(res => {
       const {list,total} = res.data;
       pagination.total = total;
       this.setData({

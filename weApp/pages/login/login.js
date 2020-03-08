@@ -1,6 +1,6 @@
 // pages/login.js
 var {Toast} = require('../../utils/util.js')
-const { login, getInfo} = require('../../api/user.js');
+const { login, getUserInfo} = require('../../api/user.js');
 const app = getApp();
 Page({
 
@@ -104,12 +104,12 @@ Page({
           console.log(res.data);
           const {token} = res.data;
           wx.setStorageSync('loginToken', token);
+          
           // getUserInfo
-          getInfo(token).then(res => {
-            console.log(res);
+          getUserInfo(token).then(res => {
+            wx.setStorageSync('userId', res.data._id);
+            wx.setStorageSync('userInfo', res.data);
             // 隐藏登录页面
-            app.globalData.userInfo = {...res.data};
-            console.log(app.globalData);
             wx.navigateBack();
           })
         })

@@ -13,7 +13,8 @@
     "pages/team/create/create",
     "pages/team/member/member",
     "pages/team/invite/invite",
-    "pages/team/approve/approve"
+    "pages/team/approve/approve",
+    "pages/message/index/index"
   ],
   "tabBar": {
     "custom": true,

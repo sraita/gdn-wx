@@ -1,18 +1,28 @@
 // pages/team/index/index.js
+const { getTeam } = require('../../../api/team.js');
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    userId: wx.getStorageSync('userId'),
+    id: '',
+    team: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options)
+    const {id } = options;
+    this.setData({
+      id
+    });
 
+    this.fetchData();
   },
 
   /**
@@ -28,6 +38,15 @@ Page({
   onShow: function () {
 
   },
+  fetchData() {
+    getTeam(this.data.id).then(res => {
+      console.log(res);
+      const team = Object.assign({},res.data);
+      this.setData({
+        team
+      });
+    })
+  },
   pageBack: function () {
     wx.navigateBack();
   },
@@ -40,5 +59,8 @@ Page({
         console.log(e)
       }
     })
+  },
+  userIsOwner() {
+    return this.data.team.owner === this.data.userId
   }
 })

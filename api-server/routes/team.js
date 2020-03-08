@@ -8,6 +8,7 @@ router.route('/')
   .post(parseToken(),controller.newTeam);
 
 router.route('/:_id')
+  .get(controller.getTeam)
   .put(controller.updateTeam)
   .delete(controller.deleteTeam);
 

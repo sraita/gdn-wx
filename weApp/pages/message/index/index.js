@@ -1,33 +1,32 @@
-// pages/mime/index.js
-const app = getApp();
-
-const defaultUser = {
-
-};
+// pages/message/index/index.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userId: wx.getStorageSync('userId'),
-    userInfo: wx.getStorageSync('userInfo')
+
   },
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function (userInfo) {
-      //更新数据
-      that.setData({
-        userInfo: userInfo
-      })
-    })
+
   },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
   onShow: function () {
-    this.getTabBar().init();
+
   },
 
   /**
@@ -63,15 +62,5 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-  // 打开页面
-  openPage(e) {
-    const page = e.currentTarget.dataset.page;
-    wx.navigateTo({
-      url: page,
-      fail: function (e) {
-        console.log(e)
-      }
-    })
   }
 })
