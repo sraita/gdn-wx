@@ -21,7 +21,7 @@
 		}
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.10.2",
+	"libVersion": "2.10.3",
 	"appid": "wxc40b73dedc26f90d",
 	"projectname": "weApp",
 	"debugOptions": {
@@ -90,11 +90,11 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 5,
 					"name": "pages/mime/index",
 					"pathName": "pages/mime/index",
 					"query": "",
-					"scene": null
+					"scene": 1025
 				},
 				{
 					"id": 6,
@@ -107,6 +107,13 @@
 					"id": -1,
 					"name": "邀请新成员",
 					"pathName": "pages/team/invite/invite",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 8,
+					"name": "审批设置",
+					"pathName": "pages/team/approve/approve",
 					"query": "",
 					"scene": null
 				}

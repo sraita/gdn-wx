@@ -64,7 +64,6 @@ Page(filter.identityFilter({
   },
   //事件处理函数
   onShow: function () {
-    this.getTabBar().init();
     console.log('afetrLoad')
     if (app.globalData.userInfo) {
       this.setData({
@@ -93,9 +92,13 @@ Page(filter.identityFilter({
       })
     }
   },
-  onTabbarChange: function (event) {
-    this.setData({
-      activeTabbar: event.detail
-    });
+  openPage(ev) {
+    const page = ev.currentTarget.dataset.page;
+    wx.navigateTo({
+      url: page,
+      fail: function (e) {
+        console.log(e)
+      }
+    })
   }
 }));

@@ -110,7 +110,14 @@ Page({
             wx.setStorageSync('userId', res.data._id);
             wx.setStorageSync('userInfo', res.data);
             // 隐藏登录页面
-            wx.navigateBack();
+            wx.navigateBack({
+              fail(res) {
+                console.log(res);
+                wx.switchTab({
+                  url:'../../pages/index/index'
+                })
+              }
+            });
           })
         })
       }).catch(err => {

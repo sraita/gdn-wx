@@ -14,14 +14,9 @@
           </view>
         </view>
         <view class="solids" bindtap="chooseApprove" wx:if="{{imgList.length<4}}">
-          <text class="cuIcon-cameraadd"></text>
+          <text class="cuIcon-add"></text>
         </view>
       </view>
-    </view>
-
-    <view class="cu-form-group  margin-top">
-      <view class="title">允许员工修改审批人</view>
-      <switch class="red sm" checked></switch>
     </view>
   </form>
 </view>

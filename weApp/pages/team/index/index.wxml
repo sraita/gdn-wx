@@ -33,7 +33,7 @@
     </view>
   </view>
 
-  <view class="cu-list menu sm-border card-menu margin-top" bindtap="openPage" data-page="../approve/approve">
+  <view class="cu-list menu sm-border card-menu margin-top" bindtap="openPage" data-page="../approve/approve?id={{id}}">
     <view class="cu-item arrow">
       <view class="content">
         <text class="cuIcon-post text-grey"></text>

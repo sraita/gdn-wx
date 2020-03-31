@@ -1,27 +1,76 @@
-<!--pages/order/create-normal/index.wxml-->
+<!-- pages/order/create-normal/index.wxml -->
 <view class="page page-order" style="padding-top: 64px;">
+  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
   <nav-bar title="普通订单" left-text="返回" bind:click-left="pageBack" />
+  <mp-form id="form" rules="{{rules}}" models="{{formData}}"  bindsubmit="formSubmit">
+    <mp-cells title="联系人信息">
+      <mp-cell prop="name" title="姓名">
+        <input bindinput="formInputChange" data-field="name" class="weui-input" placeholder="请输入姓名" />
+      </mp-cell>
+      <mp-cell prop="mobile" title="联系电话">
+        <input bindinput="formInputChange" data-field="mobile" class="weui-input" placeholder="请输入联系电话" />
+      </mp-cell>
+    </mp-cells>
+    
+    <mp-cells title="会议信息">
+      <mp-cell prop="analysor" title="分析师">
+        <input bindinput="formInputChange" data-field="analysor" class="weui-input" placeholder="请输入分析师名字" />
+      </mp-cell>
+      <mp-cell prop="subject" title="会议主题">
+        <input bindinput="formInputChange" data-field="subject" class="weui-input" placeholder="请输入会议主题" />
+      </mp-cell>
+      <mp-cell prop="address" title="会议地点">
+        <input bindinput="formInputChange" data-field="address" class="weui-input" placeholder="请输入会议地点" />
+      </mp-cell>
+      <mp-cell prop="date" title="会议日期" link ext-class="" bindtap="bindDateTap"></mp-cell>
+
+      <mp-cell prop="transType" title="翻译类型"  link>
+        <picker  data-fields="transType" name="transType" bindchange="bindLangChange" value="{{langIndex}}" range="{{langs}}" range-key="label">
+          <view class="weui-input">{{langs[langIndex].label}}</view>
+        </picker>
+      </mp-cell>
+      <mp-cell  prop="projectType" title="项目类型"  link>
+        <picker data-fields="projectType"  bindchange="bindTypeChange" value="{{typeIndex}}" range="{{types}}" range-key="label">
+          <view class="weui-input">{{types[typeIndex].label}}</view>
+        </picker>
+      </mp-cell>
+    </mp-cells>
+  </mp-form>
+
+  <checkbox-group   bindchange="onCheckBoxChange">
+    <label class="weui-agree" for="weuiAgree">
+      <view class="weui-agree__text">
+        <checkbox class="weui-agree__checkbox" id="weuiAgree" value="agree" checked="{{isAgree}}"/>
+        <view class="weui-agree__checkbox-icon">
+          <icon class="weui-agree__checkbox-icon-check" type="success_no_circle" size="9" wx:if="{{isAgree}}"></icon>
+        </view>
+        我已阅读并同意
+        <navigator url="" class="weui-agree__link">《高德纳系统合约条款》</navigator>
+      </view>
+    </label>
+  </checkbox-group>
+
+  <view class="dd" style="height: 80px"></view>
+  
   <form bindsubmit="formSubmit">
     <van-cell-group>
-      <van-field name="name" value="{{    form.name }}" required clearable label="姓名" placeholder="请输入姓名"/>
+      <van-field name="name" value="{{    form.name }}" required clearable label="姓名" placeholder="请输入姓名" />
       <van-field name="mobile" value="{{    form.mobile }}" required clearable label="联系电话" placeholder="请输入联系电话" />
     </van-cell-group>
-
     <van-cell-group>
       <van-field name="analysor" value="{{    form.analysor }}" required clearable label="分析师" placeholder="请输入分析师名字" />
-      <van-field name="subject" value="{{  form.subject }}" required clearable label="会议主题"  placeholder="请输入会议主题" />
-      <van-field name="address" value="{{    form.address }}" required clearable label="会议地点" placeholder="请输入会议地点"/>
+      <van-field name="subject" value="{{  form.subject }}" required clearable label="会议主题" placeholder="请输入会议主题" />
+      <van-field name="address" value="{{    form.address }}" required clearable label="会议地点" placeholder="请输入会议地点" />
       <am-pm-picker bind:change="ampmPickerChange">
         <van-field value="{{ displayDatetime[0] + ' ' +  displayDatetime[1] }}" required readonly is-link label="会议时间" placeholder="请选择会议时间" />
       </am-pm-picker>
       <picker name="transType" bindchange="onTranstypeChange" value="{{langs[langIndex].value}}" range="{{langs}}" range-key="label">
-        <van-field  value="{{langs[langIndex].label }}" required readonly is-link label="翻译类型" placeholder="请选择翻译类型" />
+        <van-field value="{{langs[langIndex].label }}" required readonly is-link label="翻译类型" placeholder="请选择翻译类型" />
       </picker>
-      <picker name="projectType" bindchange="onProjectChange"  value="{{types[typeIndex].value}}" range="{{types}}" range-key="label">
-        <van-field  value="{{types[typeIndex].label}}" required readonly is-link label="项目类型" placeholder="请选择项目类型" />
+      <picker name="projectType" bindchange="onProjectChange" value="{{types[typeIndex].value}}" range="{{types}}" range-key="label">
+        <van-field value="{{types[typeIndex].label}}" required readonly is-link label="项目类型" placeholder="请选择项目类型" />
       </picker>
     </van-cell-group>
-
     <van-cell-group>
       <van-field wx:if="{{!showDialog}}" name="remark" value="{{ form.remark }}" type="textarea" id="remark" placeholder="请输入项目特殊性..." autosize border="{{ false }}" />
       <text wx:else>{{form.remark}}</text>
@@ -30,24 +79,45 @@
       我已阅读并同意
       <text class="link-text">《高德纳系统合约条款》</text>
     </van-checkbox>
-
-  <!-- SubmitBar Start -->
-  <view class="submit-bar">
-    <view class="submit-bar_content">
-      <view class="submit-bar-left">
-        <view class="submit-bar_price">
-          预估费用
-          <text class="price">{{amount}}</text>
+    <!-- SubmitBar Start -->
+    <view class="submit-bar">
+      <view class="submit-bar_content">
+        <view class="submit-bar-left">
+          <view class="submit-bar_price">
+            预估费用
+            <text class="price">{{amount}}</text>
+          </view>
+          <view class="submit-bar_text">最终价格以批复后产生的价格为准！</view>
         </view>
-        <view class="submit-bar_text">最终价格以批复后产生的价格为准！</view>
+        <button class="submit-bar_button"  bindtap="submitForm">提交订单</button>
       </view>
-      <button class="submit-bar_button"  formType="submit">提交订单</button>
     </view>
-  </view>
-  <!-- Submit Bar/ End -->
+    <!-- Submit Bar/ End -->
   </form>
-  <half-screen-dialog is-true="{{showDialog}}" title="《高德纳系统合约条款》" confirm-text="我已阅读并同意" count-down count="5" bind:submit="onDialogSubmit">
-    <view class="weui-article">
+
+  <!-- 会议时间选择 -->
+  <mp-halfScreenDialog show="{{showDateDialog}}"  closabled="{{false}}" buttons="{{dateDialogButtons}}">
+    <view slot="desc">
+      <rich-text class="date-picker-title">选择日期</rich-text>
+      <cu-date-picker></cu-date-picker>
+      <rich-text class="date-picker-title">选择时间</rich-text>
+      <picker-view indicator-style="height: 40px;" style="width: 100%; height: 120px;" value="{{ampmIndex}}" bindchange="bindChange">
+        <picker-view-column style="margin-left:20rpx; text-align: center">
+          <view wx:for="{{ampms}}" style="line-height: 40px">{{item.label}}</view>
+        </picker-view-column>
+      </picker-view>
+      <view class="date-tips">
+        <rich-text>温馨提示</rich-text>
+        <rich-text>1、半天（4个小时，超时需支付额外费用）</rich-text>
+        <rich-text>2、半天（8个小时，超时需支付额外费用）</rich-text>
+      </view>
+    </view>
+  </mp-halfScreenDialog>
+
+  <!--  -->
+
+  <mp-halfScreenDialog  show="{{showDialog}}" title="《高德纳系统合约条款》" confirm-text="我已阅读并同意" count-down count="5" bind:submit="onDialogSubmit">
+    <view class="weui-article" slot="desc" style="height: 50vh; overflow-y:auto">
       <view class="weui-article__p">最近修訂日期：2014年8月1日</view>
       <view class="weui-article__h3">介紹</view>
       <view class="weui-article__section">
@@ -57,12 +127,15 @@
         <view class="weui-article__p">
           如需取消订单，请发送邮件并抄送Leon Sun，邮件中同时说明取消原因，及以后如何避免？（如果小于/等于5天提出取消订单/减少项目时间，我们需要支付原计划中所有费用）
         </view>
-        <view class="weui-article__p">
-          订单一旦生成，会议开始时间无法更改，结束时间只能延长无法缩短。如需延长会议，需得到Leon Sun的批复。
-        </view>
+        <view class="weui-article__p">订单一旦生成，会议开始时间无法更改，结束时间只能延长无法缩短。如需延长会议，需得到Leon Sun的批复。</view>
       </view>
     </view>
-  </half-screen-dialog>
+    <view slot="footer">
+      
+      <button  type="primary" class="weui-btn" bindtap="onDialogSubmit">
+        我已阅读并同意
+      </button>
+    </view>
+  </mp-halfScreenDialog>
 </view>
-
 <!-- Half Screen Dialog -->

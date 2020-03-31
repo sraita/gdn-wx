@@ -9,6 +9,12 @@ var timeout = require('connect-timeout'); //express v4
 global.CONFIG = require('./config');
 console.log(CONFIG.JWT_SECRET);
 
+// 微信 AccessToken 全局缓存
+global.wx = {
+  accessToken: null,
+  accessTokenExpireAt: Date.now()
+}
+
 var indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
 const menuRouter = require('./routes/menu');

@@ -17,7 +17,6 @@ Page({
   onLoad() {
   },
   onShow: function () {
-    this.getTabBar().init();
     this.fetchData();
   },
   fetchData() {

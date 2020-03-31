@@ -12,4 +12,12 @@ router.route('/:_id')
   .put(controller.updateTeam)
   .delete(controller.deleteTeam);
 
+router.route('/:_id/qr-image')
+  .get(controller.getQrImage)
+
+  router.route('/:_id/members')
+  .get(controller.getMembers)
+
+
+
 module.exports = router

@@ -27,7 +27,7 @@ Page({
     })
   },
   onShow: function () {
-    this.getTabBar().init();
+    
   },
 
   /**
@@ -71,6 +71,14 @@ Page({
       url: page,
       fail: function (e) {
         console.log(e)
+      }
+    })
+  },
+  // 创建或加入团队
+  createOrAddTeam(e) {
+    wx.scanCode({
+      success: (res) => {
+        console.log(res)
       }
     })
   }

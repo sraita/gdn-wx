@@ -1,24 +1,18 @@
 <!--index.wxml-->
 <view class="page page-home">
-  <nav-bar transparent theme="light" title="高德纳系统" left-text="返回" />
-  <view class="banner">
+  <nav-bar transparent theme="light" title="高德纳系统"/>
+  <view class="top-box">
+    <view class="grid">
+      <view class="grid-item" bind:tap="openPage" data-page="/pages/order/create-normal/index">
+        <text class="title">普通订单</text>
+        <text class="text">两小时内分配译员</text>
+      </view>
+      <view class="grid-item">
+        <text class="title">特殊订单</text>
+        <text class="text">难度高，需要更高级别译员</text>
+      </view>
+    </view>
   </view>
-  <view class="card">
-    <van-grid clickable column-num="2" border="{{false}}">
-      <van-grid-item use-slot link-type="navigateTo" url="/pages/order/create-normal/index">
-        <view class="grid-item">
-          <van-icon name="orders-o" class="icon" />
-          <text class="title">普通订单</text>
-          <text class="text">两小时内分配译员</text>
-        </view>
-      </van-grid-item>
-      <van-grid-item use-slot link-type="reLaunch" url="/pages/dashboard/index">
-        <view class="grid-item">
-          <van-icon name="column" class="icon" />
-          <text class="title">特殊订单</text>
-          <text class="text">难度高，需要更高级别译员</text>
-        </view>
-      </van-grid-item>
-    </van-grid>
-  </view>
+
+  <rich-text style="margin-top: 64px;display: block;">待办事项</rich-text>
 </view>

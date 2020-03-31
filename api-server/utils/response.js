@@ -1,7 +1,7 @@
 const resSuccess = function (res,message, data) {
   res.json({
     status: 'success',
-    code: 20000,
+    code: 0,
     message,
     data
   });

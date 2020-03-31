@@ -5,7 +5,7 @@
     <rich-text class="team-name">团队名称</rich-text>
     <view class="qrcode-content">
       <rich-text>邀请码: 129870</rich-text>
-      <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="aspectFit" src="{{qrcodeSrc}}"></image>
+      <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="aspectFit" src="http://localhost:3000/api/teams/dd/qr-image"></image>
     </view>
     </view>
   </view>

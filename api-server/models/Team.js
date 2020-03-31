@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
   introduction: String, // 介绍
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }, // 所有者
   contact: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 联系人信息
-  reviewers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 审核人员
+  assigneeList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // 审核人员
   createAt: Date,
 });
 
