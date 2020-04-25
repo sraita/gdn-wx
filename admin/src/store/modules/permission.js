@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import router, { asyncRoutes, constantRoutes } from '@/router'
 import { getUserRoutes } from '@/api/user';
 
 /* Layout */
@@ -25,15 +25,34 @@ function filterAsyncRoutes(routes) {
   try {
     const res = []
     routes.forEach(route => {
-      let tmp = {
-        name: route.name,
-        path: route.url,
-        component: route.component == 'Layout' ? Layout : () => import(`@/views/${route.component}`),
-        meta: route.meta,
-        redirect: route.redirect
-      };
-      if (route.children) {
-        tmp.children = filterAsyncRoutes(route.children)
+      let tmp = {};
+      if (route.parent === null && !route.children) {
+        tmp = {
+          path: route.path,
+          component: Layout,
+          meta: route.meta,
+          redirect: route.path + 'index',
+          children: [
+            {
+              name: route.name,
+              path: 'index',
+              component: () => import(`@/views/${route.component}`),
+              meta: route.meta,
+              redirect: route.redirect
+            }
+          ]
+        }
+      } else {
+        tmp = {
+          name: route.name,
+          path: route.path,
+          component: route.component == 'Layout' ? Layout : () => import(`@/views/${route.component}`),
+          meta: route.meta,
+          redirect: route.component == 'Layout' ? '' : ''
+        };
+        if (route.children) {
+          tmp.children = filterAsyncRoutes(route.children)
+        }
       }
       res.push(tmp);
     });
@@ -63,6 +82,7 @@ const actions = {
         let routes = res.data;
         let accessedRoutes = filterAsyncRoutes(routes, roles)
         accessedRoutes.push({ path: '*', redirect: '/404', hidden: true });
+        console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       }).catch (error => {

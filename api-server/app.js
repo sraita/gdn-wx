@@ -22,6 +22,7 @@ const roleRouter = require('./routes/role');
 const routeRouter = require('./routes/route');
 const teamRouter = require('./routes/team');
 const orderRouter = require('./routes/order');
+const sysRouter = require('./routes/system');
 
 require('./db');
 
@@ -52,6 +53,7 @@ app.use('/api/roles', roleRouter);
 app.use('/api/routes',routeRouter);
 app.use('/api/teams', teamRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/sys', sysRouter);
 
 
 // Catch 404 and forward them to error handler

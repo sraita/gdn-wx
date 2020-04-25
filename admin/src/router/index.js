@@ -74,7 +74,7 @@ export const asyncRoutes = [
     meta: {
       title: '权限管理',
       icon: 'authorization',
-      roles: ['admin', 'editor','5db5bc545515122cea2e938c'] // you can set roles in root nav
+      roles: ['admin', 'editor','5ea435e9189f7b2eae7fb4d6'] // you can set roles in root nav
     },
     children: [
       {
@@ -83,7 +83,7 @@ export const asyncRoutes = [
         name: 'Menu',
         meta: {
           title: '菜单管理',
-          roles: ['admin','5db5bc545515122cea2e938c'] // or you can only set roles in sub nav
+          roles: ['admin','5ea435e9189f7b2eae7fb4d6'] // or you can only set roles in sub nav
         }
       },
       {
@@ -92,7 +92,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: '角色权限',
-          roles: ['admin','5db5bc545515122cea2e938c']
+          roles: ['admin','5ea435e9189f7b2eae7fb4d6']
         }
       }
     ]

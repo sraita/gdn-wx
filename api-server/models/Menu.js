@@ -37,7 +37,7 @@ const schema = new mongoose.Schema({
   order: Number,
   level: Number,
   icon: String, 
-  url: String, // 菜单路径
+  path: String, // 菜单路径
   name: String, // 组件名称
   component: String, // 页面组件路径
   redirect: String, // 重定向

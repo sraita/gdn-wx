@@ -151,7 +151,7 @@ module.exports = {
         name: item.name,
         parent: item.parent,
         component: item.component,
-        url: item.url,
+        path: item.path,
         type: item.type,
         redirect: item.redirect,
         meta: {

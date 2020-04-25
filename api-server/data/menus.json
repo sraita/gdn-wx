@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Permission",
+    "title": "权限管理",
+    "icon": "authorization",
+    "path": "/permission",
+    "component": "Layout",
+    "redirect": "",
+    "hidden": false,
+    "order": 1,
+    "children": [
+      {
+        "name": "menu",
+        "title": "菜单管理",
+        "icon": "",
+        "path": "menu",
+        "component": "permission/menu",
+        "order": 1,
+        "hidden": false
+      },
+      {
+        "name": "RolePermission",
+        "title": "角色权限",
+        "icon": "",
+        "path": "role",
+        "component": "permission/role",
+        "order": 2,
+        "hidden": false
+      }
+    ]
+  },
+
+  {
+    "name": "User",
+    "title": "用户管理",
+    "icon": "user",
+    "path": "/user",
+    "component": "user/index",
+    "order": 2,
+    "hidden": false
+  },
+  {
+    "name": "Translator",
+    "title": "译员管理",
+    "icon": "translator",
+    "path": "/translator",
+    "component": "translator/index",
+    "order": 2
+  },
+  {
+    "name": "Team",
+    "title": "团队管理",
+    "icon": "team",
+    "path": "/teams",
+    "component": "teams/index",
+    "order": 3
+  },
+  {
+    "name": "Orders",
+    "title": "订单管理",
+    "icon": "order",
+    "path": "/order",
+    "component": "order/index",
+    "order": 4
+  },
+  {
+    "name": "Analysis",
+    "title": "统计信息",
+    "icon": "analysis",
+    "path": "/analysis",
+    "component": "Layout",
+    "order": 5,
+    "children": [
+      {
+        "name": "Orders",
+        "title": "订单统计",
+        "icon": "order",
+        "path": "/order",
+        "component": "analysis/order",
+        "order": 1
+      }
+    ]
+  }
+]

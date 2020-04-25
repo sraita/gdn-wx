@@ -49,8 +49,8 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : a123456</span>
+          <span>Username : sadmin</span>
+          <span>Password : 123456</span>
         </div>
         <div class="tips">
           <span style="margin-right:18px;">Username : editor</span>
@@ -84,8 +84,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'sadmin',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

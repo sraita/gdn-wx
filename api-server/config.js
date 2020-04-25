@@ -11,5 +11,8 @@ module.exports = {
   PUBLIC_ROUTES:[
     '/',
     '/user',
-  ]
+  ],
+  // 数据库配置
+  MONGO_URL: 'mongodb://localhost:27017',
+  MONGO_DBNAME: 'gdn-test'
 }
