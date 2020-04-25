@@ -46,7 +46,7 @@ app.use(timeout(1200000));
 app.use(haltOnTimedout);
 // Routes
 app.use('/', indexRouter);
-app.use('/api/user', userRouter);
+app.use('/api/users', userRouter);
 app.use('/api/menus', menuRouter);
 app.use('/api/roles', roleRouter);
 app.use('/api/routes',routeRouter);

@@ -1,6 +1,6 @@
 <scroll-view scroll-y class="scrollPage">
   <view class="UCenter-bg">
-  <view class="cu-avatar round xl" style="background-image:url({{userInfo.avatarUrl}});"></view>
+  <view class="cu-avatar round xl" style="background-image:url({{userInfo.avatar}});"></view>
 
     <!-- <image src="{{userInfo.avatarUrl}}" class="png" mode="widthFix"></image> -->
     <view class="text-xl margin-tb-lg">
@@ -30,7 +30,7 @@
     <view class="cu-item"  bindtap="createOrAddTeam"  data-page="../team/create/create">
       <view class="content">
         <text class="cuIcon-warn text-green"></text>
-        <text class="text-grey">创建/加入团队</text>
+        <text class="text-grey">加入团队</text>
       </view>
     </view>
     <view class="cu-item arrow">

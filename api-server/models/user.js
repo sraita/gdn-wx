@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const schema = new mongoose.Schema({
+  openid: String,
   username: {
     type: String,
     unique: true

@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class="page page-home">
-  <nav-bar transparent theme="light" title="高德纳系统"/>
+  <nav-bar transparent theme="light" title="唐能翻译"/>
   <view class="top-box">
     <view class="grid">
       <view class="grid-item" bind:tap="openPage" data-page="/pages/order/create-normal/index">

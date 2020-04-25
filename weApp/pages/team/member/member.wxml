@@ -1,4 +1,3 @@
-<nav-bar title="团队成员" left-text="返回" bind:click-left="pageBack" />
 <view class="cu-bar bg-white search fixed" style="top:64px;">
   <view class="search-form round">
     <text class="cuIcon-search"></text>

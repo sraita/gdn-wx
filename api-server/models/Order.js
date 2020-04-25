@@ -1,50 +1,104 @@
 // 订单
 const mongoose = require('mongoose');
-
-const meetingSchema = new mongoose.Schema({
-  subject: String, // 会议主题名称
-  analysor: String, // 分析师姓名
-  date: Date, // 会议日期
-  time: { // 时段
-    type: String, 
-    enum:['day','am','pm'], // 全天, 上午, 下午 
-  },
-  transType: { // 翻译类型
-    type: String,
-    enum: ['en', 'zh_Yue']
-  },
-  projectType: { // 项目类型
-    type: String,
-    enum: ['meeting', 'inquiry']
-  },
-  address: String, // 开会地点
-});
-
-const contactSchema = new mongoose.Schema({
-  name: String, // 联系人姓名
-  emial: String,
-  mobile: String,
-  tel: String
-});
-
 const schema = new mongoose.Schema({
-  no: Number, // 订单编号
-  status: { // 订单状态
-    type: Number,
-    enum: [10,20,30,40,50,60,70,80,90] // 创建(等待审批), 审批通过, 审批拒绝, 已匹配翻译人员, 预估价格并匹配译员(特殊),订单完成
+  sn: { // 订单编号
+    type: String,
+    required: true
+  },
+  status: { // 订单状态： submit - 已提交， process - 进行中, finish - 已完成，close - 已关闭（审核不通过等），cancel - 已取消
+    type: String,
+    enum: ['submit', 'process', 'finish', 'close', 'cancel'],
+    default: 'process'
   },
   type: { // 订单类型
     type: String,
-    enum:['normal','special'], // 普通 , 特殊
+    enum: ['normal', 'special'], // 普通 , 特殊
   },
-  appraise: { type: mongoose.Schema.Types.ObjectId, ref: 'appraise'}, // 订单评价
-  contact: contactSchema, // 联系信息
-  meeting: meetingSchema, // 会议相关信息
-  creator: { type: mongoose.Schema.Types.ObjectId, ref: 'user'}, // 订单创建者 || 下单方
-  team: { type: mongoose.Schema.Types.ObjectId, ref: 'team' }, // 所属团队
-  translator: { type: mongoose.Schema.Types.ObjectId, ref: 'translator' }, // 匹配译员
-  remark: String, // 订单备注
-  createAt: Date,
+  amount: Number, // 订单金额
+  trans_type: { // 翻译类型: en - 英语, zh_yue - 粤语
+    type: String,
+    enum: ['en', 'zh_yue']
+  },
+  creator: { // 订单创建人
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user' 
+  }, 
+  team: { // 所属团队
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'team' 
+  },
+  translator: { // 议员信息
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'translator' 
+  }, 
+  remark: { // 订单备注
+    type:String,
+    default: '' 
+  },
+  is_delete: { // 订单是否删除
+    type: Boolean,
+    default: false
+  },
+  create_time: { // 订单 创建/提交 时间
+    type: Date,
+    default: new Date()
+  },
+  confirm_time: { // 订单确认时间
+    type: Date,
+    default: null
+  },
+  comment_time: { // 评价时间
+    type: Date,
+    default: null
+  },
+  update_time: { // 更新时间
+    type: Date,
+    default: new Date()
+  },
+
+  // 会议信息
+  meeting_type: { // 会议类型 inquiry - 电话会议； onsite_meeting - 现场交传
+   type: String,
+    enum: ['inquiry','onsite_meeting']
+  },
+  meeting_subject: { // 会议主题
+   type: String,
+   default: ''
+  },
+  meeting_date: { // 会议日期
+   type: Date,
+   default: new Date()
+  },
+  meeting_time: { // 会议时间:
+   type:  String,
+   enum: ['am','pm','day']
+  },
+  meeting_address: { // 会议地点
+    type: String,
+    default: '' 
+  },
+  meeting_analyst: { // 会议分析师姓名
+    type: String,
+    default: '' 
+  },
+
+  // 联系信息
+  contact_name: { // 联系人姓名
+    type: String,
+    default: ''
+  },
+  contact_tel: { // 联系电话/手机
+    type: String,
+    default: ''
+  },
+
+  // 环节信息
+  process_id: { // 当前环节 Id
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'order_process' 
+  },
+  process_code: String, // 当前环节code
+  process_name: String, // 当前环节名称
 });
 
 // 设置索引

@@ -1,0 +1,79 @@
+@uri = http://localhost:3000/api
+@contentType = 'application/json'
+@userId = 5ea42de74cbf0d2a37445a03
+@orderId = 5ea3f17432040522603776fb
+@teamId=5ea3f17432040522603776fb
+
+
+### 所有用户列表
+GET {{uri}}/users
+### 
+### 用户注册
+POST 
+###
+
+### 获取用户订单
+GET {{uri}}/users/{{userId}}/orders
+###
+
+
+### 订单相关
+###
+
+### 获取所有订单
+@status=process
+@page=1
+@limit=10
+GET {{uri}}/orders?page={{page}}&limit={{limit}}&status={{status}}
+###
+
+### 提交订单
+POST {{uri}}/orders
+content-type: application/json
+
+{
+  "status": "process",
+  "remark": "",
+  "is_delete": false,
+  "meeting_subject": "高德纳系统评估",
+  "meeting_date": "2020-04-25T08:11:04.297Z",
+  "meeting_time": "am",
+  "meeting_address": "云南昆明",
+  "meeting_analyst": "Sraita",
+  "contact_name": "桂富波",
+  "contact_tel": "14787805531",
+  "sn": 9008783,
+  "type": "normal",
+  "process_code": "order-taking",
+  "process_id": "5ea3f09b646920222a369a87",
+  "process_name": "唐能翻译接单"
+}
+###
+
+### 获取用户订单列表
+GET http://localhost:3000/api/users/{{userId}}/orders 
+
+### 获取订单信息
+GET http://localhost:3000/api/orders/{{orderId}} 
+content-type: application/json
+###
+
+### 获取订单环节信息
+GET http://localhost:3000/api/orders/{{orderId}}/process 
+content-type: application/json
+###
+
+
+### 团队 ###
+
+### 获取团队列表
+GET {{uri}}/teams
+###
+
+### 加入团队 - 新增团队成员
+POST 
+###
+
+### 获取团队成员列表
+GET {{uri}}/teams/{{teamId}}/members
+###

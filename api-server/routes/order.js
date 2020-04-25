@@ -1,13 +1,16 @@
 const router = require('express-promise-router')()
 
-const orderController = require('../controllers/order');
+const controller = require('../controllers/order');
 
 router.route('/')
-  .get(orderController.getOrders)
-  .post(orderController.newOrder);
+  .get(controller.getOrders)
+  .post(controller.newOrder);
 
 router.route('/:_id')
-  .put(orderController.updateOrder)
-  .delete(orderController.deleteOrder);
+  .get(controller.info)
+  .put(controller.updateOrder)
+  .delete(controller.deleteOrder);
+
+router.route('/:_id/process').get(controller.orderProcess);
   
 module.exports = router

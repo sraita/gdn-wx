@@ -7,6 +7,12 @@ Page({
    * 页面的初始数据
    */
   data: {
+    tabs: [
+      {title:'全部', code: 'all'},
+      { title: '进行中'}, 
+      {title:'已取消'}
+    ],
+    activeTab: 0,
     list:[],
     pagination: {
       page: 1,
@@ -15,6 +21,7 @@ Page({
     }
   },
   onLoad() {
+
   },
   onShow: function () {
     this.fetchData();
@@ -29,6 +36,15 @@ Page({
         pagination
       })
     })
+  },
+  onTabCLick(e) {
+    const index = e.detail.index
+    this.setData({ activeTab: index })
+  },
+
+  onChange(e) {
+    const index = e.detail.index
+    this.setData({ activeTab: index })
   },
   clickItem: function (event) {
     console.log(event)

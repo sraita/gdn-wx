@@ -100,7 +100,7 @@ Page({
       });
       const {code } = getCode();
       getCode().then(code => {
-        login({code}).then(res => {
+        login({code, userInfo}).then(res => {
           console.log(res.data);
           const {token} = res.data;
           wx.setStorageSync('loginToken', token);

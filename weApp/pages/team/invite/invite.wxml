@@ -1,4 +1,4 @@
-<nav-bar title="邀请新成员" left-text="返回" bind:click-left="pageBack" />
+
 <view class="page">
   <view class="cu-card article margin-top-lg">
     <view class="card">

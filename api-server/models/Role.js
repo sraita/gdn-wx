@@ -17,7 +17,6 @@ const schema = new mongoose.Schema({
 // 设置索引
 schema.index({ username: 1 });
 
-
 schema.set('toObject', { getters: true, virtuals: true }); // toObject时能够转换
 schema.set('toJSON', { getters: true, virtuals: true }); // toJson时能够转换
 

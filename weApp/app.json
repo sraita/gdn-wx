@@ -14,7 +14,8 @@
     "pages/team/invite/invite",
     "pages/team/approve/approve",
     "pages/message/index/index",
-    "pages/component/choose-member/choose-member"
+    "pages/component/choose-member/choose-member",
+    "pages/order/trans-history/trans-history"
   ],
   "tabBar": {
     "color": "#7A7E83",
@@ -43,11 +44,10 @@
   },
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#727cf5",
     "navigationBarTitleText": "",
-    "navigationBarTextStyle": "black",
-    "navigationStyle": "custom",
-    "backgroundColor": "#000043"
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f1f2f7"
   },
   "sitemapLocation": "sitemap.json",
   "usingComponents": {

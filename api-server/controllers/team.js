@@ -50,8 +50,8 @@ module.exports = {
     res.json({code: 0, data:{
       list
     }});
-  },  
-
+  },
+  
   // 添加审批人
   addAssignee: async (req, res, next) => {
     let team = await Team.updateOne({_id:req.params._id},{

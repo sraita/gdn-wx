@@ -12,6 +12,15 @@ const { resSuccess, resError } = require('../utils/response');
 
 
 module.exports = {
+  index: async (req, res, next) => {
+    let list = await User.find();
+    let total = await User.countDocuments();
+
+    res.json({code: 0, data: {
+      list,
+      total
+    }})
+  },
   // User Register
   register: async (req, res, next) => {
     const {username} = req.body;
@@ -57,6 +66,8 @@ module.exports = {
     //微信小程序设置
     const wx = CONFIG.WECHAT_MINI_PROGRAM; //文件中存储了appid 和 secret
 
+    let userInfo = req.body.userInfo;
+
     // 获取 openid, session_key
     let wxRequestOptions = {
       method: 'POST',
@@ -68,33 +79,42 @@ module.exports = {
         grant_type: 'authorization_code'
       }
     }
-    const wxreq = options => new Promise((resolve, reject) => {
-      request(options, (err, response, body)=> {
+    console.log(wxRequestOptions)
+    
+    request(wxRequestOptions, async (err, response, body)=> {
         if (err) {
-          reject(err);
+          console.log(err);
+          res.status(400).json({
+            code: -1,
+            message: err.message
+          })
         } else {
-          resolve(body);
+          const { session_key, openid } = JSON.parse(body);
+          console.log({ session_key, openid })
+          let user = await User.findOne({ openid: openid });
+          if (!user) {
+            let userObj = {
+              openid,
+              username: openid,
+              password: '123456',
+              avatar: userInfo.avatarUrl,
+              city: userInfo.city,
+              gender: userInfo.gender,
+              nickName: userInfo.nickName
+            };
+            console.log(userObj);
+            user = new User(userObj);
+            user.save();
+          }
+          // 创建 token
+          const token = generateToken(user._id, 3600);
+          // update user token
+          await User.findByIdAndUpdate(user._id,{
+            $set:{token: token}
+          });
+          resSuccess(res,'',{token});
         }
       })
-    });
-    const { session_key, openid} = await wxreq(wxRequestOptions);
-    
-    const user = await User.findOne({ openid: openid });
-    if (!user) {
-      const newUser = {
-        openid,
-        session_key
-      };
-      user = await new User(newUser);
-      user.save();
-    }
-    // 创建 token
-    const token = generateToken(user._id, 3600);
-    // update user token
-    await User.findByIdAndUpdate(user._id,{
-      $set:{token: token}
-    });
-    resSuccess(res,'',{token});
   },
   // Get User Info
   info: async (req, res, next) => {
