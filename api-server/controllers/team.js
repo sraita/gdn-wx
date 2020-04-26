@@ -52,7 +52,36 @@ module.exports = {
     const team = await Team.findByIdAndRemove(req.params._id);
     res.json({ code: 0, message: '团队解散成功'})
   },
+  // 加入团队
+  joinTeam: async (req, res, next) => {
+    let team = await Team.findById(req.params._id);
+    if (!team) {
+      return res.status(400).json({code: -1, message: '团队不存在，请联系管理员'});
+    }
+    if (team.disable_code) {
+      return res.status(400).json({ code: -1, message: '团队当前不允许新成员加入，请联系管理员!' });
+    }
+    if (team.code !== req.body.code) {
+      return res.status(400).json({ code: -1, message: '确认码不正确，请重新输入再试!' });
+    }
+    let member = await TeamMember.findOne({team: team._id, user: req.body.userId});
+    if (member) {
+      return res.status(400).json({ code: -1, message: '你已加入该团队!' });
+    }
+    let ts = new Date();
+    let new_member = new TeamMember({
+      user: req.body.userId,
+      team: team._id,
+      create_time: ts,
+      update_time: ts
+    });
 
+    await new_member.save();
+    let new_team = await Team.findByIdAndUpdate(req.params._id,{
+      $inc: {member_count: 1}
+    },{new: true});
+    res.json({code: 0, message: '加入团队成功'})
+  },
   // 二维码
   getQrImage: async (req, res, next) => {
     var temp_qrcode = qr_image.image('http://www.baidu.com');
@@ -75,7 +104,7 @@ module.exports = {
         assigneeList: [req.body.assignee]
       }
     });
-    res.json({code: 0, messagee: '审批人添加成功'})
+    res.json({code: 0, message: '审批人添加成功'})
   },
   // 移除审批人
   removeAssignee: async (req, res, next) => {
@@ -84,6 +113,6 @@ module.exports = {
         assigneeList: [req.body.assignee]
       }
     });
-    res.json({ code: 0, messagee: '审批人移除成功' })
+    res.json({ code: 0, message: '审批人移除成功' })
   }
 }

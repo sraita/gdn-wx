@@ -74,12 +74,4 @@ Page({
       }
     })
   },
-  // 创建或加入团队
-  createOrAddTeam(e) {
-    wx.scanCode({
-      success: (res) => {
-        console.log(res)
-      }
-    })
-  }
 })

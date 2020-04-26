@@ -114,5 +114,11 @@ module.exports = {
         }
       })
     });
+  },
+  getTeamInfo:() => {
+
+  },
+  getTeamId:() => {
+    
   }
 }

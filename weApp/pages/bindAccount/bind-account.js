@@ -1,4 +1,5 @@
 // pages/bindAccount/band-account.js
+const {getTeams} = require('../../api/team.js');
 const app = getApp();
 Page({
 

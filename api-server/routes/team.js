@@ -12,6 +12,9 @@ router.route('/:_id')
   .post(controller.updateTeam)
   .delete(controller.deleteTeam);
 
+router.route('/:_id/join')
+  .post(controller.joinTeam);
+  
 router.route('/:_id/qr-image')
   .get(controller.getQrImage)
 

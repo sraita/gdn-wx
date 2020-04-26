@@ -4,15 +4,22 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   team: { type: mongoose.Schema.Types.ObjectId, ref: 'team' },
-  isCreator: { // 是否是创建者
+  is_creator: { // 是否是创建者
     type: Boolean,
     default: false,
   },
-  isAssignee: { // 是否是审核人员
+  is_approver: { // 是否是审核人员
     type: Boolean,
     default: false,
   },
-  createAt: Date,
+  create_time: {
+    type: Date,
+    default: new Date()
+  },
+  update_time: {
+    type: Date,
+    default: new Date()
+  },
 });
 
 // 设置索引

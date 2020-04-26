@@ -27,7 +27,7 @@
         <text class="text-grey text-sm">{{userInfo.team.name}}</text>
       </view>
     </view>
-    <view class="cu-item"  bindtap="createOrAddTeam"  data-page="../team/create/create">
+    <view class="cu-item"  bindtap="openPage"  data-page="../team/bind/bind">
       <view class="content">
         <text class="cuIcon-warn text-green"></text>
         <text class="text-grey">加入团队</text>

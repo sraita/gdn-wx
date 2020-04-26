@@ -63,13 +63,6 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/bindAccount/band-account",
-					"pathName": "pages/bindAccount/band-account",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
 					"name": "pages/order/create-normal/index",
 					"pathName": "pages/order/create-normal/index",
 					"query": "",
@@ -114,6 +107,13 @@
 					"id": 8,
 					"name": "审批设置",
 					"pathName": "pages/team/approve/approve",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "加入团队",
+					"pathName": "pages/team/bind/bind",
 					"query": "",
 					"scene": null
 				}

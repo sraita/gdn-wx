@@ -1,19 +1,19 @@
-<nav-bar title="绑定团队" left-text="关闭" bind:click-left="pageBack" />
-<view class="page">
-  <form>
-    <view class="cu-form-group margin-top">
-      <view class="title">选择团队</view>
-      <picker bindchange="PickerChange" value="{{index}}" range="{{picker}}">
-        <view class="picker">{{index?picker[index]:'禁止换行，超出容器部分会以 ... 方式截断'}}</view>
+<mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+<mp-form id="form" rules="{{rules}}" models="{{formData}}">
+  <mp-cells>
+    <mp-cell prop="team" title="团队" link>
+      <picker bindchange="bindTeamChange" data-field="team" value="{{teamIndex}}" range="{{teams}}" range-key="name">
+        <view class="weui-input">{{teams[teamIndex].name}}</view>
       </picker>
-    </view>
-    <view class="cu-form-group">
-      <view class="title">校验码</view>
-      <input placeholder="输入框带标签"></input>
-      <view class="cu-capsule radius">
-        <view class="cu-tag bg-blue">+86</view>
-        <view class="cu-tag line-blue">中国大陆</view>
-      </view>
-    </view>
-  </form>
+    </mp-cell>
+    <mp-cell prop="code" title="确认码">
+      <input type="number" maxlength="4" bindinput="formInputChange" data-field="code" class="weui-input" placeholder="请输入4位数字确认码" />
+    </mp-cell>
+  </mp-cells>
+</mp-form>
+
+<view class="weui-btn-area">
+  <button class="weui-btn" type="primary" bindtap="submitForm" disabled="{{submiting}}">
+  {{submiting ? '正在提交' : '加入团队'}}
+  </button>
 </view>
