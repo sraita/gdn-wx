@@ -9,7 +9,7 @@ router.route('/')
 
 router.route('/:_id')
   .get(controller.getTeam)
-  .put(controller.updateTeam)
+  .post(controller.updateTeam)
   .delete(controller.deleteTeam);
 
 router.route('/:_id/qr-image')

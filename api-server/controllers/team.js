@@ -6,20 +6,37 @@ const { resSuccess, resError } = require('../utils/response');
 
 const qr_image = require('qr-image');
 
+/**
+ * 生成固定长度的数字随机码
+ * @param {Number} len  验证码长度
+ */
+function build_sms_code(len = 4) {
+  let p = '1234567890'
+  let str = '';
+  for (let i = 0; i< len; i++) {
+    str += p.charAt(Math.random() * p.length | 0)
+  }
+  return str;
+}
+
 module.exports = {
   index: async (req, res, next) => {
-    const list = Team.find({});
-    const total = Team.countDocuments();
+    let filters = [];
 
-    resSuccess(res, '', {
-      list,
-      total
+    const list = await Team.find({});
+    const total = await Team.countDocuments();
+
+    res.json({
+      code: 0,
+      data: {
+        list,
+        total
+      }
     });
   },
   newTeam: async (req,res,next) => {
-    const newTeam = new Team(req.body)
-    const user = await User.findByIdAndUpdate(req.userId, {team:newTeam});
-    newTeam.owner = user._id;
+    const newTeam = new Team(req.body);
+    newTeam.code = build_sms_code();
     let team = await newTeam.save();
     resSuccess(res, '', team);
   },
@@ -28,13 +45,12 @@ module.exports = {
     resSuccess(res,'',team);
   },
   updateTeam: async (req, res, next) => {
-    const team = await Team.findByIdAndUpdate(req.params._id, req.body);
-
-    resSuccess(req,'', team);
+    const team = await Team.findByIdAndUpdate(req.params._id, req.body, {new: true});
+    res.json({code: 0, data: team})
   },
   deleteTeam: async (req, res, next) => {
     const team = await Team.findByIdAndRemove(req.params._id);
-    resSuccess(req,'团队解散成功','success');
+    res.json({ code: 0, message: '团队解散成功'})
   },
 
   // 二维码

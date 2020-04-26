@@ -153,7 +153,7 @@ module.exports = {
         component: item.component,
         path: item.path,
         type: item.type,
-        redirect: item.redirect,
+        hidden: item.hidden,
         meta: {
           title: item.title,
           icon: item.icon

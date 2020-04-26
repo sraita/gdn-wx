@@ -26,13 +26,17 @@ const mongoose = require('mongoose');
 const schema = new mongoose.Schema({
   parent: {type: mongoose.Schema.Types.ObjectId, ref: 'menu'},
   title: String, // 菜单名称
-  status: {
-    type: String,
-    enum:['enable','disable']
-  },
   type: {
     type: String,
     enum: ['menu','toc']
+  },
+  hidden: { // 是否隐藏(不在菜单中显示)
+    type: Boolean,
+    default: false
+  },
+  is_disable: { // 是否禁用
+    type: Boolean,
+    default: false
   },
   order: Number,
   level: Number,

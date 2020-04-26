@@ -18,26 +18,16 @@
             {{ scope.row.title }}
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="层级" width="60">
-          <template slot-scope="scope">{{ scope.row.level }} 级</template>
-        </el-table-column>
         <el-table-column prop="order" label="排序" width="60"></el-table-column>
-        <el-table-column prop="type" label="类型" width="80">
+        <el-table-column prop="status" label="是否隐藏" width="80">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.type === 'menu'" type="success" size="mini">菜单</el-tag>
-            <el-tag v-else type="primary" size="mini">目录</el-tag>
+            <el-tag v-if="scope.row.hidden" type="danger" size="mini">隐藏</el-tag> 
+            <el-tag v-else type="success" size="mini">显示</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="80">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.status === 'enable'" type="success" size="mini">显示</el-tag>
-            <el-tag v-else type="danger" size="mini">隐藏</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="url" label="请求地址"></el-table-column>
+        <el-table-column prop="path" label="请求地址"></el-table-column>
         <el-table-column prop="name" label="组件名称"></el-table-column>
         <el-table-column prop="component" label="组件路径"></el-table-column>
-        <el-table-column prop="redirect" label="重定向"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="操作" width="160">
           <template slot-scope="scope">
@@ -67,35 +57,26 @@
         <el-form-item label="菜单名称">
           <el-input v-model="menu.title"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="menu.status">
-            <el-radio label="enable">显示</el-radio>
-            <el-radio label="disable">隐藏</el-radio>
+        <el-form-item label="是否隐藏">
+          <el-radio-group v-model="menu.hidden">
+            <el-radio :label="true">隐藏</el-radio>
+            <el-radio :label="false">显示</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排列顺序">
           <el-input-number v-model="menu.order" controls-position="right" :min="1"></el-input-number>
-        </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="menu.type" placeholder>
-            <el-option label="目录" value="toc"></el-option>
-            <el-option label="菜单" value="menu"></el-option>
-          </el-select>
         </el-form-item>
         <el-form-item label="菜单图标">
           <el-input v-model="menu.icon"></el-input>
         </el-form-item>
         <el-form-item label="请求地址">
-          <el-input v-model="menu.url"></el-input>
+          <el-input v-model="menu.path"></el-input>
         </el-form-item>
         <el-form-item label="组件名称">
           <el-input v-model="menu.name"></el-input>
         </el-form-item>
         <el-form-item label="组件路径">
           <el-input v-model="menu.component"></el-input>
-        </el-form-item>
-        <el-form-item label="重定向到">
-          <el-input v-model="menu.redirect"></el-input>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">

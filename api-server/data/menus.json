@@ -33,7 +33,7 @@
   {
     "name": "User",
     "title": "用户管理",
-    "icon": "user",
+    "icon": "user-manage",
     "path": "/user",
     "component": "user/index",
     "order": 2,
@@ -52,7 +52,7 @@
     "title": "团队管理",
     "icon": "team",
     "path": "/teams",
-    "component": "teams/index",
+    "component": "team/index",
     "order": 3
   },
   {
