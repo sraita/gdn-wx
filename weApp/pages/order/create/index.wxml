@@ -1,5 +1,4 @@
 <!-- pages/order/create-normal/index.wxml -->
-<view class="page page-order" style="padding-top: 64px;">
   <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
   <!-- <nav-bar title="普通订单" left-text="返回" bind:click-left="pageBack" /> -->
   <mp-form id="form" rules="{{rules}}" models="{{formData}}"  bindsubmit="formSubmit">
@@ -7,14 +6,14 @@
       <mp-cell prop="name" title="姓名">
         <input bindinput="formInputChange" data-field="name" class="weui-input" placeholder="请输入姓名" />
       </mp-cell>
-      <mp-cell prop="mobile" title="联系电话">
-        <input bindinput="formInputChange" data-field="mobile" class="weui-input" placeholder="请输入联系电话" />
+      <mp-cell prop="tel" title="联系电话">
+        <input bindinput="formInputChange" data-field="tel" class="weui-input" placeholder="请输入联系电话" />
       </mp-cell>
     </mp-cells>
     
     <mp-cells title="会议信息">
-      <mp-cell prop="analysor" title="分析师">
-        <input bindinput="formInputChange" data-field="analysor" class="weui-input" placeholder="请输入分析师名字" />
+      <mp-cell prop="analyst" title="分析师">
+        <input bindinput="formInputChange" data-field="analyst" class="weui-input" placeholder="请输入分析师名字" />
       </mp-cell>
       <mp-cell prop="subject" title="会议主题">
         <input bindinput="formInputChange" data-field="subject" class="weui-input" placeholder="请输入会议主题" />
@@ -33,6 +32,13 @@
         <picker data-field="projectType"  bindchange="bindTypeChange" value="{{typeIndex}}" range="{{types}}" range-key="label">
           <view class="weui-input">{{types[typeIndex].label}}</view>
         </picker>
+      </mp-cell>
+    </mp-cells>
+
+    <mp-cells title="项目特殊性" wx:if="{{formData.type === 'special'}}">
+      <mp-cell prop="desc">
+        <textarea class="weui-textarea" placeholder="请输入项目特殊性" style="height: 3.3em" />
+        <view class="weui-textarea-counter">0/200</view>
       </mp-cell>
     </mp-cells>
   </mp-form>
@@ -107,5 +113,3 @@
       </button>
     </view>
   </mp-halfScreenDialog>
-</view>
-<!-- Half Screen Dialog -->

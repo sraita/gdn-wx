@@ -2,7 +2,7 @@
 const { formatDate, currencyFormater } = require('../../../utils/util.js');
 const { newOrder } = require('../../../api/order');
 const { deepClone } = require('../../../utils/util.js');
-const { _, userId } = getApp();
+const app = getApp();
 Page({
 
   /**
@@ -29,7 +29,7 @@ Page({
 
     // 项目类型
     types: [
-      { label: 'Onside Meeting', value: 'meeting' },
+      { label: 'Onside Meeting', value: 'onsite_meeting' },
       { label: 'Inquiry', value: 'inquiry' }
     ],
     typeIndex: 0,
@@ -49,26 +49,28 @@ Page({
     countDown:5,
     countDownInterval: null,
     formData: {
+      type: 'normal',
       name: '',
-      mobile: '',
+      tel: '',
 
-      analysor: '',
+      analyst: '',
       subject: '',
       address: '',
 
       date:'2020-08-11',
+      time: 'am',
       transType: 'en',
-      projectType: 'meeting',
+      projectType: 'onsite_meeting',
       amount: 4550
     },
     rules: [{
       name: 'name',
       rules: { required: true, message: '请输入联系人姓名' },
     }, {
-      name: 'mobile',
+        name: 'tel',
       rules: [{ required: true, message: '请输入联系电话' }, { mobile: true, message: '请输入正确的联系电话' }],
     }, {
-      name: 'analysor',
+      name: 'analyst',
       rules: { required: true, message: '请输入分析师名字' },
     }, {
       name: 'subject',
@@ -78,7 +80,14 @@ Page({
       rules: { required: true, message: '请输入会议地点' },
     }],
   },
-  onLoad() {
+  onLoad(options) {
+    let type = options.type;
+    this.setData({
+      ['formData.type']: type
+    });
+    wx.setNavigationBarTitle({
+      title: type === 'normal' ? '普通订单':'特殊订单'
+    });
     this.initDatetime();
   },
   onShow: function () {
@@ -203,7 +212,6 @@ Page({
   submitForm() {
     this.selectComponent('#form').validate((valid, errors) => {
       console.log('valid', valid, errors)
-      console.log(this.data.formData)
       if (!valid) {
         const firstError = Object.keys(errors)
         if (firstError.length) {
@@ -213,37 +221,43 @@ Page({
 
         }
       } else {
-        wx.showToast({
-          title: '校验通过'
-        })
-        if (!isAgree) {
-          return _.alert('请阅读并同意《唐能翻译合约条款》', '提示', '我知道了');
+        const {formData, isAgree} = this.data;
+        
+        if (!app.userId()) {
+          return app._.alert('请先登录', '提示', '我知道了');
         }
-        let orderParams = {
-          creator: userId,
+        if (!app.teamId()) {
+          return app._.alert('请先j加入团队', '提示', '我知道了');
+        }
+        if (!isAgree) {
+          return app._.alert('请阅读并同意《唐能翻译合约条款》', '提示', '我知道了');
+        }
+        let params = {
           type: 'normal',
-          contact: {
-            name: params.name,
-            mobile: params.mobile
-          },
-          meeting: {
-            subject: params.subject,
-            analysor: params.analysor,
-            transType: params.transType,
-            projectType: params.projectType,
-            address: params.address,
-            date: datetime[0],
-            time: datetime[1]
-          }
+          trans_type: formData.transType,
+          creator: app.userId(),
+          team: app.teamId(),
+          remark: '',
+          // 会议信息
+          meeting_type: formData.projectType,
+          meeting_subject: formData.subject,
+          meeting_analyst: formData.analyst,
+          meeting_address: formData.address,
+          meeting_date: formData.date,
+          meeting_time: formData.time,
+        // 联系信息
+          contact_name: formData.name,
+          contact_tel: formData.tel
         };
+        console.log(params)
 
-        _.showLoading('正在提交', true);
-        newOrder(orderParams).then(res => {
+        app._.showLoading('正在提交', true);
+        newOrder(params).then(res => {
           const { _id } = res.data;
-          _.toast(res.message, 'success');
+          app._.toast('已提交', 'success');
         }).catch(err => {
-          _.hideLoading();
-          _.toast(res.message, 'error');
+          app._.hideLoading();
+          app._.toast(res.message, 'error');
         })
         
       }

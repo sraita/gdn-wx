@@ -125,9 +125,12 @@ module.exports = {
     }
 
     const _id = verifyToken(req);
-    let user = await User.findOne({ _id: _id }).populate('menus').populate('team');
-    user.roles = ['admin'];
-    return resSuccess(res, '登录成功', user);
+    let user = await User.findOne({ _id: _id }).populate('teams');
+    // user.roles = ['admin'];
+    res.json({
+      code: 0,
+      data: user
+    })
   },
   // Get User Routes 
   userRoutes: async (req, res, next) => {

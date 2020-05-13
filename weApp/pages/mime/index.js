@@ -4,6 +4,7 @@ const app = getApp();
 const defaultUser = {
 
 };
+const mapp = getApp();
 Page({
 
   /**
@@ -11,20 +12,14 @@ Page({
    */
   data: {
     userId: wx.getStorageSync('userId'),
+    teamId: mapp.teamId(),
     userInfo: wx.getStorageSync('userInfo')
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function (userInfo) {
-      //更新数据
-      that.setData({
-        userInfo: userInfo
-      })
-    })
+
   },
   onShow: function () {
     

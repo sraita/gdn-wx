@@ -1,6 +1,8 @@
 // pages/order/index.js
-const { getUserOrders} = require('../../api/order.js');
+const orderApi = require('../../api/order.js');
+const userApi = require('../../api/user.js');
 const {_, userId} = getApp();
+const app = getApp();
 Page({
 
   /**
@@ -20,15 +22,15 @@ Page({
       total: 0,
     }
   },
-  onLoad() {
-
+  onLoad(option) {
+    this.fetchData();
   },
   onShow: function () {
     this.fetchData();
   },
   fetchData() {
     let pagination = this.data.pagination;
-    getUserOrders(userId(),{}).then(res => {
+    userApi.getUserOrders(app.userId(),{}).then(res => {
       const {list,total} = res.data;
       pagination.total = total;
       this.setData({
@@ -48,11 +50,6 @@ Page({
   },
   clickItem: function (event) {
     console.log(event)
-    wx.navigateTo({
-      url: './detail/index?id=x',
-      fail: function(e) {
-        console.log(e)
-      }
-    })
+    app.$router.push('orderDetail',{}, {id:event.currentTarget.dataset.id});
   }
 })

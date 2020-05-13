@@ -1,25 +1,3 @@
-
-
-.page-order {
-  padding: 64px 0;
-}
-form {
-  font-size: 12px;
-}
-.link-text {
-  color: #f56723;
-}
-.van-cell-group {
-  display: block;
-  margin: 10px;
-  background: #fff;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.van-checkbox {
-  margin: 10px 15px;
-}
-
 /* Submit Bar */
 .submit-bar {
   position: fixed;

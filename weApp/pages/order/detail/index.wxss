@@ -1,16 +1,17 @@
 /* pages/order/detail/index.wxss */
+
 .banner {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40%;
+  height: 120px;
   background: #727cf5;
   color: #fff;
 }
 
 .banner .status {
   font-size: 18px;
-
+  margin-top: -20px;
 }
 
 .steps {
@@ -24,6 +25,7 @@
   padding: 10px;
   padding-left: 30px;
 }
+
 .step-item {
   position: relative;
   font-weight: normal;
@@ -32,6 +34,7 @@
   padding-left: 30px;
   margin-bottom: 10px;
 }
+
 .step-item::before {
   position: absolute;
   content: "";
@@ -41,9 +44,11 @@
   width: 1px;
   background: #eee;
 }
-.step-item:last-child::before{
+
+.step-item:last-child::before {
   content: none;
 }
+
 .step-item van-icon {
   position: absolute;
   color: #727cf5;
@@ -51,22 +56,29 @@
   left: -12px;
   top: -6px;
 }
-.step-item .title{
+
+.step-item .title {
   display: block;
   color: #1a1a1a;
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 5px;
 }
+
 .step-item .desc {
   line-height: 20px;
 }
-.sub-step{
+
+.sub-step {
   position: relative;
   padding-bottom: 10px;
 }
-.sub-step:last-child{ margin-bottom: 0;}
-.sub-step::after{
+
+.sub-step:last-child {
+  margin-bottom: 0;
+}
+
+.sub-step::after {
   position: absolute;
   content: "";
   top: 7px;
@@ -76,10 +88,12 @@
   background: #ddd;
   border-radius: 50%;
 }
-.sub-step:first-child::after{
+
+.sub-step:first-child::after {
   content: none;
 }
-.sub-step::before{
+
+.sub-step::before {
   position: absolute;
   content: "";
   top: -4px;
@@ -88,7 +102,54 @@
   width: 1px;
   background: #eee;
 }
+
 /* .sub-step:first-child::before, */
-.sub-step:last-child::before{
+
+.sub-step:last-child::before {
   content: none;
+}
+
+/* 订单信息卡片 */
+
+.order-info-cells {
+  margin: 10px;
+  border-radius: 3px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.order-info-cells .weui-cells__title {
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.order-info-cells .weui-cell {
+  align-items: flex-start;
+}
+
+.weui-cell__hd, .weui-cell__bd, .weui-cell__ft {
+  font-size: 14px;
+}
+
+.weui-cell__bd, .weui-cell__ft {
+  color: #8c8c8c;
+}
+
+.weui-cell__hd {
+  width: 5em;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.weui-cell__bd {
+  padding-left: 10px;
+}
+
+.no-translator {
+  padding: 32px 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #8c8c8c;
 }

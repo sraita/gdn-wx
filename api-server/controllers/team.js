@@ -80,6 +80,7 @@ module.exports = {
     let new_team = await Team.findByIdAndUpdate(req.params._id,{
       $inc: {member_count: 1}
     },{new: true});
+    let new_user = await User.findByIdAndUpdate(req.body.userId, { team: req.params._id});
     res.json({code: 0, message: '加入团队成功'})
   },
   // 二维码

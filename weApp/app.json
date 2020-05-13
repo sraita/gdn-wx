@@ -5,7 +5,7 @@
     "pages/mime/index",
     "pages/login/login",
     "pages/bindAccount/bind-account",
-    "pages/order/create-normal/index",
+    "pages/order/create/index",
     "pages/order/detail/index",
     "pages/team/bind/bind",
     "pages/team/index/index",
@@ -15,7 +15,8 @@
     "pages/team/approve/approve",
     "pages/message/index/index",
     "pages/component/choose-member/choose-member",
-    "pages/order/trans-history/trans-history"
+    "pages/order/trans-history/trans-history",
+    "pages/approval/index"
   ],
   "tabBar": {
     "color": "#7A7E83",

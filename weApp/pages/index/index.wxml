@@ -3,11 +3,11 @@
   <nav-bar transparent theme="light" title="唐能翻译"/>
   <view class="top-box">
     <view class="grid">
-      <view class="grid-item" bind:tap="openPage" data-page="/pages/order/create-normal/index">
+      <view class="grid-item" bind:tap="createOrder" data-type="normal">
         <text class="title">普通订单</text>
         <text class="text">两小时内分配译员</text>
       </view>
-      <view class="grid-item">
+      <view class="grid-item"  bind:tap="createOrder" data-type="special">
         <text class="title">特殊订单</text>
         <text class="text">难度高，需要更高级别译员</text>
       </view>

@@ -94,11 +94,12 @@ Page(filter.identityFilter({
   },
   openPage(ev) {
     const page = ev.currentTarget.dataset.page;
-    wx.navigateTo({
-      url: page,
-      fail: function (e) {
-        console.log(e)
-      }
-    })
+    app.$router.push(page);
+  },
+  createOrder(ev) {
+    const type = ev.currentTarget.dataset.type;
+    app.$router.push('createOrder',{},{
+      type
+    });
   }
 }));

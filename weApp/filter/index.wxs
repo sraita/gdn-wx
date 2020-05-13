@@ -1,0 +1,59 @@
+var TRANS_TYPE = {
+  'en': '英语',
+  'zh_Yue': '粤语'
+}
+
+var PROJECT_TYPE = {
+  'onsite_meeting': 'Onside Meeting',
+  'inquiry': 'Inquiry'
+}
+var AM_PM = {
+  'am' :'上午', 
+  'pm' :'下午', 
+  'day':'全天', 
+}
+var formatNumber = function(value) {
+  var str = value.toString();
+  if (value < 10) {
+    str = '0'+str;
+  }
+  return str;
+}
+module.exports = {
+  formatTransType: function(value){
+    return TRANS_TYPE[value];
+  },
+  formatProjectType: function (value){
+    return PROJECT_TYPE[value];
+  },
+  formatAmPm:function (value) {
+    return AM_PM[value]
+  },
+  formatDate: function (timestamp) {
+    var date = getDate(timestamp);
+    var year = date.getFullYear()
+    var month = date.getMonth() + 1
+    var day = date.getDate()
+
+    return [year, month, day].map(formatNumber).join('-')
+  },
+  formatDatetime: function (timestamp) {
+    var date = getDate(timestamp);
+    var year = date.getFullYear()
+    var month = date.getMonth() + 1
+    var day = date.getDate()
+
+    var hour = date.getHours()
+    var minute = date.getMinutes()
+    var second = date.getSeconds()
+
+    return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+  },
+  formatAmount: function (value) {
+    
+    var reg = getRegExp('(\d)(?=(?:\d{3})+$)','g');
+    var num = parseFloat(value).toFixed(2);
+    var str = (num.toString().indexOf('.') !== -1) ? num.toString() : num.toString().replace(reg, '$1,');
+    return '￥' + str;
+  }
+}

@@ -9,9 +9,9 @@
   <block wx:for="{{tabs}}" wx:key="title">
     <view class="tab-content" slot="tab-content-{{index}}">
       <view class="order-list">
-        <view wx:for="{{list}}" class="order-item" bindtap="clickItem">
+        <view wx:for="{{list}}" class="order-item" bindtap="clickItem" data-id="{{item._id}}">
           <view class="order-header">
-            <text>订单号:NO.2019110901002</text>
+            <text>订单号:{{item.sn}}</text>
             <view>待支付</view>
           </view>
           <view class="order-body">

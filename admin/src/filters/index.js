@@ -1,4 +1,5 @@
 // import parseTime, formatTime and set to filter
+
 export { parseTime, formatTime } from '@/utils'
 
 /**
@@ -65,4 +66,13 @@ export function toThousandFilter(num) {
  */
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+export function getAmpmString(value) {
+  let AM_PM = {
+    'am': '上午',
+    'pm': '下午',
+    'day': '全天',
+  }
+  return AM_PM[value];
 }

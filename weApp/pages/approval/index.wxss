@@ -1,0 +1,44 @@
+/* 订单信息卡片 */
+
+.order-info-cells {
+  margin: 10px;
+  border-radius: 3px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.order-info-cells .weui-cells__title {
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.order-info-cells .weui-cell {
+  align-items: flex-start;
+}
+
+.weui-cell__hd, .weui-cell__bd, .weui-cell__ft {
+  font-size: 14px;
+}
+
+.weui-cell__bd, .weui-cell__ft {
+  color: #8c8c8c;
+}
+
+.weui-cell__hd {
+  width: 5em;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.weui-cell__bd {
+  padding-left: 10px;
+}
+
+.no-translator {
+  padding: 32px 15px;
+  text-align: center;
+  font-size: 14px;
+  color: #8c8c8c;
+}

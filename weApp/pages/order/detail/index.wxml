@@ -1,45 +1,80 @@
+<wxs src="../../../filter/index.wxs" module="filter"></wxs>
 
-<view class="page page-order">
-  <view class="banner">
-    <text class="status">审核中</text>
-  </view>
+<view class="banner">
+  <text class="status">{{order.process_name}}</text>
+</view>
 
-  <view class="steps">
-    <view class="step-item">
-      <van-icon name="checked" custom-class="step-icon" />
-      <text class="title">运输中</text>
-      <view class="sub-steps">
-        <view class="sub-step">
-          <rich-text class="desc">扫描完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
-        <view class="sub-step">
-          <rich-text class="desc">拣货完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
-        <view class="sub-step">
-          <rich-text class="desc">你的订单已打印完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
+<view class="steps">
+  <view class="step-item">
+    <van-icon name="checked" custom-class="step-icon" />
+    <text class="title">运输中</text>
+    <view class="sub-steps">
+      <view class="sub-step">
+        <rich-text class="desc">扫描完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
+      </view>
+      <view class="sub-step">
+        <rich-text class="desc">拣货完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
+      </view>
+      <view class="sub-step">
+        <rich-text class="desc">你的订单已打印完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
       </view>
     </view>
-    <view class="step-item">
-      <van-icon name="checked" custom-class="step-icon" />
-      <text class="title">仓库处理中</text>
-      <view class="sub-steps">
-        <view class="sub-step">
-          <rich-text class="desc">扫描完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
-        <view class="sub-step">
-          <rich-text class="desc">拣货完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
-        <view class="sub-step">
-          <rich-text class="desc">你的订单已打印完成</rich-text>
-          <text class="time">2019-11-12 22:30</text>
-        </view>
+  </view>
+  <view class="step-item">
+    <van-icon name="checked" custom-class="step-icon" />
+    <text class="title">仓库处理中</text>
+    <view class="sub-steps">
+      <view class="sub-step">
+        <rich-text class="desc">扫描完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
+      </view>
+      <view class="sub-step">
+        <rich-text class="desc">拣货完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
+      </view>
+      <view class="sub-step">
+        <rich-text class="desc">你的订单已打印完成</rich-text>
+        <text class="time">2019-11-12 22:30</text>
       </view>
     </view>
   </view>
 </view>
+
+<!-- 订单信息卡片 -->
+<mp-cells ext-class="order-info-cells"  title="订单信息">
+  <mp-cell title="订单编号:">
+        <view slot="footer" style="display: flex; align-items: center;">
+          {{order.sn}} 
+          <span class="cu-driver cu-driver__horizontal"></span>
+          <button class="cu-link" bind:tap="copyText" data-text="{{order.sn}}">复制</button>
+        </view>
+  </mp-cell>
+  <mp-cell title="下单时间:"    footer="{{filter.formatDatetime(order.create_time)}}"></mp-cell>
+  <mp-cell title="预估费用:"    footer="{{filter.formatAmount(2500.567)}}"></mp-cell>
+</mp-cells>
+<!-- 会议信息 -->
+<mp-cells ext-class="order-info-cells" title="会议信息">
+  <mp-cell title="分析师:"  footer="{{order.meeting_analyst}}"></mp-cell>
+  <mp-cell title="会议主题:"  footer="{{order.meeting_subject}}"></mp-cell>
+  <mp-cell title="会议地点:"  footer="{{order.meeting_address}}"></mp-cell>
+  <mp-cell title="会议日期:"  footer="{{filter.formatDate(order.meeting_date)}}  {{filter.formatAmPm(order.meeting_time)}}"></mp-cell>
+  <mp-cell title="翻译类型:"  footer="{{filter.formatTransType(order.trans_type)}}"></mp-cell>
+  <mp-cell title="项目类型:"  footer="{{filter.formatProjectType(order.meeting_type)}}"></mp-cell>
+</mp-cells>
+<!-- 译员信息 -->
+<mp-cells ext-class="order-info-cells"  title="议员信息">
+  <view wx:if="{{order.translator}}">
+    <mp-cell title="分析师:"  footer="{{order.meeting_analyst}}"></mp-cell>
+    <mp-cell title="项目类型:"  footer="{{order.sn}}"></mp-cell>
+    <mp-cell title="会议地址:" footer="{{order.meeting_address}}"></mp-cell>
+    <mp-cell title="会议时间:"  footer="{{order.meeting_date}}"></mp-cell>
+  </view>
+  <view wx:else class="no-translator">
+    暂未分配译员
+  </view>
+</mp-cells>
+
+

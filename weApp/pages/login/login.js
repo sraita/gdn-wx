@@ -1,6 +1,5 @@
 // pages/login.js
-var {Toast} = require('../../utils/util.js')
-const { login, getUserInfo} = require('../../api/user.js');
+const { login, getInfo} = require('../../api/user.js');
 const app = getApp();
 Page({
 
@@ -106,8 +105,10 @@ Page({
           wx.setStorageSync('loginToken', token);
           
           // getUserInfo
-          getUserInfo(token).then(res => {
-            wx.setStorageSync('userId', res.data._id);
+          getInfo(token).then(res => {
+            const {_id, team = null} = res.data;
+            wx.setStorageSync('userId', _id);
+            wx.setStorageSync("teamId", team);
             wx.setStorageSync('userInfo', res.data);
             // 隐藏登录页面
             wx.navigateBack({
@@ -121,7 +122,7 @@ Page({
           })
         })
       }).catch(err => {
-        Toast('登录失败!', 'error');
+        app._.toast('登录失败!', 'error');
         console.log('登录失败:',err);
       }).finally(() => {
         wx.hideLoading();

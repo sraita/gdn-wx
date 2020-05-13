@@ -1,0 +1,38 @@
+<wxs src="../../filter/index.wxs" module="filter"></wxs>
+<!-- 会议信息 -->
+<mp-cells ext-class="order-info-cells" title="会议信息">
+  <mp-cell title="分析师:" footer="{{order.meeting_analyst}}"></mp-cell>
+  <mp-cell title="会议主题:" footer="{{order.meeting_subject}}"></mp-cell>
+  <mp-cell title="会议地点:" footer="{{order.meeting_address}}"></mp-cell>
+  <mp-cell title="会议日期:" footer="{{filter.formatDate(order.meeting_date)}}  {{filter.formatAmPm(order.meeting_time)}}"></mp-cell>
+  <mp-cell title="翻译类型:" footer="{{filter.formatTransType(order.trans_type)}}"></mp-cell>
+  <mp-cell title="项目类型:" footer="{{filter.formatProjectType(order.meeting_type)}}"></mp-cell>
+</mp-cells>
+<!-- 译员信息 -->
+<mp-cells ext-class="order-info-cells" title="议员信息">
+  <view wx:if="{{order.translator}}">
+    <mp-cell title="分析师:" footer="{{order.meeting_analyst}}"></mp-cell>
+    <mp-cell title="项目类型:" footer="{{order.sn}}"></mp-cell>
+    <mp-cell title="会议地址:" footer="{{order.meeting_address}}"></mp-cell>
+    <mp-cell title="会议时间:" footer="{{order.meeting_date}}"></mp-cell>
+  </view>
+  <view wx:else class="no-translator">暂未分配译员</view>
+</mp-cells>
+
+<!--  订单信息 -->
+<mp-cells ext-class="order-info-cells" title="订单信息">
+  <mp-cell title="订单编号:">
+    <view slot="footer" style="display: flex; align-items: center;">
+      {{order.sn}}
+      <span class="cu-driver cu-driver__horizontal"></span>
+      <button class="cu-link" bind:tap="copyText" data-text="{{order.sn}}">复制</button>
+    </view>
+  </mp-cell>
+  <mp-cell title="下单人:">
+    <view slot="footer" style="display: flex; align-items: center;">
+        <button class="cu-link" bind:tap="copyText" data-text="{{order.contact_tel}}">电话联系</button>
+        <span class="cu-driver cu-driver__horizontal"></span>
+        {{order.contact_name}}
+    </view>
+  </mp-cell>
+</mp-cells>

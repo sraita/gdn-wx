@@ -1,9 +1,5 @@
-// pages/order/detail/index.js
 const app = getApp();
-const orderApi = require('../../../api/order');
-
-
-
+const orderApi = require('../../api/order');
 Page({
 
   /**
@@ -11,28 +7,14 @@ Page({
    */
   data: {
     _id: null,
-    order:{
+    order: {
 
     },
-    steps: [
-      {
-        text: '发送订单详情',
-        desc: '描述信息'
-      },
-      {
-        text: '翻译接单',
-        desc: '描述信息'
-      },
-      {
-        text: '匹配译员',
-        desc: '描述信息'
-      },
-      {
-        text: 'VP审批',
-        desc: '描述信息'
-      }
-    ]
   },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad(query) {
     console.log(app.$router)
     this.setData({
@@ -40,11 +22,19 @@ Page({
     });
     this.fetchData();
   },
-  onShow: function () {
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
 
   },
-  pageBack: function () {
-    wx.navigateBack();
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
   },
   fetchData() {
     orderApi.getOrder(this.data._id).then(res => {

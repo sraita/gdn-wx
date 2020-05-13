@@ -76,10 +76,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 3,
 					"name": "pages/order/detail/index",
 					"pathName": "pages/order/detail/index",
-					"query": "",
+					"query": "id=5eb83285e79c5447daf07371",
 					"scene": null
 				},
 				{
@@ -115,6 +115,13 @@
 					"name": "加入团队",
 					"pathName": "pages/team/bind/bind",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "订单审批",
+					"pathName": "pages/approval/index",
+					"query": "id=5eb83285e79c5447daf07371",
 					"scene": null
 				}
 			]

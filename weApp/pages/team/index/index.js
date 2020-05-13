@@ -1,6 +1,7 @@
 // pages/team/index/index.js
 const { getTeam } = require('../../../api/team.js');
 
+const mapp = getApp();
 Page({
 
   /**
@@ -39,7 +40,7 @@ Page({
 
   },
   fetchData() {
-    getTeam(this.data.id).then(res => {
+    getTeam(mapp.teamId()).then(res => {
       console.log(res);
       const team = Object.assign({},res.data);
       this.setData({

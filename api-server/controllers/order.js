@@ -68,7 +68,7 @@ module.exports = {
     let process_name = '',
         process_code = '';
     
-    if (order.type === 'normal' && order.meeting_type === 'onsite-meeting') { // 普通订单(现场交传)
+    if (order.type === 'normal' && order.meeting_type === 'onsite_meeting') { // 普通订单(现场交传)
       process_name = 'pv 审批';
       process_code = 'pv-approval';
     } else {
@@ -111,7 +111,7 @@ module.exports = {
         // 2. 根据订单类型， 会议类型 生成订单下一环节信息
         let next_process = null,
             process_code = '';
-        if (order.order_type === 'normal') { // 普通订单
+        if (order.type === 'normal') { // 普通订单
           process_code = 'match-translator'
           next_process = new OrderProcess({
             order_id: order._id,
@@ -412,9 +412,16 @@ module.exports = {
   },
 
   getOrders: async (req, res, next) => {
-    const limit = req.query.limit ? parseInt(req.query.limit) : 5;
-    let list = await Order.find({}).limit(limit)
-    let total = await Order.countDocuments();
+    const limit = req.query.limit ? parseInt(req.query.limit) : 20;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    let skip = (page - 1) * limit;
+    
+    let list = await Order.find(req.body).skip(skip).limit(limit).sort(
+      { create_time: -1 }
+    )
+    .populate('creator')
+    .populate('team');
+    let total = await Order.countDocuments(req.body);
     res.json({code: 0, data: {
       list,
       total
@@ -422,7 +429,9 @@ module.exports = {
   },
   // 获取订单信息
   info: async (req, res, next) => {
-    let order = await Order.findById(req.params._id);
+    let order = await Order.findById(req.params._id)
+      .populate('creator')
+      .populate('team');;
     res.json({code: 0, data: order});
   },
   updateOrder: async (req, res, next) => {
