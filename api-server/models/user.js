@@ -20,9 +20,16 @@ const schema = new mongoose.Schema({
   },
   name: String, // 真实姓名
   mobile: Number,
-  tel: String,
   email: String,
-  status: Number, // 0:禁用,1:启用
+  status: {
+    type: String,
+    enum: ['1','-1'],
+    default: '1'
+  },// 1:正常,-1:删除
+  is_disable:{
+    type: Boolean,
+    default: false,
+  },
   createAt: Date,
   wechat: {type: mongoose.Schema.Types.ObjectId, ref: 'wechat'}, // 微信账号绑定关系
   team: { type: mongoose.Schema.Types.ObjectId, ref:'team'}, // 所属团队

@@ -10,18 +10,17 @@ const schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }, // 关联账户
   name: String, // 姓名
   sex: {
-    type:Number,
-    enum: ['未知','男','女'], // 未知, 男, 女
+    type: String,
+    enum: ['0','1','2'], // 未知, 男, 女
   },
   tel: String,
-  mobile: Number,
-  qq: Number,
+  mobile: String,
+  qq: String,
   wechat: String,
-  subtotal: subtotalSchema, // 订单统计汇总
-  province: String,
-  city: String,
-  county: String,
-  street: String, // 街道 - 详细地址(填写)
+  picture:{
+    type: String,
+    default: ''
+  },
   rank: { // 翻译人员级别
     type: String,
     enum: ['normal', 'advanced','proficient'], // 普通, 高级, 专家

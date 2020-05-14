@@ -13,7 +13,8 @@ const { resSuccess, resError } = require('../utils/response');
 
 module.exports = {
   index: async (req, res, next) => {
-    let list = await User.find();
+    let list = await User.find().populate('team')
+      .populate('roles');
     let total = await User.countDocuments();
 
     res.json({code: 0, data: {
@@ -180,6 +181,18 @@ module.exports = {
       token: null
     }});
     return resSuccess(res, '你已退出登录');
+  },
+
+  // 管理员添加用户
+  addUser: async (req, res, next ) => {
+    let newUser = new User(req.body);
+    await newUser.save();
+    res.json({code: 0, data: newUser});
+  },
+  // 更新用户信息
+  updateUser: async(req, res, next) => {
+    let newUser = await User.findByIdAndUpdate(req.params._id, req.body,{new: true});
+    res.json({ code: 0, data: newUser });
   },
   // 获取用户的订单列表
   getUserOrders: async (req, res, next) => {

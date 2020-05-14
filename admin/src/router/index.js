@@ -110,12 +110,6 @@ export const asyncRoutes = [
         name: 'User',
         meta: { title: '用户列表', icon: 'user', affix: true },
       },
-      {
-        path: 'create',
-        component: () => import('@/views/user/create'),
-        name: 'User',
-        meta: { title: '新增用户', icon: 'user-manage', affix: true },
-      }
     ]
   },
   {
