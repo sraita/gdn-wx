@@ -13,8 +13,9 @@ const { resSuccess, resError } = require('../utils/response');
 
 module.exports = {
   index: async (req, res, next) => {
-    let list = await User.find().populate('team')
-      .populate('role');
+    let list = await User.find({},{password:0})
+      .populate('team',{name:1})
+      .populate('role',{name: 1, code: 1});
     let total = await User.countDocuments();
 
     res.json({code: 0, data: {
@@ -126,7 +127,7 @@ module.exports = {
     }
 
     const _id = verifyToken(req);
-    let user = await User.findOne({ _id: _id }).populate('teams');
+    let user = await User.findOne({ _id: _id },{password: 0}).populate('teams');
     // user.roles = ['admin'];
     res.json({
       code: 0,

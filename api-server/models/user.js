@@ -18,8 +18,13 @@ const schema = new mongoose.Schema({
   avatar: {
     type: String
   },
+  sex:{
+    type: String,
+    enum:['0','1','2'],
+    default: '0'
+  },
   name: String, // 真实姓名
-  mobile: Number,
+  mobile: String,
   email: String,
   status: {
     type: String,
