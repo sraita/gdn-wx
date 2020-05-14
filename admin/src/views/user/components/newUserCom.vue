@@ -10,7 +10,7 @@
         <el-input v-model="form.username"></el-input>
       </el-form-item>
       <el-form-item label="密码：" prop="password">
-        <el-input v-model="form.password"></el-input>
+        <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
       <el-form-item label="性别：" prop="sex">
         <el-radio-group v-model="form.sex">
@@ -20,9 +20,9 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="用户状态：" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio label="enable">启用</el-radio>
-          <el-radio label="disable">禁用</el-radio>
+        <el-radio-group v-model="form.is_disable">
+          <el-radio :label="false">启用</el-radio>
+          <el-radio :label="true">禁用</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="真实姓名：" prop="name">
@@ -43,8 +43,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户角色：" prop="roles">
-        <el-select v-model="form.roles" placeholder="请选择">
+      <el-form-item label="用户角色：" prop="role">
+        <el-select v-model="form.role" placeholder="请选择">
           <el-option v-for="item in roles"
             :key="item._id"
             :label="item.name"
@@ -84,11 +84,11 @@ export default {
       password: '', // 密码
       name: '', // 姓名
       sex: '0',
-      status: 'enable',
+      is_disable: false,
       mobile: '',
       email: '',
       team: null,
-      roles: []
+      role: null
     }
     return {
       submiting: false,

@@ -14,7 +14,7 @@ const { resSuccess, resError } = require('../utils/response');
 module.exports = {
   index: async (req, res, next) => {
     let list = await User.find().populate('team')
-      .populate('roles');
+      .populate('role');
     let total = await User.countDocuments();
 
     res.json({code: 0, data: {
@@ -136,18 +136,13 @@ module.exports = {
   // Get User Routes 
   userRoutes: async (req, res, next) => {
     const user = await User.findOne({_id: req.params._id});
-    const roles = await Role.find({ _id: { $in: user.roles } }).populate({
+    const role = await Role.findOne({ _id: user.role }).populate({
       path:'menus',
       options:{
         sort:{order: 1}
       }
     });
-    let menus = [];
-    for (let [key, value] of roles.entries()) {
-      menus = menus.concat(value.menus);
-    }
-    menus = Array.from(new Set(menus));
-
+    let menus = role ? role.menus:[];
     let data = menus.map(item => {
       let obj = Object.assign({}, item);
       obj = {

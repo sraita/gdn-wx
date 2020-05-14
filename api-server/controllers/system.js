@@ -54,7 +54,7 @@ module.exports = {
       username: 'sadmin',
       password: '123456', 
       nickname: '超级管理员',
-      roles: [role._id]
+      role: role._id
     });
     await user.save();
 

@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
   createAt: Date,
   wechat: {type: mongoose.Schema.Types.ObjectId, ref: 'wechat'}, // 微信账号绑定关系
   team: { type: mongoose.Schema.Types.ObjectId, ref:'team'}, // 所属团队
-  roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'role'}], // 可用角色列表
+  role: { type: mongoose.Schema.Types.ObjectId, ref: 'role'}, // 可用角色列表
 });
 
 // 设置索引

@@ -34,8 +34,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户角色：" prop="roles">
-        <el-select v-model="form.roles" placeholder="请选择">
+      <el-form-item label="用户角色：" prop="role">
+        <el-select v-model="form.role" placeholder="请选择">
           <el-option v-for="item in roles"
             :key="item._id"
             :label="item.name"
@@ -68,7 +68,7 @@ let defaultForm = {
   mobile: '',
   email: '',
   team: null,
-  roles: []
+  role: null
 }
 export default {
   name: 'editUserCom',
@@ -146,7 +146,15 @@ export default {
     user:{
       handler(val,oldVal){
         if (val) {
-          this.form = Object.assign(defaultForm, val)
+          this.form = {
+            username: val.username, // 用户名
+            name: val.name, // 姓名
+            sex: val.sex,
+            mobile: val.mobile,
+            email: val.email,
+            team: val.team ? val.team._id: null,
+            role: val.role ? val.role._id: null
+          }
         }
       },
       immediate: true

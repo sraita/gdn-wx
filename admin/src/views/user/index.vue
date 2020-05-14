@@ -49,7 +49,10 @@
         </el-table-column>
         <el-table-column prop="roles" label="角色">
           <template slot-scope="scope">
-            <el-tag v-for="item in scope.row.roles" :key="item._id" size="mini">{{item.name}}</el-tag>
+            <span v-if="scope.row.role">
+              <el-tag size="mini">{{scope.row.role.name}}</el-tag>
+            </span>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="120">
