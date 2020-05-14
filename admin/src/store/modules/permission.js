@@ -4,18 +4,6 @@ import { getUserRoutes } from '@/api/user';
 /* Layout */
 import Layout from '@/layout'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
-}
 
 /**
  * Filter asynchronous routing tables by recursion
@@ -76,11 +64,11 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, {_id,roles}) {
+  generateRoutes({ commit }, {_id,role}) {
     return new Promise((resolve,reject)=> {
       getUserRoutes(_id).then(res => {
         let routes = res.data;
-        let accessedRoutes = filterAsyncRoutes(routes, roles)
+        let accessedRoutes = filterAsyncRoutes(routes, role)
         accessedRoutes.push({ path: '*', redirect: '/404', hidden: true });
         console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)

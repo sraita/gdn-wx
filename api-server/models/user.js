@@ -5,7 +5,10 @@ const schema = new mongoose.Schema({
   openid: String,
   username: {
     type: String,
-    unique: true
+    unique: true,
+    set(val) {
+      return val.toString().toLocaleLowerCase();
+    }
   },
   password: {
     type: String,
